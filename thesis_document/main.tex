@@ -1,0 +1,48 @@
+\documentclass{include/thesisclass}
+\include{setup}
+
+\begin{document}
+\include{setup2}
+% Always use the primary source of information (probably mostly relevant in introduction)
+% Referencing whole paragraph after full stop is fine (Harvard style).
+% ~ is an unbreakable space.
+
+% Punctuation for equations:
+% - Use "equation" blocks
+% - Use \,. to set a point after an equation.
+% See: https://tex.stackexchange.com/questions/7542/for-formal-articles-should-a-displayed-equation-be-followed-by-a-punctuation-to
+
+% Page numbers required for direct quotations.
+% Can also be helpful for indirect quotations, for example to locate the source in a big book etc.
+% For papers not necessary.
+
+% Cite entire paragraph after final period: https://tu-dresden.de/bu/umwelt/geo/ifk/ressourcen/dateien/downloads/TUM-Citation-Guide.pdf?lang=de
+
+\addchap{Abstract}
+\pagenumbering{roman}
+Abstract goes here.
+
+\addchap{Zusammenfassung}
+Deutsche Zusammenfassung hier.
+
+\chapter{Introduction}
+\pagenumbering{arabic}
+
+\chapter{Background}
+We used tensorflow \cite{abadiTensorFlowLargeScaleMachine2015}.
+
+\section{Related work}
+
+\chapter{Methods}
+
+\chapter{Results}
+
+\chapter{Conclusion}
+
+\Appendix
+
+\addchap{Appendix}
+
+\TheBibliography
+\printbibliography[heading=bibintoc]
+\end{document}
