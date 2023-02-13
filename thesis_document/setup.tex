@@ -1,0 +1,51 @@
+
+\usepackage{tabularx}
+\usepackage{changepage}
+\usepackage{float}
+
+\interfootnotelinepenalty=10000
+
+\newcommand{\vect}[1]{\boldsymbol{\bm{#1}}} % for package bm
+
+\SelectLanguage{english}
+% details on this thesis
+\newcommand{\thesisauthor}{Your name}
+%\newcommand{\thesistopic}{Name des Themas auf Deutsch}
+
+%\newcommand{\thesisentopic}{Extraction of structural information from powder X-ray diffraction patterns
+%using neural network based on randomly generated crystals}
+%\newcommand{\thesisentopic}{Analysis of Powder X-Ray Diffractograms
+%Using Neural Networks Trained on an Infinite Stream of Synthetic Patterns}
+%\newcommand{\thesisentopic}{Analysis of Powder X-Ray Diffractograms
+%Using Neural Networks Trained on Continuously Generated Synthetic Patterns}
+%\newcommand{\thesisentopic}{Analysis of Powder X-ray Diffractograms Using Neural Networks Based on
+%Synthetic Patterns Generated During Training}
+%\newcommand{\thesisentopic}{Analysis of Powder X-Ray Diffractograms
+%Using Neural Networks Trained on Continuously Generated Synthetic Patterns}
+\newcommand{\thesisentopic}{Your Title (Capitalized)}
+
+\newcommand{\thesisinstitute}{Institute of Theoretical Informatics}
+\newcommand{\thesisreviewerone}{T.T.-Prof. Dr. Pascal Friederich}
+\newcommand{\thesisreviewertwo}{Prof. Dr. Second Reviewer}
+\newcommand{\thesisadvisorone}{Your Advisor}
+\newcommand{\thesistimestart}{dd.mm.yyyy} % on titlepage
+\newcommand{\thesistimeend}{dd.mm.yyyy} % on titlepage
+\newcommand{\thesistimehandin}{dd.mm.yyyy} % on second page 'preamble'
+\newcommand{\thesispagehead}{\thesisentopic} % page heading
+
+\hypersetup
+{
+    pdfauthor={\thesisauthor},
+    pdftitle={\thesisentopic},
+    pdfkeywords={kit,informatics,master,thesis,\thesisauthor}
+}
+
+% Describe separation hints here:
+\hyphenation
+{
+    über-nom-me-nen an-ge-ge-be-nen
+}
+
+\addbibresource{biblatex.bib}
+
+
