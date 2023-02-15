@@ -1,0 +1,189 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[margin=1in]{geometry} % full-width
+
+% AMS Packages
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+
+% Unicode
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\hypersetup{
+    unicode,
+    colorlinks,
+%   breaklinks,
+%   urlcolor=cyan,
+    linkcolor=blue,
+    pdfauthor={Author One, Author Two, Author Three},
+    pdftitle={A simple article template},
+    pdfsubject={A simple article template},
+    pdfkeywords={article, template, simple},
+    pdfproducer={LaTeX},
+    pdfcreator={pdflatex}
+}
+
+% Vietnamese
+%\usepackage{vntex}
+
+% Natbib
+\usepackage[sort&compress,numbers,square]{natbib}
+\bibliographystyle{plain}
+
+% Theorem, Lemma, etc
+% \theoremstyle{plain}
+% \newtheorem{theorem}{Theorem}
+% \newtheorem{corollary}[theorem]{Corollary}
+% \newtheorem{lemma}[theorem]{Lemma}
+% \newtheorem{claim}{Claim}[theorem]
+% \newtheorem{axiom}[theorem]{Axiom}
+% \newtheorem{conjecture}[theorem]{Conjecture}
+% \newtheorem{fact}[theorem]{Fact}
+% \newtheorem{hypothesis}[theorem]{Hypothesis}
+% \newtheorem{assumption}[theorem]{Assumption}
+% \newtheorem{proposition}[theorem]{Proposition}
+% \newtheorem{criterion}[theorem]{Criterion}
+% \theoremstyle{definition}
+% \newtheorem{definition}[theorem]{Definition}
+% \newtheorem{example}[theorem]{Example}
+% \newtheorem{remark}[theorem]{Remark}
+% \newtheorem{problem}[theorem]{Problem}
+% \newtheorem{principle}[theorem]{Principle}
+
+\usepackage{graphicx, color}
+\graphicspath{{figures/}}
+
+%\usepackage[linesnumbered,ruled,vlined,commentsnumbered]{algorithm2e} % use algorithm2e for typesetting algorithms
+\usepackage{algorithm, algpseudocode} % use algorithm and algorithmicx for typesetting algorithms
+\usepackage{mathrsfs} % for \mathscr command
+
+\usepackage{lipsum}
+
+% Author info
+\title{Exposé on Using Large Language Models for Automated Data Extraction from Scientific Literature}
+\author{Felix Karg}
+
+\date{\today}
+\renewcommand{\abstractname}{\vspace{-\baselineskip}} % clear 'abstract' from abstract
+
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+    It should be noted that everything mentioned in this document is highly
+    uncertain, particularly scientific questions, steps and timelines, even if
+    not otherwise mentioned.
+
+    % \noindent\textbf{Keywords:} article, template, simple
+\end{abstract}
+
+% \tableofcontents
+
+\section{Introduction}
+The goal of this work is to create a pipeline that derives accurate answers to
+given questions from a provided scientific article. For this, the article
+is first provided in some way: either as link to a site to download, as
+file-upload or through some other method to be determined later. Next, we do
+paragraph extraction similar to \cite{luo_mof_2022} to find paragraphs that
+describe synthesis steps. These paragraphs are then provided as context to use
+in answering the given questions with a Large Language Model (LLM).
+Answers from the extracted data will be returned directly or in a
+machine-readable format. From an agglomeration of such extracted data, a
+database may be built. This database may in further works be used in works to
+make predictions on MOF synthesis procedures.
+
+
+\section{General Topic and Motivation}
+While there are many articles on material synthesis, it is difficult to
+automatically extract important information such as reaction time, temperature,
+solvent, and additives in a comprehensive database. When trying to automatize
+the extraction of relevant data, the problem becomes one of Natural Language
+Processing (NLP) and proper semantic understanding of synthesis procedures.
+
+\section{Related Literature}
+
+\begin{itemize}
+    \item ChemicalTagger: A tool for semantic text-mining in chemistry \cite{hawizy_chemicaltagger_2011}
+        \begin{itemize}
+            \item Early demonstration that semantic data extraction works on scientific literature can work
+        \end{itemize}
+    \item MOF Synthesis Prediction Enabled by Automatic Data Mining and Machine Learning \cite{luo_mof_2022}
+        \begin{itemize}
+            \item Doing Synthesis prediction based on an automatic data extraction pipeline
+        \end{itemize}
+    \item Structured information extraction from complex scientific text with fine-tuned large language models \cite{dunn_structured_2022}
+        \begin{itemize}
+            \item demonstration that LLMs can be very capable of extracting materials chemistry information for representative tasks with high accuracy
+        \end{itemize}
+\end{itemize}
+
+\section{Scientific Questions}
+Benchmarking accuracy of data extraction from scientific literature using state-of-the-art LLMs and other tools: how well do various existing methods do, and (how much) can priming, fine-tuning and prompt engineering improve this.
+
+Specifically, compare the accuracy of:
+\begin{itemize}
+    \item what the model already knows: here, the article would not be in context
+    \item what it can easily extract from the article: when provided in
+        context, how well it can answer questions relating the content.
+    \item particarly, without much prompt engineering or fine-tuning the model
+    \item with prompt engineering: attempt to increase accuracy by finding good prompts for that
+    \item after task-based fine-tuning (without context, in-context, and with or without good prompts)
+    \begin{itemize}
+        \item articles included in fine-tuning
+        \item articles not fine-tuned on
+        \item experiment with fine-tuning approaches
+    \end{itemize}
+    \item Models of varying sizes
+    \begin{itemize}
+        \item the varying sizes of available OPT-models \cite{zhang_opt_2022}
+        \item given enough time, try to use distillation \cite{sun_patient_2019} to compress the model parameter size
+    \end{itemize}
+\end{itemize}
+
+% \section{Objectives}
+% Objectives of the work (both mandatory objectives and optional additional objectives)
+
+\section{Intermediate Steps}
+% Concrete work steps
+
+\begin{enumerate}
+    \item Take exemplary / arbitrary synthesis paper
+    \item get paragraph classification to work
+    \item figure out how to pass the relevant paragraphs as LLM context
+    \item determine accuracy of answering the given questions based on reference database
+    \item first without, later with prompt engineering and fine-tuning of the model
+\end{enumerate}
+
+\section{Schedule}
+
+\subsection{1-2 Months}
+\begin{itemize}
+    \item read related papers (those cited before, BERT \cite{devlin_bert_2018}, Attention is All you Need \cite{vaswani_attention_2017}, GPT2 \cite{radford_language_2019}, GPT3 \cite{brown_language_2020}, Chinchilla \cite{hoffmann_training_2022} and more)
+    \item follow Andrej Karpathy ML-Course to building a GPT-model yourself
+    \item get OPT models of different sizes to run on cluster
+    \item build initial pipeline to evaluate OPT models
+    \item begin building initial dataset to 
+\end{itemize}
+
+\subsection{3-4 Months}
+\begin{itemize}
+    \item (Keep eyes out for online-mode papers, see if it could be reasonably integrated)
+    \item finish building initial dataset to compare accuracy (before fine-tuning)
+    \item deep probe models with (reverse) prompts, run prompt engineering experiments
+    \item figure out ways to fine-tune, run fine-tuning experiments
+\end{itemize}
+
+\subsection{5-6 Months}
+\begin{itemize}
+    \item Run further experiments
+    \item keep eyes out for (new) papers on LLMs
+    \item Mostly: Write thesis, re-run experiments (if possible / necessary)
+    \item Deploy service, create final database with results
+\end{itemize}
+
+\bibliography{references.bib}
+ 
+
+\end{document}
