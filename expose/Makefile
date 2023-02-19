@@ -48,7 +48,7 @@ dist-clean: clean
 	latexmk -outdir=$(OUT_DIR) -pdf -use-make -file-line-error -shell-escape $<
 	cp -v $(foreach PDF, $(PDFNAMES),$(OUT_DIR)/$(PDF)) . || :
 
-%.pdf: %.tex *.tex
+%.pdf: %.tex *.tex img/*
 	mkdir -p $(OUT_DIR)/chapters
 	# -interaction=nonstopmode
 	latexmk -outdir=$(OUT_DIR) -pdf -use-make -file-line-error -shell-escape $<
