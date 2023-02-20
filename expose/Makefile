@@ -17,13 +17,13 @@ all: $(PDFNAMES)
 
 diff: $(addsuffix -diff.pdf, $(PROJNAME))
 
-spell: chapters/*.tex
-	nix-build -E 'with import <nixpkgs> {}; aspellWithDicts (d: [d.de])'; \
+spell: main.tex
+	nix-build -E 'with import <nixpkgs> {}; aspellWithDicts (d: [d.en])'; \
 	for file in $^; do \
 	    echo ; \
 	    echo ------------------------------; \
 	    echo Correcting file: echo $${file}; \
-	    bash result/bin/aspell -l de check $${file}; \
+	    bash result/bin/aspell -l en check $${file}; \
 	done
 
 watch:
@@ -48,7 +48,7 @@ dist-clean: clean
 	latexmk -outdir=$(OUT_DIR) -pdf -use-make -file-line-error -shell-escape $<
 	cp -v $(foreach PDF, $(PDFNAMES),$(OUT_DIR)/$(PDF)) . || :
 
-%.pdf: %.tex *.tex img/*
+%.pdf: %.tex *.tex img/* references.bib
 	mkdir -p $(OUT_DIR)/chapters
 	# -interaction=nonstopmode
 	latexmk -outdir=$(OUT_DIR) -pdf -use-make -file-line-error -shell-escape $<
