@@ -1,4 +1,4 @@
-\documentclass[a4paper,12pt]{article}
+\documentclass[a4paper,11pt]{article}
 
 \usepackage[margin=1in]{geometry} % full-width
 
@@ -16,10 +16,10 @@
 %   breaklinks,
 %   urlcolor=cyan,
     linkcolor=blue,
-    pdfauthor={Author One, Author Two, Author Three},
-    pdftitle={A simple article template},
-    pdfsubject={A simple article template},
-    pdfkeywords={article, template, simple},
+    pdfauthor={Felix Karg},
+    pdftitle={Master Thesis Exposé},
+    pdfsubject={Using Large Language Models for Automated Data Extraction from Scientific Literature},
+    pdfkeywords={automated, scientific literature, large language model},
     pdfproducer={LaTeX},
     pdfcreator={pdflatex}
 }
@@ -70,7 +70,7 @@
 \newcommand{\margtodo}                                 % used by \todo command
 {\marginpar{\textbf{\textcolor{red}{ToDo}}}{}}
 \newcommand{\todo}[1]
-{{\textbf{\textcolor{red}{[\margtodo{}#1]}}}{}}   % for todo-notes inside 
+{{\textbf{\textcolor{red}{[\margtodo{}#1]}}}{}}   % for todo-notes inside
 
 
 \begin{document}
@@ -93,9 +93,9 @@ tools to extract further knowledge.  % \todo{expand on LLMs and limits here?}
 \section{Motivation}
 Take for example the field of synthesizing Metal-Organic Frameworks (MOFs)
 \cite{zhou_introduction_2012}. While numerous detailed descriptions of
-synthesis procedures exist, they are not in a machine-readable format, which
-prevents effective application of state-of-the-art techniques such as automated
-experimentation \cite{shi_automated_2021} or synthesis prediction
+synthesis procedures exist, they are not available in machine-readable formats,
+which prevents effective application of state-of-the-art techniques such as
+automated experimentation \cite{shi_automated_2021} or synthesis prediction
 \cite{luo_mof_2022}. Thus, we intend to create a pipeline for deriving
 machine-readable information on MOF synthesis parameters from given questions
 on provided scientific articles.
@@ -104,30 +104,49 @@ on provided scientific articles.
 \section{Background}
 \paragraph{Rule-Based Entity Recognition}
 There have long been rule-based approaches for the recognition of individual
-entities. ChemTagger \cite{hawizy_chemicaltagger_2011} clearly demonstrated
-that simple rule-based systems can sometimes extract much of the requested
-information. While they often achieve high precision for simple tasks,
-they fail in answering more complex queries, such as the relation between
-two entities.
+entities (e.g. Temperature). ChemTagger \cite{hawizy_chemicaltagger_2011}
+and others \cite{beard_comparative_2019, huang_database_2020}
+clearly demonstrated that simple rule-based systems can sometimes extract much
+of the requested information. While they often achieve high precision for
+simple tasks, they fail in answering more complex queries, such as the relation
+between two entities.
 
 \paragraph{Language Models}
-With 'Attention is All you Need' \cite{vaswani_attention_2017}, Google
-introduced the transformer architecture for language models and demonstrated
-significant improvements. Soon, BERT \cite{devlin_bert_2018} followed, a model
-which is conceptually simple and empirically powerful. It was soon demonstrated
-that BERT can be easily fine-tuned for named entity recognition in materials
-science \cite{zhao_finetuning_2021}. OpenAI pushed scaling forward with their
-GPT2 \cite{radford_language_2019} model, which was substantially larger than
-BERT. Step-by-step, these models enabled more sophisticated extraction requests.
+All modern language models are based on what Google introduced as the
+transformer architecture \cite{vaswani_attention_2017}, which outperformed
+other available architectures with a fraction of the training cost. Based on
+this, Bidirectional Encoder Representation from Transformers (BERT)
+\cite{devlin_bert_2018} substantially improved the state-of-the-art for all
+natural language processing benchmarks. BERT can be easily fine-tuned for named
+entity recognition in materials science \cite{zhao_finetuning_2021b}. Later
+models such as GPT2 \cite{radford_language_2019} grew considerably in parameter
+size, as it had up to 1.5 billion parameters, up to 15x more parameters than
+BERT. Along with significantly increasing capability in natural language
+processing, these models enabled more sophisticated extraction requests.
+Even though automated extraction methods based on them were introduced only
+recently, they were already surpassed by even larger models.
 
 \paragraph{Large Language Models}
-With the introduction of GPT3 \cite{brown_language_2020} OpenAI trailblazed the
-era of Large Language Models. This model enabled more sophisticated information
-extraction requests with little fine-tuning \cite{dunn_structured_2022}. Soon,
-open-source variants such as OPT \cite{zhang_opt_2022} followed. It was also
-demonstrated with Chinchilla \cite{hoffmann_training_2022} and CoTR
-\cite{zhang_multimodal_2023}, that these large language models are
-substantially overparametrized and undertrained.
+A continuation of increasing parameters culminated in the 175 billion parameter
+model GPT3 \cite{brown_language_2020}, the first large language model. This
+model enabled the most sophisticated information extraction requests yet, and
+required only a small amount fine-tuning \cite{dunn_structured_2022}. However,
+Chinchilla \cite{hoffmann_training_2022} and CoTR \cite{zhang_multimodal_2023}
+demonstrated that while achieving impressive capability, such large models are
+substantially overparametrized and undertrained. Additionally, while the
+results are state-of-the-art, GPT3 is only accessible through the API of
+OpenAI, a for-profit company. This considerably limits access to model
+internals.
+
+Our work differs from \cite{dunn_structured_2022} by addressing these two
+caveats. Instead of GPT3, we use a similarly capable open-source model called
+OPT \cite{zhang_opt_2022}. Self-hosting enables us to do deep introspection
+necessary for state-of-the-art prompt engineering and gives us the required
+freedom to attempt distillation \cite{sun_patient_2019}, which addressess
+overparametrization. Distillation promises substantial model parameter
+reduction with little loss in accuracy (50x parameter reduction while keeping
+95\% accuracy), and has been confirmed to have similar improvement characterics
+for other large models.
 
 % \paragraph{Downstream Usages}
 % MOF Synthesis Prediction Enabled by Automatic Data Mining and Machine Learning \cite{luo_mof_2022}
@@ -135,54 +154,20 @@ substantially overparametrized and undertrained.
 % \todo{rewrite}
 
 \section{Scientific Questions}
-Use Large Language Models to demonstrate automated extraction of unstructured
-text from scientific literature for the creation of a database with otherwise
-unavailable information on MOF synthesis. By doing so, we create a pipeline
-that can easily be adapted to numerous other data extraction tasks.
+The goal of this work is to use large language models to demonstrate automated
+extraction of unstructured text from scientific literature for the creation of
+a database with otherwise non-machine readable information on MOF synthesis. By
+doing so, we create a training pipeline that can be a) self-hosted and b)
+adapted to other data extraction tasks. It may be provided as a service for
+other research groups.
 
-Specifically, using OPT \cite{zhang_opt_2022} empirically test if accuracy can
-be improved via 1) fine-tuning and 2) prompt engineering. Additionally,
-test if 3) model size can be reduced by using distillation
-\cite{sun_patient_2019}, and how it will affect accuracy as well as compute and
-memory requirements. Distillation would enable considerable model parameter
-reduction with little loss in accuracy, which could make it substantially
-less compute intensive to fine-tune and run.
+In this work, we will use OPT \cite{zhang_opt_2022} to empirically test how
+much accuracy can be improved via 1) fine-tuning and 2) prompt engineering.
+Additionally, we intend to 3) test how accuracy and compute requirements will be
+affected by reduction of model size via distillation \cite{sun_patient_2019}.
+A reduction in parameters would make it considerably less compute intensive to
+run the final model.
 
-% Benchmarking accuracy of data extraction from scientific literature using state-of-the-art LLMs and other tools: how well do various existing methods do, and (how much) can priming, fine-tuning and prompt engineering improve this. \todo{rewrite}
-% 
-% Specifically, compare the accuracy of:
-% \begin{itemize}
-%     \item what the model already knows: here, the article would not be in context
-%     \item what it can easily extract from the article: when provided in
-%         context, how well it can answer questions relating the content.
-%     \item particarly, without much prompt engineering or fine-tuning the model
-%     \item with prompt engineering: attempt to increase accuracy by finding good prompts for that
-%     \item after task-based fine-tuning (without context, in-context, and with or without good prompts)
-%     \begin{itemize}
-%         \item articles included in fine-tuning
-%         \item articles not fine-tuned on
-%         \item experiment with fine-tuning approaches
-%     \end{itemize}
-%     \item Models of varying sizes
-%     \begin{itemize}
-%         \item the varying sizes of available OPT-models \cite{zhang_opt_2022}
-%         \item given enough time, try to use distillation \cite{sun_patient_2019} to compress the model parameter size
-%     \end{itemize}
-% \end{itemize}
-
-% \section{Objectives}
-% Objectives of the work (both mandatory objectives and optional additional objectives)
-
-% \section{Intermediate Steps}
-% Concrete work steps
-% \begin{enumerate}
-%     \item Take exemplary / arbitrary synthesis paper
-%     \item get paragraph classification to work
-%     \item figure out how to pass the relevant paragraphs as LLM context
-%     \item determine accuracy of answering the given questions based on reference database
-%     \item first without, later with prompt engineering and fine-tuning of the model
-% \end{enumerate}
-% \todo{combine with schedule}
 
 \section{Schedule}
 \begin{figure}[ht!]
@@ -191,32 +176,32 @@ less compute intensive to fine-tune and run.
 \end{figure}
 
 
-\subsection{Literature Research}
+\paragraph{Step 1: Literature Research}
 In this step, we will conduct a thorough review of the relevant literature
 related to our topic. This includes reading academic articles, research papers,
 and other publications to gain a better understanding of the current state of
 knowledge in the field. By continuously reading relevant literature, we can
-stay up-to-date with the latest advancements and identify gaps in the research
-that we can address in our own work.
+stay up-to-date with the latest advancements and incorporate them in our own
+work.
 
 
-\subsection{Train Simple GPT}
+\paragraph{Step 2: Train Simple GPT}
 We will train a small GPT model to gain a deeper understanding of its
 architecture, training procedure, and properties. By doing this, we can get
 hands-on experience with the model and better understand its strengths and
 limitations. This will help us to make informed decisions about how to
-fine-tune the model for our specific task.
+fine-tune larger models for our specific task.
 
 
-\subsection{Set up OPT models on Cluster}
-To set up the open-source OPT models on a cluster, we will need to carefully
-configure the models to ensure that our experiments are run on a reliable and
-scalable computing infrastructure. While the models can be downloaded, the
-configuration process may not be straightforward, and it will be critical to
-get it right to ensure the reliability and scalability of our experiments.
+\paragraph{Step 3: Set up OPT models on Cluster}
+To run experiments later on, we need to download the model parameters and set
+up the environment. It is particularly important that Multi-GPU-execution works
+as expected. Additionally, we will write simple scripts to automate our later
+experiments. This includes tools for evaluation, fine-tuning, and accuracy
+assessment.
 
 
-\subsection{Fine-tune model}
+\paragraph{Step 4: Fine-tune model}
 In this step, we will construct and train the model on select examples, with
 intermediate annotations or validation in-between, similar to what is described
 in \cite{dunn_structured_2022}. The first goal is to increase the task success
@@ -225,15 +210,15 @@ The second goal is to increase accuracy. To achieve high accuracy, we may
 manually annotate a few examples, and augment using partially annotated ones.
 
 
-\subsection{Prompt Engineering}
+\paragraph{Step 5: Prompt Engineering}
 In this step, we will apply deep introspection and automatic prompt engineering
-\cite{zhou_large_2022} to increase the accuracy of generated databases. Prompt
-engineering involves designing the prompts that the model will use to generate
-responses. By optimizing the prompts, we can improve the quality of the model's
-output and make it more accurate.
+\cite{zhou_large_2022} in an attempt to increase the accuracy of generated
+databases. Prompt engineering involves designing the prompts that the model
+will use to generate responses. By optimizing the prompts, we can improve the
+quality of the model's output and make it more accurate.
 
 
-\subsection{Distillation}
+\paragraph{Step 6: Distillation}
 Distillation is a technique for reducing the size of a large model while
 maintaining its accuracy. In this step, we will apply distillation
 \cite{sun_patient_2019} to our model to reduce its parameter size while keeping
@@ -241,7 +226,7 @@ accuracy high. This will make the model more efficient and easier to deploy in
 production.
 
 
-\subsection{Run Experiments}
+\paragraph{Step 7: Run Experiments}
 In this step, we will run detailed experiments to evaluate the performance of
 our model. We will generate graphs, tables, and databases of extracted
 information to analyze and interpret the results. By running experiments, we
@@ -249,7 +234,7 @@ can validate the effectiveness of our approach and identify areas for
 improvement.
 
 
-\subsection{Write Thesis}
+\paragraph{Step 8: Write Thesis}
 In the final step, we will write an extensive scientific article as the
 concluding work of our master's degree. This will involve summarizing our
 research, detailing our methodology, presenting our results, and discussing the
@@ -259,5 +244,5 @@ broader academic community.
 
 
 \bibliography{references.bib}
- 
+
 \end{document}
