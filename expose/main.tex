@@ -62,7 +62,7 @@
 
 % Author info
 \title{Exposé on Using Large Language Models for Automated Data Extraction from Scientific Literature}
-\author{Felix Karg}
+\author{Felix Karg\footnote{This work has partially been augmented using ChatGPT}}
 
 \date{\today}
 % \renewcommand{\abstractname}{\vspace{-\baselineskip}} % clear 'abstract' from abstract
@@ -190,39 +190,73 @@ less compute intensive to fine-tune and run.
     \caption{Exemplary timeline. Details are subject to change.}
 \end{figure}
 
+
 \subsection{Literature Research}
-Get a better understanding by continuously reading relevant literature. This
-includes articles mentioned here, but also others I may come across.
+In this step, we will conduct a thorough review of the relevant literature
+related to our topic. This includes reading academic articles, research papers,
+and other publications to gain a better understanding of the current state of
+knowledge in the field. By continuously reading relevant literature, we can
+stay up-to-date with the latest advancements and identify gaps in the research
+that we can address in our own work.
+
 
 \subsection{Train Simple GPT}
-Train a very small GPT model to get a deeper understanding of its architecture,
-training procedure, and properties.
+We will train a small GPT model to gain a deeper understanding of its
+architecture, training procedure, and properties. By doing this, we can get
+hands-on experience with the model and better understand its strengths and
+limitations. This will help us to make informed decisions about how to
+fine-tune the model for our specific task.
+
 
 \subsection{Set up OPT models on Cluster}
-While the OPT models are open source and can be downloaded, it might not be
-trivial to set them up in the required configuration.
+To set up the open-source OPT models on a cluster, we will need to carefully
+configure the models to ensure that our experiments are run on a reliable and
+scalable computing infrastructure. While the models can be downloaded, the
+configuration process may not be straightforward, and it will be critical to
+get it right to ensure the reliability and scalability of our experiments.
+
 
 \subsection{Fine-tune model}
-Construct and train the model on select examples, with intermediate annotations
-or validation in-between, similiar to what is described in
-\cite{dunn_structured_2022}. The goal is to increase task-success-rate
-(answering in the requested machine-readable format) and accuracy.
-\cite{dunn_structured_2022} have used 100 manual examples, and 500 partially
-annotated ones to achieve high accuracy.
+In this step, we will construct and train the model on select examples, with
+intermediate annotations or validation in-between, similar to what is described
+in \cite{dunn_structured_2022}. The first goal is to increase the task success
+rate, which means answering questions in the requested machine-readable format.
+The second goal is to increase accuracy. To achieve high accuracy, we may
+manually annotate a few examples, and augment using partially annotated ones.
+
 
 \subsection{Prompt Engineering}
-Apply deep introspection and automatic prompt engineering \cite{zhou_large_2022}
-in an attempt to increase the accuracy of generated databases.
+In this step, we will apply deep introspection and automatic prompt engineering
+\cite{zhou_large_2022} to increase the accuracy of generated databases. Prompt
+engineering involves designing the prompts that the model will use to generate
+responses. By optimizing the prompts, we can improve the quality of the model's
+output and make it more accurate.
+
 
 \subsection{Distillation}
-Apply distillation \cite{sun_patient_2019} to reduce model parameter size while
-keeping accuracy high.
+Distillation is a technique for reducing the size of a large model while
+maintaining its accuracy. In this step, we will apply distillation
+\cite{sun_patient_2019} to our model to reduce its parameter size while keeping
+accuracy high. This will make the model more efficient and easier to deploy in
+production.
+
 
 \subsection{Run Experiments}
-Run detailed experiments and generate graphs, tables, and databases of extracted information.
+In this step, we will run detailed experiments to evaluate the performance of
+our model. We will generate graphs, tables, and databases of extracted
+information to analyze and interpret the results. By running experiments, we
+can validate the effectiveness of our approach and identify areas for
+improvement.
+
 
 \subsection{Write Thesis}
-Write extensive scientific article as concluding work of my masters.
+In the final step, we will write an extensive scientific article as the
+concluding work of our master's degree. This will involve summarizing our
+research, detailing our methodology, presenting our results, and discussing the
+implications of our findings. Writing the thesis is an essential part of the
+research process and allows us to share our insights and contributions with the
+broader academic community.
+
 
 \bibliography{references.bib}
  
