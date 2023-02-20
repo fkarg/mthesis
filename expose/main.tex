@@ -62,7 +62,7 @@
 
 % Author info
 \title{Exposé on Using Large Language Models for Automated Data Extraction from Scientific Literature}
-\author{Felix Karg\footnote{This work has partially been augmented using ChatGPT}}
+\author{Felix Karg\footnote{This work has been partially augmented using ChatGPT}}
 
 \date{\today}
 % \renewcommand{\abstractname}{\vspace{-\baselineskip}} % clear 'abstract' from abstract
@@ -128,9 +128,10 @@ recently, they were already surpassed by even larger models.
 
 \paragraph{Large Language Models}
 A continuation of increasing parameters culminated in the 175 billion parameter
-model GPT3 \cite{brown_language_2020}, the first large language model. This
-model enabled the most sophisticated information extraction requests yet, and
-required only a small amount fine-tuning \cite{dunn_structured_2022}. However,
+model GPT3 \cite{brown_language_2020}, the first large language model. Fine-tuning
+GPT3 with 100 manual and 500 partially augmented examples of data extraction
+created the most sophisticated pipeline for information extraction yet
+\cite{dunn_structured_2022}. Most of our work will be similar to theirs. However,
 Chinchilla \cite{hoffmann_training_2022} and CoTR \cite{zhang_multimodal_2023}
 demonstrated that while achieving impressive capability, such large models are
 substantially overparametrized and undertrained. Additionally, while the
@@ -142,11 +143,11 @@ Our work differs from \cite{dunn_structured_2022} by addressing these two
 caveats. Instead of GPT3, we use a similarly capable open-source model called
 OPT \cite{zhang_opt_2022}. Self-hosting enables us to do deep introspection
 necessary for state-of-the-art prompt engineering and gives us the required
-freedom to attempt distillation \cite{sun_patient_2019}, which addressess
+freedom to attempt distillation \cite{sun_patient_2019}, which addresses
 overparametrization. Distillation promises substantial model parameter
 reduction with little loss in accuracy (50x parameter reduction while keeping
-95\% accuracy), and has been confirmed to have similar improvement characterics
-for other large models.
+95\% accuracy), and has been confirmed to have similar compression characteristics
+for other large language models.
 
 % \paragraph{Downstream Usages}
 % MOF Synthesis Prediction Enabled by Automatic Data Mining and Machine Learning \cite{luo_mof_2022}
@@ -178,11 +179,11 @@ run the final model.
 
 \paragraph{Step 1: Literature Research}
 In this step, we will conduct a thorough review of the relevant literature
-related to our topic. This includes reading academic articles, research papers,
-and other publications to gain a better understanding of the current state of
-knowledge in the field. By continuously reading relevant literature, we can
-stay up-to-date with the latest advancements and incorporate them in our own
-work.
+related to our topic. By continuously reading relevant literature, we can
+stay up-to-date with the latest advancements to incorporate them in our own
+work. This is particularly relevant due to the recently increased attention
+on large language models and associated accelerated release cadence of
+scientific articles.
 
 
 \paragraph{Step 2: Train Simple GPT}
@@ -238,9 +239,7 @@ improvement.
 In the final step, we will write an extensive scientific article as the
 concluding work of our master's degree. This will involve summarizing our
 research, detailing our methodology, presenting our results, and discussing the
-implications of our findings. Writing the thesis is an essential part of the
-research process and allows us to share our insights and contributions with the
-broader academic community.
+implications of our findings.
 
 
 \bibliography{references.bib}
