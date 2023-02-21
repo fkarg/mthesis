@@ -24,8 +24,6 @@
     pdfcreator={pdflatex}
 }
 
-% Vietnamese
-%\usepackage{vntex}
 
 % Natbib
 \usepackage[sort&compress,numbers,square]{natbib}
@@ -61,7 +59,7 @@
 \usepackage{lipsum}
 
 % Author info
-\title{Exposé on Using Large Language Models for Automated Data Extraction from Scientific Literature}
+\title{Exposé for a Master's Thesis: Using Large Language Models for Automated Data Extraction from Scientific Literature}
 \author{Felix Karg\footnote{This work has been partially augmented using ChatGPT}}
 
 \date{\today}
@@ -94,10 +92,10 @@ tools to extract further knowledge.  % \todo{expand on LLMs and limits here?}
 Take for example the field of synthesizing Metal-Organic Frameworks (MOFs)
 \cite{zhou_introduction_2012}. While numerous detailed descriptions of
 synthesis procedures exist, they are not available in machine-readable formats,
-which prevents effective application of state-of-the-art techniques such as
+which prevents the effective application of state-of-the-art techniques such as
 automated experimentation \cite{shi_automated_2021} or synthesis prediction
 \cite{luo_mof_2022}. Thus, we intend to create a pipeline for deriving
-machine-readable information on MOF synthesis parameters from given questions
+machine-readable information on e.g. MOF synthesis parameters from given questions
 on provided scientific articles.
 
 
@@ -163,8 +161,9 @@ adapted to other data extraction tasks. It may be provided as a service for
 other research groups.
 
 In this work, we will use OPT \cite{zhang_opt_2022} to empirically test how
-much accuracy can be improved via 1) fine-tuning and 2) prompt engineering.
-Additionally, we intend to 3) test how accuracy and compute requirements will be
+much accuracy can be improved via 1) fine-tuning, 2) fine-tuning on
+synthetically generated data and 3) prompt engineering.
+Additionally, we intend to 4) test how accuracy and compute requirements will be
 affected by reduction of model size via distillation \cite{sun_patient_2019}.
 A reduction in parameters would make it considerably less compute intensive to
 run the final model.
@@ -209,7 +208,8 @@ in \cite{dunn_structured_2022}. The first goal is to increase the task success
 rate, which means answering questions in the requested machine-readable format.
 The second goal is to increase accuracy. To achieve high accuracy, we may
 manually annotate a few examples, and augment using partially annotated ones.
-
+Additionally, we may synthetically generate examples with a second fine-tuned
+model on synthesis procedures.
 
 \paragraph{Step 5: Prompt Engineering}
 In this step, we will apply deep introspection and automatic prompt engineering
