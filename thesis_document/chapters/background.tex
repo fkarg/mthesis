@@ -1,0 +1,56 @@
+\chapter{Background}
+
+\section{Related work}
+
+\begin{itemize}
+    \item Attention before transformers \url{https://jalammar.github.io/visualizing-neural-machine-translation-mechanics-of-seq2seq-models-with-attention/}
+\end{itemize}
+\todo{write section}
+
+\paragraph{Rule-Based Entity Recognition}
+There have long been rule-based approaches for the recognition of individual
+entities (e.g. Temperature). ChemTagger \cite{hawizy_chemicaltagger_2011}
+and others \cite{beard_comparative_2019, huang_database_2020}
+clearly demonstrated that simple rule-based systems can sometimes extract much
+of the requested information. While they often achieve high precision for
+simple tasks, they fail in answering more complex queries, such as the relation
+between two entities.
+
+\paragraph{Language Models}
+All modern language models are based on what Google introduced as the
+transformer architecture \cite{vaswani_attention_2017}, which outperformed
+other available architectures with a fraction of the training cost. Based on
+this, Bidirectional Encoder Representation from Transformers (BERT)
+\cite{devlin_bert_2018} substantially improved the state-of-the-art for all
+natural language processing benchmarks. BERT can be easily fine-tuned for named
+entity recognition in materials science \cite{zhao_finetuning_2021b}. Later
+models such as GPT2 \cite{radford_language_2019} grew considerably in parameter
+size, as it had up to 1.5 billion parameters, up to 15x more parameters than
+BERT. Along with significantly increasing capability in natural language
+processing, these models enabled more sophisticated extraction requests.
+Even though automated extraction methods based on them were introduced only
+recently, they were already surpassed by even larger models.
+
+\paragraph{Large Language Models}
+A continuation of increasing parameters culminated in the 175 billion parameter
+model GPT3 \cite{brown_language_2020}, the first large language model. Fine-tuning
+GPT3 with 100 manual and 500 partially augmented examples of data extraction
+created the most sophisticated pipeline for information extraction yet
+\cite{dunn_structured_2022}. Most of our work will be similar to theirs. However,
+Chinchilla \cite{hoffmann_training_2022} and CoTR \cite{zhang_multimodal_2023}
+demonstrated that while achieving impressive capability, such large models are
+substantially overparametrized and undertrained. Additionally, while the
+results are state-of-the-art, GPT3 is only accessible through the API of
+OpenAI, a for-profit company. This considerably limits access to model
+internals.
+
+Our work differs from \cite{dunn_structured_2022} by addressing these two
+caveats. Instead of GPT3, we use a similarly capable open-source model called
+OPT \cite{zhang_opt_2022}. Self-hosting enables us to do deep introspection
+necessary for state-of-the-art prompt engineering and gives us the required
+freedom to attempt distillation \cite{sun_patient_2019}, which addresses
+overparametrization. Distillation promises substantial model parameter
+reduction with little loss in accuracy (50x parameter reduction while keeping
+95\% accuracy), and has been confirmed to have similar compression characteristics
+for other large language models.
+\todo{rewrite}

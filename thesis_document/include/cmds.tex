@@ -23,10 +23,10 @@
 %% -----------------------------------
 %% |    Commands and Environments    |
 %% -----------------------------------
-\newcommand{\margtodo}                                 % used by \todo command
-{\marginpar{\textbf{\textcolor{kitcolor}{ToDo}}}{}}
-%\newcommand{\todo}[1]
-%{{\textbf{\textcolor{kitcolor}{[\margtodo{}#1]}}}{}}   % for todo-notes inside 
+\newcommand{\margtodo}{\marginpar{\textbf{\textcolor{kitcolor}{ToDo}}}{}}   % used by \todo command
+% \newcommand{\todo}[1]{{\textbf{\textcolor{kitcolor}{[\margtodo{}#1]}}}{}}   % for todo-notes inside 
+% \renewcommand{\todo}[2][]{\todo[color=red,#1]{#2}}
+
                                                        % the document
 \newenvironment{deprecated}                            % for something that you
 {\begin{color}{gray}}{\end{color}}                     % want to use no more

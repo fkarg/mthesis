@@ -1,11 +1,19 @@
 \chapter*{Declaration of Authorship}
 
-Find the appropriate and up-to-date text in your Studienordnung and copy it here.\\
+I hereby declare that I have composed this thesis by myself and without any
+assistance other than the sources given in my list of works cited. This thesis
+has not been submitted in the past or is currently being submitted to any other
+examination institution. It has not been published. All direct quotes as well
+as indirect quotes which in phrasing or original idea have been taken from a
+different text (written or otherwise) have been marked as such clearly and in
+each single instance under a precise specification of the source.
+
+I am aware that any false claim made here results in failing the examination.
 
 \vspace{1cm}
 
-\noindent Karlsruhe, Month dd, yyyy \hfill \parbox[t]{.5\linewidth}{\rule[-3pt]{\linewidth}{.4pt}\par\smallskip
-    \centering Your name}
+\noindent Karlsruhe, \longdate \hfill \parbox[t]{.5\linewidth}{\rule[-3pt]{\linewidth}{.4pt}\par\smallskip
+    \centering Felix Karg}
 
 \vfill
 
@@ -13,9 +21,23 @@ Approved as examination copy:\\
 
 \vspace{1cm}
 
-\noindent Karlsruhe, Month dd, yyyy \hfill \parbox[t]{.5\linewidth}{\rule[-3pt]{\linewidth}{.4pt}\par\smallskip
+\noindent Karlsruhe, \longdate \hfill \parbox[t]{.5\linewidth}{\rule[-3pt]{\linewidth}{.4pt}\par\smallskip
     \centering}
 
 \renewcommand{\arraystretch}{1}
 
 \cleardoublepage
+
+\renewcommand{\cftchapfont}{%
+    \bfseries
+}
+
+\tableofcontents                    % listoftables on new pages
+\begingroup \let\clearpage\relax    % in order to avoid listoffigures and
+%\listoffigures
+%\listoftables
+\endgroup
+\cleardoublepage
+
+% Contents
+\MainMatter

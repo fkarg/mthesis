@@ -181,7 +181,7 @@ urldate=iso
 
 \usepackage{sectsty}
 
-\usepackage{todonotes}
+\usepackage[linecolor=red,backgroundcolor=red]{todonotes}
 \usepackage{import}
 \usepackage{bm}
 

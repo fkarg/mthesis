@@ -1,8 +1,7 @@
 \documentclass{include/thesisclass}
-\include{setup}
+\include{include/setup}
 
 \begin{document}
-\include{setup2}
 % Always use the primary source of information (probably mostly relevant in introduction)
 % Referencing whole paragraph after full stop is fine (Harvard style).
 % ~ is an unbreakable space.
@@ -18,31 +17,15 @@
 
 % Cite entire paragraph after final period: https://tu-dresden.de/bu/umwelt/geo/ifk/ressourcen/dateien/downloads/TUM-Citation-Guide.pdf?lang=de
 
-\addchap{Abstract}
-\pagenumbering{roman}
-Abstract goes here.
-
-\addchap{Zusammenfassung}
-Deutsche Zusammenfassung hier.
-
-\chapter{Introduction}
-\pagenumbering{arabic}
-
-\chapter{Background}
-We used tensorflow \cite{abadiTensorFlowLargeScaleMachine2015}.
-
-\section{Related work}
-
-\chapter{Methods}
-
-\chapter{Results}
-
-\chapter{Conclusion}
-
-\Appendix
-
-\addchap{Appendix}
-
-\TheBibliography
-\printbibliography[heading=bibintoc]
+\include{include/titlepage}
+\include{include/preamble}
+\include{chapters/abstract}
+\include{chapters/introduction}
+\include{chapters/background}
+\include{chapters/scientific_question}
+\include{chapters/results}
+\include{chapters/conclusion}
+\include{chapters/appendix}
+\include{chapters/todos}
+\include{chapters/references}
 \end{document}
