@@ -1,44 +1,51 @@
-from jsonformer import Jsonformer
-from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline, set_seed
-
-import os
-from torch import optim, nn, utils, Tensor
-from torchvision.datasets import MNIST
-from torchvision.transforms import ToTensor
 import lightning.pytorch as pl
+from jsonformer import Jsonformer
+from transformers import (
+    AutoModelForCausalLM,
+    AutoTokenizer,
+)
 
-import torch.nn as nn
-import torch.nn.functional as F
+class JsonformerModel(pl.LightningModule):
+    """Provides interface for a LLM wrapped with JsonFormer for material Science applications.
 
+    PARAMS:
+        model_path [str]: path to both model and tokenizer in pytorch / huggingface format.
+        load_params [bool]: if the model should load parameters. if they will be restored from a checkpoint anyways.
+    """
 
-# define any number of nn.Modules (or use your current ones)
-encoder = nn.Sequential(nn.Linear(28 * 28, 64), nn.ReLU(), nn.Linear(64, 3))
-decoder = nn.Sequential(nn.Linear(3, 64), nn.ReLU(), nn.Linear(64, 28 * 28))
+    def __init__(self, model_path: str | None = None, load_params: bool = True, checkpoint_path: str = None):
 
+        if checkpoint_path:
+            return JsonformerModel.load_from_checkpoint(checkpoint_path)
 
-# define the LightningModule
-class LitAutoEncoder(pl.LightningModule):
-    def __init__(self, encoder, decoder):
         super().__init__()
-        self.encoder = encoder
-        self.decoder = decoder
+        if load or model_path is None:
+            self.model = AutoModelForCausalLM.from_pretrained(
+                model_path, torch_dtype=torch.float16, device_map="auto"
+            )
+            self.tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=True)
+        else:
+            self.model = None
+            self.tokenizer = None
 
-    def training_step(self, batch, batch_idx):
-        # training_step defines the train loop.
-        # it is independent of forward
-        x, y = batch
-        x = x.view(x.size(0), -1)
-        z = self.encoder(x)
-        x_hat = self.decoder(z)
-        loss = nn.functional.mse_loss(x_hat, x)
-        # Logging to TensorBoard (if installed) by default
-        self.log("train_loss", loss)
-        return loss
+        self.prompt = "Generate the information of used parameters for the reaction based on the following schema:"
+        self.schema = {
+            "type": "object",
+            "properties": {
+                "additive": {"type": "string"},
+                "solvent": {"type": "string"},
+                "temperature": {"type": "number"},
+                "time": {"type": "number"},
+            },
+        }
 
-    def configure_optimizers(self):
-        optimizer = optim.Adam(self.parameters(), lr=1e-3)
-        return optimizer
+    def forward(self, text):
+        # TODO: ensure that the prompt is added somewhere before?
+        # input = text + "\n" + self.prompt
 
+        generated = Jsonformer(self.model, self.tokenizer, self.schema, text)()
 
-# init the autoencoder
-autoencoder = LitAutoEncoder(encoder, decoder)
+        return generated
+
+    def training_step(self):
+        pass

@@ -14,6 +14,8 @@ transformers = "^4.30.2"
 jsonformer = "^0.12.0"
 lightning = "^2.0.4"
 torch = "^2.0.1"
+lightning-bolts = "^0.6.0.post1"
+lightning-transformers = "^0.2.5"
 
 
 [tool.poetry.group.dev.dependencies]
