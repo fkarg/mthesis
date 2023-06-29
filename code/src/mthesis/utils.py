@@ -28,16 +28,18 @@ def load_yaml(filename: str, root_dir: str = None) -> dict:
         root_dir: root-directory of file (default: ./)
     """
     if root_dir is None:
-        root_dir = "./"
+        root_dir = ""
     name = ".".join(filename.split(".")[:-1])
-    endings = [".yaml", ".yml"]
+    endings = [".yml", ".yaml"]
     for end in endings:
         try:
             with open(root_dir + name + end, "r") as stream:
                 return yaml.safe_load(stream)
         except FileNotFoundError as e:
-            log.warn("Could not load '{}', creating it (empty)".format(filename))
-            save_yaml(None, root_dir + filename)
+            log.warn(e)
+    log.warn("Could not load '{}', creating it (empty)".format(filename))
+    input("Continue. [Enter]")
+    save_yaml({}, root_dir + filename)
 
 
 def save_yaml(data: dict | list | str, filename: str):

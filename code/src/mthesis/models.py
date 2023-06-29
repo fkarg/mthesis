@@ -1,4 +1,5 @@
 import lightning.pytorch as pl
+import torch
 from jsonformer import Jsonformer
 from transformers import (
     AutoModelForCausalLM,
@@ -19,7 +20,7 @@ class JsonformerModel(pl.LightningModule):
             return JsonformerModel.load_from_checkpoint(checkpoint_path)
 
         super().__init__()
-        if load or model_path is None:
+        if load_params or model_path is None:
             self.model = AutoModelForCausalLM.from_pretrained(
                 model_path, torch_dtype=torch.float16, device_map="auto"
             )
@@ -35,7 +36,9 @@ class JsonformerModel(pl.LightningModule):
                 "additive": {"type": "string"},
                 "solvent": {"type": "string"},
                 "temperature": {"type": "number"},
+                "temperature_unit": {"type": "string"},
                 "time": {"type": "number"},
+                "time_unit": {"type": "string"},
             },
         }
 
