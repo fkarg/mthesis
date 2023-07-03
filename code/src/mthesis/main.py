@@ -1,9 +1,14 @@
 import typer
+import logging
 
 from mthesis.models import JsonformerModel
 from mthesis.utils import load_yaml
 
-import logging
+logging.basicConfig(
+    format="%(asctime)s %(levelname)-8s %(message)s",
+    level=logging.INFO,
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
 
 log = logging.getLogger(__name__)
 
