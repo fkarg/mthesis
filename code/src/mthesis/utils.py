@@ -6,8 +6,7 @@ log = logging.getLogger(__name__)
 
 
 def md5(fpath: str):
-    """ Return md5 hash of file at location `fpath`.
-    """
+    """Return md5 hash of file at location `fpath`."""
     import hashlib
 
     hash_md5 = hashlib.md5()
@@ -18,7 +17,7 @@ def md5(fpath: str):
 
 
 def load_yaml(filename: str, root_dir: str = None) -> dict:
-    """ Load `filename` as yaml-file, and try with both endings `.yml` and
+    """Load `filename` as yaml-file, and try with both endings `.yml` and
     `.yaml`, regardless of what was passed.
     If the file is not found, it is created (empty), and `None` is returned.
     You need to handle errors when the directory does not exist yourself.
@@ -43,8 +42,25 @@ def load_yaml(filename: str, root_dir: str = None) -> dict:
 
 
 def save_yaml(data: dict | list | str, filename: str):
-    """ Save `data` to `filename` in yaml.
-    """
+    """Save `data` to `filename` in yaml."""
     with open(filename, "w") as outfile:
         yaml.dump(data, outfile, default_flow_style=False)
 
+
+def read_paragraph(paragraph_id: str, dataset_path: str = None):
+    """Read file `dataset_path/synthesis_paragraphs/paragraph_id/content.txt`.
+
+    Will encode with utf8, and replace e.g. '\n', '\u2009', '\u2005' and '\xa0'
+    with a normal space.
+    """
+    # TODO: two hardcoded locations: synthesis_paragraphs and content.txt
+    if not dataset_path:
+        dataset_path = "~/mof_synthesis"
+    paragraphs_path = os.path.join(dataset_path, "synthesis_paragraphs")
+    paragraph_file = os.path.join(self.paragraphs_path, paragraph_id, "content.txt")
+    paragraph_text = ""
+    with open(paragraph_file, encoding="utf8") as f:
+        paragraph_text = " ".join(f.readlines())
+        for char in ["\n", "\u2009", "\u2005", "\xa0"]:
+            paragraph_text = paragraph_text.replace(char, " ")
+    return paragraph_text

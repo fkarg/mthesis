@@ -12,10 +12,11 @@ optimizer = AdamW(get_grouped_params(model), lr=5e-4)
 # Epochs: 3-5
 # Training examples: 100, 300, 500
 trainer = Trainer(
-        # devices="auto", accelerator="auto", deterministic=False,  # all default
-        # precision="16-mixed",
+    # devices="auto", accelerator="auto", deterministic=False,  # all default
+    # precision="16-mixed",
     callbacks=ORTCallback(),
-    max_epochs=1, accumulate_grad_batches=4,
+    max_epochs=1,
+    accumulate_grad_batches=4,
     fast_dev_run=True,
     # plugins=HFSaveCheckpoint(model=model),
 )  # set deterministic=True for reproducible results later on
