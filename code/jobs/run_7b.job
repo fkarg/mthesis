@@ -21,6 +21,6 @@ echo
 echo "NVDIA-SMI OUTPUT"
 nvidia-smi
 
-cd ~/mthesis/code
+cd ~/llms/mthesis/code
 
-poetry run main train --stats stats_7b.yml --settings settings/settings_7b.yml
+poetry run main test --stats stats_7b.yml --settings settings/settings_7b.yml

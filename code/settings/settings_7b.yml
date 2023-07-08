@@ -1,21 +1,23 @@
 dataset_path: /home/kit/iti/lz5921/mof_synthesis/synthesis_paragraphs
 checkpoint_path: /home/kit/iti/lz5921/checkpoints/
 models:
-# - model_name: LLaMa 7B
-#   model_path: /pfs/work8/workspace/ffuc/scratch/lz5921-llms/llama.cpp/models/7B/
-#   model_type: text-generation
-# - model_name: Vicuna 7B
+# - model_name: Vicuna 13B
 #   model_path: /pfs/work8/workspace/ffuc/scratch/lz5921-llms/vicuna-13b-1.1/
-#   model_type: text-generation
-# - model_name: Falcon 7B
-#   model_path: /pfs/work8/workspace/ffuc/scratch/lz5921-llms/falcon-7b/
 #   model_type: text-generation
 # - model_name: Falcon 7B Instruct
 #   model_path: /pfs/work8/workspace/ffuc/scratch/lz5921-llms/falcon-7b-instruct/
 #   model_type: text-generation
-- model_name: Falcon 7B (local)
-  model_path: /home/kit/iti/lz5921/falcon-7b/
+# - model_name: Falcon 7B (local)
+#   model_path: /home/kit/iti/lz5921/falcon-7b/
+#   model_type: text-generation
+- model_name: LLaMa 7B
+  model_path: /pfs/work8/workspace/ffuc/scratch/lz5921-llms/llama.cpp/models/7B/
   model_type: text-generation
+- model_name: Vicuna 7B
+  model_path: /pfs/work8/workspace/ffuc/scratch/lz5921-llms/vicuna-7b-1.1/
+  model_type: text-generation
+- model_name: Falcon 7B
+  model_path: /pfs/work8/workspace/ffuc/scratch/lz5921-llms/falcon-7b/
 extract_config:
   additive:
     type: string
