@@ -5,7 +5,7 @@ import logging
 from tqdm import tqdm
 
 from mthesis.models import JsonformerModel
-from mthesis.utils import load_yaml
+from mthesis.utils import load_yaml, save_yaml
 from mthesis.dataloader import MOFDataset
 
 logging.basicConfig(
@@ -28,34 +28,58 @@ def evaluate(
     if settings is None:
         settings = "settings.yml"
     if stats is None:
-        stats: str = "stats.yml"
+        stats_path = "stats.yml"
+    else:
+        stats_path = stats
     if device is None:
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     log.info("Loading settings and stats")
 
     settings = load_yaml(settings)
-    stats = load_yaml(stats)
+    stats = load_yaml(stats_path)
     # run evaluation of models
 
-    model_path = settings["models"][0]["model_path"]
-    model_name = settings["models"][0]["model_name"]
+    evaluated = frozenset(map(lambda s: (s["paragraph_id"], s["model_name"]), stats))
 
-    log.info(f"Loading Model [{model_name}]")
-    model = JsonformerModel(model_path)
-    model.eval()  # set model to eval mode
+    for model_settings in settings["models"]:
+        model_path = model_settings["model_path"]
+        model_name = model_settings["model_name"]
 
-    progress_bar = tqdm(MOFDataset(settings["dataset_path"]), file=open(os.devnull, "w"))
+        log.info(f"Loading Model [{model_name}]")
+        model = JsonformerModel(model_path)
+        model.eval()  # set model to eval mode
 
-    for item in progress_bar:
-        print(str(progress_bar))
-        res = model(item["text"])
-        print(f"result for {item['paragraph_id']}: {res}")
-        # TODO: Save results for future processing. async
+        log.info(f"Loading Dataset")
 
-    # print(model(x))
-    # {'additive': 'water', 'solvent': 'water', 'temperature': 90.0, 'temperature_unit': 'C', 'time': 40.0, 'time_unit': 'h'}
+        dataset = MOFDataset(settings["dataset_path"])
 
+        progress_bar = tqdm(dataset, file=open(os.devnull, "w"))
+
+        diff = -(len(evaluated) % len(dataset))
+        first = True
+
+        for item in progress_bar:
+            log.info(str(progress_bar))
+            print(str(progress_bar))
+            paragraph_id = item["paragraph_id"]
+            if (paragraph_id, model_name) in evaluated:
+                log.debug(f"Skipping {paragraph_id}, as it has been processed before.")
+                progress_bar.update()
+                continue
+
+            if first:
+                progress_bar.update(diff)
+                first = False
+
+            entry = {
+                "paragraph_id": paragraph_id,
+                "model_name": model_name,
+            }
+
+            entry["answer"] = model(item["text"])
+            stats.append(entry)
+            save_yaml(stats, stats_path)
 
 @app.command()
 def train(
@@ -66,12 +90,19 @@ def train(
     if settings is None:
         settings = "settings.yml"
     if stats is None:
-        stats: str = "stats.yml"
+        stats_path = "stats.yml"
+    else:
+        stats_path = stats
     if device is None:
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+    log.info("Loading settings and stats")
+
     settings = load_yaml(settings)
-    stats = load_yaml(stats)
+    stats = load_yaml(stats_path)
+    # run evaluation of models
+
+    evaluated = frozenset(map(lambda s: (s["paragraph_id"], s["model_name"]), stats))
 
     # model training run
     raise NotImplementedError

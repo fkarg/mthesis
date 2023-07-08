@@ -16,6 +16,8 @@ lightning = "^2.0.4"
 torch = "^2.0.1"
 lightning-bolts = "^0.6.0.post1"
 lightning-transformers = "^0.2.5"
+bitsandbytes = "^0.39.1"
+accelerate = "^0.20.3"
 
 
 [tool.poetry.group.dev.dependencies]

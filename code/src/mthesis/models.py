@@ -34,8 +34,9 @@ class JsonformerModel(pl.LightningModule):
         if load_params and model_path is not None:
             self.model = AutoModelForCausalLM.from_pretrained(
                 model_path,
-                # torch_dtype=torch.bfloat16,
-                trust_remote_code=True,
+                torch_dtype=torch.bfloat16,
+                load_in_8bit=True,
+                # trust_remote_code=True,
                 device_map="auto",
             )
             self.tokenizer = AutoTokenizer.from_pretrained(
