@@ -1,4 +1,5 @@
 import yaml
+import os
 import sys
 import logging
 
@@ -55,9 +56,8 @@ def read_paragraph(paragraph_id: str, dataset_path: str = None):
     """
     # TODO: two hardcoded locations: synthesis_paragraphs and content.txt
     if not dataset_path:
-        dataset_path = "~/mof_synthesis"
-    paragraphs_path = os.path.join(dataset_path, "synthesis_paragraphs")
-    paragraph_file = os.path.join(self.paragraphs_path, paragraph_id, "content.txt")
+        dataset_path = "~/mof_synthesis/synthesis_paragraphs"
+    paragraph_file = os.path.join(dataset_path, paragraph_id, "content.txt")
     paragraph_text = ""
     with open(paragraph_file, encoding="utf8") as f:
         paragraph_text = " ".join(f.readlines())

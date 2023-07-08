@@ -38,7 +38,11 @@ class JsonformerModel(pl.LightningModule):
                 trust_remote_code=True,
                 device_map="auto",
             )
-            self.tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=True)
+            self.tokenizer = AutoTokenizer.from_pretrained(
+                model_path,
+                use_fast=True,
+                return_tensors="pt",
+            )
         else:
             self.model = None
             self.tokenizer = None

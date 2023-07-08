@@ -52,7 +52,8 @@ class MOFDataset(torch.utils.data.Dataset):
     def __init__(self, dataset_path: str = None):
         # TODO: hardcoded location: `dataset_path`
         if not dataset_path:
-            dataset_path = "~/mof_synthesis"
+            dataset_path = "~/mof_synthesis/synthesis_paragraphs"
+        log.info(f"Loading MOFDataset from '{dataset_path}'")
         self.paragraph_list = os.listdir(dataset_path)
         self.paragraphs = dict()
         for p_id in self.paragraph_list:
@@ -62,9 +63,11 @@ class MOFDataset(torch.utils.data.Dataset):
                 log.warning(e)
                 continue
         self.paragraphs = OrderedDict(self.paragraphs)
+        self.paragraph_list = list(self.paragraphs.items())
 
     def __len__(self):
         # return length of full dataset
+        log.info(f"len: {len(self.paragraphs)}")
         return len(self.paragraphs)
 
     def __getitem__(self, idx: int | str) -> dict:
@@ -73,11 +76,14 @@ class MOFDataset(torch.utils.data.Dataset):
         try:
             paragraph = self.paragraphs[idx]
         except KeyError:
-            paragraph = self.paragraphs.values()[idx]
+            idx, paragraph = self.paragraph_list[idx]
 
         # since Jsonformer is doing tokenization later on,
         # we're not doing that yet
-        return {"text": paragraph}
+        return {
+            "paragraph_id": idx,
+            "text": paragraph,
+        }
 
 
 class MOFDatasetWithLabels(MOFDataset):
