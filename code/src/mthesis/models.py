@@ -1,4 +1,5 @@
 import lightning.pytorch as pl
+import torch.nn.functional as F
 import torch
 from jsonformer import Jsonformer
 from transformers import (
@@ -6,7 +7,7 @@ from transformers import (
     AutoModelForCausalLM,
     AutoTokenizer,
 )
-
+from torch.optim import AdamW
 
 class JsonformerHFModel(PreTrainedModel):
     def __init__(self, **kwargs):
@@ -34,9 +35,9 @@ class JsonformerModel(pl.LightningModule):
         if load_params and model_path is not None:
             self.model = AutoModelForCausalLM.from_pretrained(
                 model_path,
-                torch_dtype=torch.bfloat16,
+                torch_dtype=torch.float16,
                 load_in_8bit=True,
-                # trust_remote_code=True,
+                trust_remote_code=True,
                 device_map="auto",
             )
             self.tokenizer = AutoTokenizer.from_pretrained(
@@ -68,5 +69,19 @@ class JsonformerModel(pl.LightningModule):
         # https://github.com/1rgs/jsonformer/blob/main/jsonformer/main.py#L240C13-L240C13
         return Jsonformer(self.model, self.tokenizer, self.schema, text)()
 
-    def training_step(self):
-        raise NotImplementedError
+    def forward2(self, text: str):
+        input_tokens = self.tokenizer.encode(text, return_tensors="pt").to(self.model.device)
+        return self.model(text)
+
+    def training_step(self, batch, batch_idx):
+        x, l = batch["input"], batch["label"]
+        y_hat = self.model(x)
+        loss = F.cross_entropy(y_hat, y)
+        return loss
+
+	def configure_optimizers(self):
+        optimizer = AdamW(
+            self.trainer.model.parameters,
+            lr=5e-4,
+        )
+        return optimizer

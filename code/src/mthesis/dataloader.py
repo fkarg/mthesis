@@ -1,12 +1,17 @@
 import lightning.pytorch as pl
 from torch.utils.data import random_split, DataLoader
 from collections import OrderedDict
+import pandas as pd
+import numpy as np
 import torch
+from tqdm import tqdm
 
 import os
+import csv
 import logging
 
 from mthesis.utils import read_paragraph
+from mthesis.conversion import cid2syns
 
 log = logging.getLogger(__name__)
 
@@ -49,10 +54,7 @@ class ConceptDataset(torch.utils.data.Dataset):
 class MOFDataset(torch.utils.data.Dataset):
     """Dataset of MOF synthesis paragraphs, without labels."""
 
-    def __init__(self, dataset_path: str = None):
-        # TODO: hardcoded location: `dataset_path`
-        if not dataset_path:
-            dataset_path = "~/mof_synthesis/synthesis_paragraphs"
+    def __init__(self, dataset_path: str):
         log.info(f"Loading MOFDataset from '{dataset_path}'")
         self.paragraph_list = os.listdir(dataset_path)
         self.paragraphs = dict()
@@ -62,6 +64,7 @@ class MOFDataset(torch.utils.data.Dataset):
             except Exception as e:
                 log.warning(e)
                 continue
+
         self.paragraphs = OrderedDict(self.paragraphs)
         self.paragraph_list = list(self.paragraphs.items())
 
@@ -86,64 +89,150 @@ class MOFDataset(torch.utils.data.Dataset):
         }
 
 
-class MOFDatasetWithLabels(MOFDataset):
-    """Dataset of MOF synthesis paragraphs, with labels for ."""
+class LabeledMOFDataset(MOFDataset):
+    """Dataset of MOF synthesis paragraphs, with labels."""
 
-    def __init__(self, dataset_path: str = None, label_cols: dict = None):
+    def __init__(self, dataset_path: str, label_cols: dict, from_csv: str = None):
+        """
+        dataset_path: path from which to load synthesis paragraphs
+        label_cols: mapping from parameters to columns in label files (where the label for the parameter can be read from).
+        from_csv: load dataset from csv filepath instead.
+        """
+        self.labels = dict()
+        self.label_cols = label_cols
+        if from_csv:
+            try:
+                self.paragraphs = dict()
+                self.paragraph_list = list()
+                self._from_csv(from_csv)
+                return
+            except Exception:
+                log.error(f"Failed loading dataset from CSV '{from_csv}'. Will reconstruct instead.")
+
         # load paragraphs first
-        super().__init__(tokenizer, dataset_path)
-
-        if not labels_for:
-            labels_for = {
-                "additive": "additive1",
-                "solvent": "solvent1",
-                "temperature": "temperature_Celsius",
-                "time": "time_h",
-            }
+        super().__init__(dataset_path)
 
         # now load label data
-        labels_path_A = os.path.join(self.dataset_path, "results", "SynMOF_A_out.csv")
-        labels_path_M = os.path.join(self.dataset_path, "results", "SynMOF_M_out.csv")
+        labels_path_A = os.path.join(
+            dataset_path, "../results", "SynMOF_A_out.csv"
+        )
+        labels_path_M = os.path.join(
+            dataset_path, "../results", "SynMOF_M_out.csv"
+        )
 
         labels_A = pd.read_csv(labels_path_A, sep=";")
         labels_M = pd.read_csv(labels_path_M, sep=";")
 
-        for paragraph_id in self.paragraph_list:
+        progress_bar = tqdm(self.paragraphs.keys(), file=open(os.devnull, "w"))
+        progress_bar.set_postfix_str("Configuring Dataset Labels")
+
+        # count = 5
+
+        for paragraph_id in progress_bar:
+            # if count <= 0:
+            #     self.paragraphs = { k: self.paragraphs[k] for k in self.labels.keys() }
+            #     break
+            # count -= 1
+            print(str(progress_bar))
             self.labels[paragraph_id] = dict()
-            for parameter, config in self.extract_config.items():
+            for parameter, column in label_cols.items():
+                answer_a, answer_m = None, None
                 try:
-                    col_name = config["dataset_cols"][0]
                     answer_a = labels_A.loc[labels_A["filename"] == paragraph_id][
-                        col_name
+                        column
                     ].values[0]
-                    answer_a = int(answer_a) if not np.isnan(answer_a) else None
                     answer_m = (
                         None
                         if paragraph_id not in labels_M["filename"].values
                         else labels_M.loc[labels_M["filename"] == paragraph_id][
-                            col_name
+                            column
                         ].values[0]
                     )
-                    if answer_m is not None:
-                        answer_m = int(answer_m) if not np.isnan(answer_m) else None
-                    self.labels[paragraph_id][parameter] = {
-                        "actual_a": answer_a,
-                        "actual_m": answer_m,
-                    }
                 except KeyError as e:
                     log.critical(
-                        "KeyError: Invalid SETTINGSFILE. Requested `dataset_cols` don't exist. Failed when loading actuals."
+                        f"KeyError: Invalid SETTINGSFILE. Requested column `dataset_cols` '{column}' for parameter {parameter} does not exist in file. Failed when loading labels."
                     )
                     sys.exit(1)
+                answer_a = None if np.isnan(answer_a) else int(answer_a)
+                if answer_m is not None:
+                    answer_m = None if np.isnan(answer_m) else int(answer_m)
+
+                if answer_a and answer_m and answer_a != answer_m:
+                    log.warning(
+                        f"Dataset: answer cids differ. a: {answer_a} m: {answer_m}. Continuing with answer [a]."
+                    )
+                if answer_a is None:
+                    self.labels[paragraph_id][parameter] = None
+                    continue
+
+                if parameter in ["additive", "solvent"]:
+                    synonyms = cid2syns(answer_a)
+
+                    for syn in synonyms:
+                        if syn in self.paragraphs[paragraph_id]:
+                            self.labels[paragraph_id][parameter] = syn
+                            break
+
+                    self.labels[paragraph_id][parameter] = synonyms[0]
+                elif parameter in ["time", "temperature"]:
+                    self.labels[paragraph_id][parameter] = answer_a
 
         # TODO: convert additive, solvent to cid
         # TODO: convert cid (from label) to string
         # resulting output from Jsonformer:
         # {'additive': 'water', 'solvent': 'water', 'temperature': 90.0, 'temperature_unit': 'C', 'time': 40.0, 'time_unit': 'h'}
 
+    def to_csv(self, filename):
+        """
+        Header:
+        paragraph_id, <parameters>, context
+        idx, <labels>, <context>
+        """
+        keys = ["paragraph_id"] + list(self.label_cols.keys()) + ["context"]
+        with open(filename, "w", newline='') as f:
+            writer = csv.DictWriter(f, fieldnames=keys, delimiter=';')
+
+            # write header
+            writer.writeheader()
+
+            for idx in self.paragraphs.keys():
+                writer.writerow(
+                    { "paragraph_id": idx,
+                      "context": self.paragraphs[idx]
+                    } | { p: v for p, v in self.labels[idx].items() }
+                )
+
+    def _from_csv(self, from_csv: str):
+        # need to reconstruct:
+        # - self.paragraphs: dict[paragraph_id -> context]
+        # - self.paragraph_list: list[(paragraph_id, context)]
+        # - self.labels: dict[paragraph_id, parameter -> str | float | None]
+        with open(from_csv, newline='') as f:
+            reader = csv.DictReader(f, delimiter=';')
+            for row in reader:
+                idx = row["paragraph_id"]
+                self.paragraphs[idx] = row["context"]
+                self.labels[idx] = { k: row[k] for k in self.label_cols.keys()}
+
     def __getitem__(self, idx: int | str) -> dict:
-        # return item at position idx
+        # return item at position idx.
         raise NotImplementedError
+        paragraph = ""
+        label = ""
+        try:
+            paragraph = self.paragraphs[idx]
+        except KeyError:
+            idx, paragraph = self.paragraph_list[idx]
+
+        label = self.labels[idx]
+
+        # since Jsonformer is doing tokenization later on,
+        # we're not doing that yet
+        return {
+            "paragraph_id": idx,
+            "text": paragraph,
+            "label": label,
+        }
 
 
 class MOFDataModule(pl.LightningDataModule):
