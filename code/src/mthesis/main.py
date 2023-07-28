@@ -7,9 +7,12 @@ from tqdm import tqdm
 from transformers import (
     AutoConfig,
     AutoModelForCausalLM,
+    AutoModelForQuestionAnswering,
+    AutoTokenizer,
     TrainingArguments,
     Trainer,
     DataCollatorForLanguageModeling,
+    pipeline,
 )
 from pathlib import Path
 
@@ -79,7 +82,7 @@ def evaluate(
                 progress_bar.update(diff)
                 first = False
                 log.info(f"Loading Model [{model_name}]")
-                model = JsonformerModel(model_path)
+                model = JsonformerModel(**model_settings)
                 model.eval()  # set model to eval mode
 
             count += 1
@@ -96,6 +99,53 @@ def evaluate(
                 save_yaml(stats, stats_path)
                 count = 0
         save_yaml(stats, stats_path)
+
+
+@app.command()
+def test(
+    settings: str = None,
+    stats: str = None,
+    device: str = None,
+):
+    """ Test information.
+    """
+    if settings is None:
+        settings = "settings.yml"
+    if stats is None:
+        stats_path = "stats.yml"
+    else:
+        stats_path = stats
+    if device is None:
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    log.info("Loading settings and stats")
+
+    settings = load_yaml(settings)
+    stats = load_yaml(stats_path)
+
+    for model_settings in settings["models"]:
+        model_name = model_settings["model_name"]
+        model_path = model_settings["model_path"]
+        log.info(f"Loading Tokenizer [{model_name}]")
+        tokenizer = AutoTokenizer.from_pretrained(model_path)
+        log.info(f"Loading Model [{model_name}] as QA")
+        try:
+            model = AutoModelForCausalLM.from_pretrained(
+                model_path,
+                trust_remote_code=True,
+                device_map="auto",
+            )
+            log.info("Succeeded loading. Attempting forward")
+
+            question = "How many programming languages does BLOOM support?"
+            context = "BLOOM has 176 billion parameters and can generate text in 46 languages natural languages and 13 programming languages."
+            pipe = pipeline("question-answering", model=model, tokenizer=tokenizer)
+            result = pipe(question=question, context=context)
+            log.info(f"QA Result: {result}")
+
+        except Exception as e:
+            log.error(f"{e} during loading of {model_name}.")
+
 
 
 @app.command()
@@ -129,19 +179,24 @@ def train(
         )
         sys.exit(1)
 
-    dataset = LabeledMOFDataset(settings["dataset_path"], label_cols, from_csv="mof_dataset_labeled.csv")
-
-    # dataset.to_csv("mof_dataset_labeled.csv")
-
-    generator = torch.Generator().manual_seed(42)
-    train_ds, eval_ds = torch.utils.data.random_split(dataset, [0.05, 0.95], generator=generator)
-
     # TODO: FOR loop
     model_settings = settings["models"][0]
 
     model_path = model_settings["model_path"]
     model_name = model_settings["model_name"]
 
+    log.info(f"Loading Tokenizer [{model_name}]")
+    tokenizer = AutoTokenizer.from_pretrained(model_path)
+
+    log.info("Loading Dataset")
+    dataset = LabeledMOFDatasetTokens(tokenizer, True, settings["dataset_path"], label_cols, from_csv="mof_dataset_labeled.csv")
+
+    # dataset.to_csv("mof_dataset_labeled.csv")
+
+    generator = torch.Generator().manual_seed(42)
+    train_ds, eval_ds = torch.utils.data.random_split(dataset, [0.05, 0.95], generator=generator)
+
+    log.info(f"Loading Model [{model_name}]")
     model = AutoModelForCausalLM.from_pretrained(
         model_path,
         trust_remote_code=True,
@@ -153,7 +208,13 @@ def train(
     Path(OUTPUT_MODEL_PATH).mkdir(parents=True, exist_ok=True)
 
 
-    data_collator = DataCollatorForLanguageModeling(model.tokenizer, mlm=False)
+    # DataCollator: https://huggingface.co/docs/transformers/main/en/main_classes/data_collator#transformers.DataCollatorForLanguageModeling
+    # mlm (bool, optional, defaults to True) — Whether or not to use masked
+    # language modeling. If set to False, the labels are the same as the inputs
+    # with the padding tokens ignored (by setting them to -100). Otherwise, the
+    # labels are -100 for non-masked tokens and the value to predict for the
+    # masked token.
+    data_collator = DataCollatorForLanguageModeling(tokenizer)  # mlm=False
 
     ## Arguments
     training_args = TrainingArguments(
@@ -171,7 +232,7 @@ def train(
         evaluation_strategy="epoch",  # alternatively: "no",
         fp16=True,
         save_strategy="steps",
-        save_steps=400,
+        save_steps=50,
     )
 
     ## Training
@@ -182,7 +243,6 @@ def train(
         eval_dataset=eval_ds,
         data_collator=data_collator,
     )
-
 
     # automatically restores model, epoch, step, LR schedulers, etc from checkpoint
     # model.config.use_cache = False

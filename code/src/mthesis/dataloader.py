@@ -177,8 +177,6 @@ class LabeledMOFDataset(MOFDataset):
                 elif parameter in ["time", "temperature"]:
                     self.labels[paragraph_id][parameter] = answer_a
 
-        # TODO: convert additive, solvent to cid
-        # TODO: convert cid (from label) to string
         # resulting output from Jsonformer:
         # {'additive': 'water', 'solvent': 'water', 'temperature': 90.0, 'temperature_unit': 'C', 'time': 40.0, 'time_unit': 'h'}
 
@@ -213,6 +211,7 @@ class LabeledMOFDataset(MOFDataset):
                 idx = row["paragraph_id"]
                 self.paragraphs[idx] = row["context"]
                 self.labels[idx] = { k: row[k] for k in self.label_cols.keys()}
+        self.paragraph_list = list(self.paragraphs.items())
 
     def __getitem__(self, idx: int | str) -> dict:
         # return item at position idx.
@@ -225,6 +224,7 @@ class LabeledMOFDataset(MOFDataset):
             idx, paragraph = self.paragraph_list[idx]
 
         label = self.labels[idx]
+        # {'additive': 'H2O', 'solvent': 'H2O', 'temperature': 150.0, 'temperature_unit': 'C', 'time': 96.0, 'time_unit': 'h'}
 
         # since Jsonformer is doing tokenization later on,
         # we're not doing that yet
@@ -234,6 +234,19 @@ class LabeledMOFDataset(MOFDataset):
             "label": label,
         }
 
+# "instruction": "Detect the sentiment of the tweet.",
+# "input": row_dict["tweet"],
+# "output": sentiment_score_to_name(row_dict["sentiment"])
+
+
+class LabeledMOFDatasetTokens(LabeledMOFDataset):
+    def __init__(self, tokenizer, load_untokenized: bool = False, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if kwargs["from_csv"] and not load_untokenized:
+            return
+        self.paragraphs = { k: tokenizer.encode(v) for k, v in self.paragraphs.items() }
+        self.paragraph_list = list(self.paragraphs.items())
+        self.labels = { k: tokenizer.encode(str(v)) for k, v in self.labels.items() }
 
 class MOFDataModule(pl.LightningDataModule):
     def __init__(self):

@@ -20,16 +20,18 @@ class JsonformerModel(pl.LightningModule):
     PARAMS:
         model_path [str]: path to both model and tokenizer in pytorch / huggingface format.
         load_params [bool]: if the model should load parameters. if they will be restored from a checkpoint anyways.
+
+    Use `JsonformerModel.load_from_checkpoint(PATH)`
+    to load from a checkpoint.
     """
 
     def __init__(
         self,
         model_path: str | None = None,
+        model_name: str | None = None,
+        model_type: str | None = None,
         load_params: bool = True,
-        checkpoint_path: str = None,
     ):
-        if checkpoint_path:
-            return JsonformerModel.load_from_checkpoint(checkpoint_path)
 
         super().__init__()
         if load_params and model_path is not None:
@@ -74,12 +76,13 @@ class JsonformerModel(pl.LightningModule):
         return self.model(text)
 
     def training_step(self, batch, batch_idx):
+        # TODO: FIXME: calculate loss properly, and only for labels
         x, l = batch["input"], batch["label"]
         y_hat = self.model(x)
         loss = F.cross_entropy(y_hat, y)
         return loss
 
-	def configure_optimizers(self):
+    def configure_optimizers(self):
         optimizer = AdamW(
             self.trainer.model.parameters,
             lr=5e-4,
