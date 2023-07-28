@@ -18,7 +18,7 @@ from pathlib import Path
 
 from mthesis.models import JsonformerModel
 from mthesis.utils import load_yaml, save_yaml
-from mthesis.dataloader import MOFDataset, LabeledMOFDataset
+from mthesis.dataloader import MOFDataset, LabeledMOFDatasetTokens
 
 logging.basicConfig(
     format="%(asctime)s %(levelname)-8s %(message)s",
