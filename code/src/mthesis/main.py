@@ -6,6 +6,7 @@ import logging
 from tqdm import tqdm
 from transformers import (
     AutoConfig,
+    AutoTokenizer,
     AutoModelForCausalLM,
     AutoModelForQuestionAnswering,
     AutoTokenizer,
@@ -18,7 +19,7 @@ from pathlib import Path
 
 from mthesis.models import JsonformerModel
 from mthesis.utils import load_yaml, save_yaml
-from mthesis.dataloader import MOFDataset, LabeledMOFDatasetTokens
+from mthesis.dataloader import MOFDataset, LabeledMOFDataset, InstructionMOFDataset, TokenizeDataSet, LabeledMOFDatasetTokens
 
 logging.basicConfig(
     format="%(asctime)s %(levelname)-8s %(message)s",
@@ -126,22 +127,65 @@ def test(
     for model_settings in settings["models"]:
         model_name = model_settings["model_name"]
         model_path = model_settings["model_path"]
-        log.info(f"Loading Tokenizer [{model_name}]")
-        tokenizer = AutoTokenizer.from_pretrained(model_path)
-        log.info(f"Loading Model [{model_name}] as QA")
         try:
+            log.info(f"Loading Tokenizer [{model_name}]")
+            tokenizer = AutoTokenizer.from_pretrained(model_path)
+            log.info(f"Loading Model [{model_name}] for Training")
             model = AutoModelForCausalLM.from_pretrained(
                 model_path,
                 trust_remote_code=True,
                 device_map="auto",
             )
-            log.info("Succeeded loading. Attempting forward")
+            log.info("Finished loading. Begin Training for one Sample")
+            OUTPUT_MODEL_PATH = f"/home/kit/iti/lz5921/checkpoints/{model_name}/"
+            Path(OUTPUT_MODEL_PATH).mkdir(parents=True, exist_ok=True)
 
-            question = "How many programming languages does BLOOM support?"
-            context = "BLOOM has 176 billion parameters and can generate text in 46 languages natural languages and 13 programming languages."
-            pipe = pipeline("question-answering", model=model, tokenizer=tokenizer)
-            result = pipe(question=question, context=context)
-            log.info(f"QA Result: {result}")
+            # DataCollator:
+            # https://huggingface.co/docs/transformers/main/en/main_classes/data_collator#transformers.DataCollatorForLanguageModeling
+            # mlm (bool, optional, defaults to True) — Whether or not to use
+            # masked language modeling. If set to False, the labels are the
+            # same as the inputs with the padding tokens ignored (by setting
+                    # them to -100). Otherwise, the labels are -100 for non-masked
+            # tokens and the value to predict for the masked token.
+            data_collator = DataCollatorForLanguageModeling(tokenizer)  # mlm=False
+
+            dataset = TokenizeDataSet(SingleSampleDataset(), tokenizer)
+
+            ## Arguments
+            training_args = TrainingArguments(
+                output_dir=OUTPUT_MODEL_PATH,
+                overwrite_output_dir=True,
+                num_train_epochs=1,
+                weight_decay=0.005,
+                per_device_train_batch_size=1,
+                gradient_checkpointing=True,
+                logging_dir="./logs",
+                logging_steps=1,
+                logging_strategy="epoch",
+                optim="adamw_torch",
+                learning_rate=5e-4,
+                evaluation_strategy="epoch",  # alternatively: "no",
+                # fp16=True,
+                save_strategy="steps",
+                save_steps=50,
+            )
+
+            # torch.cuda.set_device(0) # -1 for cpu, 0, 1, ... for gpu
+
+            ## Training
+            trainer = Trainer(
+                model=model,
+                args=training_args,
+                train_dataset=dataset,
+                eval_dataset=dataset,
+                data_collator=data_collator,
+            )
+
+            # automatically restores model, epoch, step, LR schedulers, etc from checkpoint
+            # model.config.use_cache = False
+            model.train()  # put model in training mode
+            trainer.train()
+            model.save_pretrained(OUTPUT_MODEL_PATH)
 
         except Exception as e:
             log.error(f"{e} during loading of {model_name}.")
@@ -186,10 +230,14 @@ def train(
     model_name = model_settings["model_name"]
 
     log.info(f"Loading Tokenizer [{model_name}]")
-    tokenizer = AutoTokenizer.from_pretrained(model_path)
+    tokenizer = AutoTokenizer.from_pretrained(model_path, return_tensors="pt")
+    tokenizer.pad_token = tokenizer.eos_token
 
-    log.info("Loading Dataset")
-    dataset = LabeledMOFDatasetTokens(tokenizer, True, settings["dataset_path"], label_cols, from_csv="mof_dataset_labeled.csv")
+    log.info(f"Loading Dataset '{settings['dataset_path']}'")
+    # dataset = InstructionMOFDataset(settings["dataset_path"], label_cols, from_csv="mof_dataset_labeled.csv")
+    # dataset = LabeledMOFDatasetTokens(tokenizer, True, settings["dataset_path"], label_cols, from_csv="mof_dataset_labeled.csv")
+    # dataset = TokenizeDataSet(InstructionMOFDataset(settings["dataset_path"], label_cols, from_csv="mof_dataset_labeled.csv"), tokenizer)
+    dataset = LabeledMOFDatasetTokens(tokenizer, dataset_path=settings["dataset_path"], label_cols=label_cols, from_csv="mof_dataset_labeled.csv")
 
     # dataset.to_csv("mof_dataset_labeled.csv")
 
@@ -201,10 +249,11 @@ def train(
         model_path,
         trust_remote_code=True,
         device_map="auto",
+        torch_dtype=torch.float16,
     )
     # model = JsonformerHFModel(model_path)
 
-    OUTPUT_MODEL_PATH = f"/home/kit/iti/lz5921/checkpoints/{model_name}/"
+    OUTPUT_MODEL_PATH = f"/home/kit/iti/lz5921/llms/checkpoints/{model_name}/"
     Path(OUTPUT_MODEL_PATH).mkdir(parents=True, exist_ok=True)
 
 
@@ -214,7 +263,7 @@ def train(
     # with the padding tokens ignored (by setting them to -100). Otherwise, the
     # labels are -100 for non-masked tokens and the value to predict for the
     # masked token.
-    data_collator = DataCollatorForLanguageModeling(tokenizer)  # mlm=False
+    data_collator = DataCollatorForLanguageModeling(tokenizer, mlm=False)
 
     ## Arguments
     training_args = TrainingArguments(
@@ -228,12 +277,14 @@ def train(
         logging_steps=1,
         logging_strategy="epoch",
         optim="adamw_torch",
-        learning_rate=1e-4,
+        learning_rate=5e-4,
         evaluation_strategy="epoch",  # alternatively: "no",
-        fp16=True,
+        # fp16=True,
         save_strategy="steps",
         save_steps=50,
     )
+
+    # torch.cuda.set_device(0) # -1 for cpu, 0, 1, ... for gpu
 
     ## Training
     trainer = Trainer(
@@ -244,10 +295,13 @@ def train(
         data_collator=data_collator,
     )
 
+    log.info("Set up training. Starting ...")
+
     # automatically restores model, epoch, step, LR schedulers, etc from checkpoint
-    # model.config.use_cache = False
+    model.config.use_cache = False
     model.train()  # put model in training mode
     trainer.train()
+    log.info("Concluded training. Saving ...")
     model.save_pretrained(OUTPUT_MODEL_PATH)
 
 

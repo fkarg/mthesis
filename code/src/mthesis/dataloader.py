@@ -8,6 +8,7 @@ from tqdm import tqdm
 
 import os
 import csv
+import json
 import logging
 
 from mthesis.utils import read_paragraph
@@ -70,7 +71,6 @@ class MOFDataset(torch.utils.data.Dataset):
 
     def __len__(self):
         # return length of full dataset
-        log.info(f"len: {len(self.paragraphs)}")
         return len(self.paragraphs)
 
     def __getitem__(self, idx: int | str) -> dict:
@@ -176,6 +176,8 @@ class LabeledMOFDataset(MOFDataset):
                     self.labels[paragraph_id][parameter] = synonyms[0]
                 elif parameter in ["time", "temperature"]:
                     self.labels[paragraph_id][parameter] = answer_a
+            self.labels[paragraph_id]["temperature_unit"] = "C"
+            self.labels[paragraph_id]["time_unit"] = "h"
 
         # resulting output from Jsonformer:
         # {'additive': 'water', 'solvent': 'water', 'temperature': 90.0, 'temperature_unit': 'C', 'time': 40.0, 'time_unit': 'h'}
@@ -201,6 +203,7 @@ class LabeledMOFDataset(MOFDataset):
                 )
 
     def _from_csv(self, from_csv: str):
+        log.info(f"[dataset]: Loading LabeledMofDataset from csv '{from_csv}'")
         # need to reconstruct:
         # - self.paragraphs: dict[paragraph_id -> context]
         # - self.paragraph_list: list[(paragraph_id, context)]
@@ -210,12 +213,14 @@ class LabeledMOFDataset(MOFDataset):
             for row in reader:
                 idx = row["paragraph_id"]
                 self.paragraphs[idx] = row["context"]
-                self.labels[idx] = { k: row[k] for k in self.label_cols.keys()}
+                self.labels[idx] = { k: row[k] for k in self.label_cols.keys() }
+                self.labels[idx]["temperature_unit"] = "C"
+                self.labels[idx]["time_unit"] = "h"
         self.paragraph_list = list(self.paragraphs.items())
+        log.info(f"[dataset]: Finished loading. #Items: {len(self)}")
 
     def __getitem__(self, idx: int | str) -> dict:
         # return item at position idx.
-        raise NotImplementedError
         paragraph = ""
         label = ""
         try:
@@ -234,19 +239,88 @@ class LabeledMOFDataset(MOFDataset):
             "label": label,
         }
 
-# "instruction": "Detect the sentiment of the tweet.",
-# "input": row_dict["tweet"],
-# "output": sentiment_score_to_name(row_dict["sentiment"])
-
 
 class LabeledMOFDatasetTokens(LabeledMOFDataset):
     def __init__(self, tokenizer, load_untokenized: bool = False, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if kwargs["from_csv"] and not load_untokenized:
+        if kwargs["from_csv"] and load_untokenized:
             return
-        self.paragraphs = { k: tokenizer.encode(v) for k, v in self.paragraphs.items() }
-        self.paragraph_list = list(self.paragraphs.items())
-        self.labels = { k: tokenizer.encode(str(v)) for k, v in self.labels.items() }
+
+        self.tokenized = {k: tokenizer.encode(self.paragraphs[k] + "\n" + str(self.labels[k])) for k in self.paragraphs.keys()}
+
+    def __getitem__(self, idx: int | str) -> dict:
+        try:
+            return self.tokenized[idx]
+        except KeyError:
+            idx, _ = self.paragraph_list[idx]
+            return self.tokenized[idx]
+
+class InstructionMOFDataset(LabeledMOFDataset):
+    """ Basically, a LabeledMOFDataset, but we're returning instructions here.
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def __getitem__(self, idx: int | str) -> dict:
+        paragraph = ""
+        label = ""
+        try:
+            paragraph = self.paragraphs[idx]
+        except KeyError:
+            idx, paragraph = self.paragraph_list[idx]
+
+        label = self.labels[idx]
+
+        schema = json.dumps({
+            "type": "object",
+            "properties": {
+                "additive": {"type": "string"},
+                "solvent": {"type": "string"},
+                "temperature": {"type": "number"},
+                "temperature_unit": {"type": "string"},
+                "time": {"type": "number"},
+                "time_unit": {"type": "string"},
+            },
+        })
+
+        instruction = f"Output result in the following JSON schema format:\n{schema}"
+        # "instruction": "Detect the sentiment of the tweet.",
+        # "input": row_dict["tweet"],
+        # "output": sentiment_score_to_name(row_dict["sentiment"])
+
+        # use wrapper TokenizeDataSet
+        return {
+            "paragraph_id": idx,
+            "instruction": instruction,
+            "input": paragraph,
+            "output": label,
+        }
+
+
+class TokenizeDataSet(torch.utils.data.Dataset):
+    """ Iterate through full dataset ahead of time for tokenization.
+    """
+    def __init__(self, dataset: torch.utils.data.Dataset, tokenizer):
+        self.dataset = dataset
+        self.tokenizer = tokenizer
+
+    def __len__(self):
+        return len(self.dataset)
+
+    def __getitem__(self, idx: int | str) -> dict:
+        item = self.dataset[idx]
+        tok = lambda t: self.tokenizer(
+                t,
+                add_special_tokens=True,
+                return_tensors="pt",
+                # padding=True,
+                # truncation=True,
+                # max_length=tokenizer_max_length,
+            )
+        return tok(str(item))
+
+class SingleSampleDataset(torch.utils.data.Dataset):
+    pass
 
 class MOFDataModule(pl.LightningDataModule):
     def __init__(self):

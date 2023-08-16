@@ -18,6 +18,7 @@ models:
   model_type: text-generation
 - model_name: Falcon 7B
   model_path: /pfs/work8/workspace/ffuc/scratch/lz5921-llms/falcon-7b/
+  model_type: text-generation
 extract_config:
   additive:
     type: string

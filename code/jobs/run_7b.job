@@ -2,7 +2,8 @@
 #SBATCH --job-name=run_7b
 #SBATCH --output=results/run_7b_%j.out
 #SBATCH --error=results/run_7b_%j.err
-#SBATCH --partition=dev_gpu_4_a100
+##SBATCH --partition=dev_gpu_4_a100
+#SBATCH --partition=normal
 #SBATCH --ntasks-per-node=1
 #SBATCH --gres=gpu:1
 #SBATCH --time=30:00
@@ -13,7 +14,6 @@ cd $SLURM_SUBMIT_DIR
 
 source ~/.bashrc
 module load devel/cuda
-conda activate eval
 
 echo "run_7b"
 echo "GPU:1"
@@ -23,4 +23,5 @@ nvidia-smi
 
 cd ~/llms/mthesis/code
 
-poetry run main test --stats stats_7b.yml --settings settings/settings_7b.yml
+# poetry run main train --stats stats_7b.yml --settings settings/settings_7b.yml
+poetry run main train --settings settings/settings_7b.yml
