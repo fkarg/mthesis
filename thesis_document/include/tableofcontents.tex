@@ -1,0 +1,14 @@
+\pagenumbering{Roman}
+\renewcommand{\cftchapfont}{%
+    \bfseries
+}
+
+\tableofcontents                    % listoftables on new pages
+\begingroup \let\clearpage\relax    % in order to avoid listoffigures and
+%\listoffigures
+%\listoftables
+\endgroup
+\cleardoublepage
+
+% Contents
+\MainMatter

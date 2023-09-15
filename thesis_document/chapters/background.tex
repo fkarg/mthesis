@@ -1,40 +1,59 @@
-\chapter{Background}
-
-\section{Related work}
-
+\chapter{Background}\label{chap:background}
+\todo{write background}
+Core meta points:
 \begin{itemize}
-    \item Attention before transformers \url{https://jalammar.github.io/visualizing-neural-machine-translation-mechanics-of-seq2seq-models-with-attention/}
+    \item up to five pages background
+    \item go from very general to very related to topic, end with questions to resolve
 \end{itemize}
-\todo{write section}
 
-\paragraph{Rule-Based Entity Recognition}
+\section{General Work, Related}\label{sec:general}
+\todo{think about it if I actually want to include this section}
+ml models increasingly used in screening steps for materials discovery and property prediction
+% “Machine learning in materials discovery: Confirmed predictions and their underlying approaches"
+% “Recent advances and applications of deep learning methods in materials science"
+
+\section{Related Work}\label{sec:related}
+% \todo{write section}
+\todo{related work is only entity recognition stuff}
+
+\subsection{Rule-Based Entity Recognition}\label{sub:ER}
 There have long been rule-based approaches for the recognition of individual
 entities (e.g. Temperature). ChemTagger \cite{hawizy_chemicaltagger_2011}
 and others \cite{beard_comparative_2019, huang_database_2020}
 clearly demonstrated that simple rule-based systems can sometimes extract much
-of the requested information. While they often achieve high precision for
-simple tasks, they fail in answering more complex queries, such as the relation
-between two entities.
+of the requested information. They can often
+achieve high precision for simple, well-defined
+tasks, but tend to be highly specialized and
+are hard to adapt to differing circumstances.
 
-\paragraph{Language Models}
-All modern language models are based on what Google introduced as the
-transformer architecture \cite{vaswani_attention_2017}, which outperformed
-other available architectures with a fraction of the training cost. Based on
-this, Bidirectional Encoder Representation from Transformers (BERT)
-\cite{devlin_bert_2018} substantially improved the state-of-the-art for all
-natural language processing benchmarks. BERT can be easily fine-tuned for named
-entity recognition in materials science \cite{zhao_finetuning_2021b}. Later
-models such as GPT2 \cite{radford_language_2019} grew considerably in parameter
-size, as it had up to 1.5 billion parameters, up to 15x more parameters than
-BERT. Along with significantly increasing capability in natural language
-processing, these models enabled more sophisticated extraction requests.
-Even though automated extraction methods based on them were introduced only
-recently, they were already surpassed by even larger models.
+\todo{establish ER and NER}
 
-\paragraph{Large Language Models}
-A continuation of increasing parameters culminated in the 175 billion parameter
-model GPT3 \cite{brown_language_2020}, the first large language model. Fine-tuning
-GPT3 with 100 manual and 500 partially augmented examples of data extraction
+
+
+\todo{Notes from Jehona Talk, adapt accordingly}
+\begin{itemize}
+    \item Techniques like TF-IDF or BM25 ??
+    \item 'it is called extractive because it extracts the answer from a agiven
+        context, rather than generating a new answer'
+    \item using haystack as llm framework
+    \item using a document store and memorizing architecture? dense retrieval:
+        'using dense embeddings rather than sparse ones'
+    \item
+\end{itemize}
+
+\paragraph{BM25}
+
+\gls{BM25} is a ranking function that ranks a set of documents based on the query terms appearing in each document, regardless of the inter-relationship between the query terms within a document (e.g., their relative proximity).
+
+\paragraph{TF-IDF}
+\gls{TF-IDF} is a handy algorithm that uses the frequency of words to determine how relevant those words are to a given document.
+
+\section{Language Models for Data Extraction Tasks}
+\todo{write lms for data extraction and then move it to background}
+It was shown that fine-tuning \gls{BERT} for \gls{NER} tasks in materials science has good results \cite{zhao_finetuning_2021}.
+
+\subsection{Using LLMs for Data Extraction}
+Fine-tuning \gls{GPT3} with 100 manual and 500 partially augmented examples of data extraction
 created the most sophisticated pipeline for information extraction yet
 \cite{dunn_structured_2022}. Most of our work will be similar to theirs. However,
 Chinchilla \cite{hoffmann_training_2022} and CoTR \cite{zhang_multimodal_2023}
@@ -53,4 +72,29 @@ overparametrization. Distillation promises substantial model parameter
 reduction with little loss in accuracy (50x parameter reduction while keeping
 95\% accuracy), and has been confirmed to have similar compression characteristics
 for other large language models.
-\todo{rewrite}
+\todo{rewrite section on LLMs}
+
+
+
+
+\newpage
+\section{Scientific Question}\label{sec:question}
+\todo{expand scientific question}
+
+how well can we automate the extraction of parameters from scientific data using \glspl{LLM} with zero-shot
+
+The goal of this work is to benchmark the accuracy of open source \glspl{LLM} to
+demonstrate automated extraction of unstructured text from scientific
+literature and create an automated pipeline for the creation of a database with otherwise non-machine readable information on \gls{MOF} synthesis or similar tasks.
+
+% By
+% doing so, we create a training pipeline that can be a) self-hosted and b)
+% adapted to other data extraction tasks. It may be provided as a service for
+% other research groups.
+%
+% In this work, we will use OPT \cite{zhang_opt_2022} to empirically test how
+% much accuracy can be improved via 1) fine-tuning and 2) prompt engineering.
+% Additionally, we intend to 3) test how accuracy and compute requirements will be
+% affected by reduction of model size via distillation \cite{sun_patient_2019}.
+% A reduction in parameters would make it considerably less compute intensive to
+% run the final model.

@@ -1,6 +1,13 @@
 \usepackage{tabularx}
 \usepackage{changepage}
+\usepackage{subfig}
 \usepackage{float}
+% \usepackage[printonlyused,withpage]{acronym}
+\usepackage{csquotes}
+\usepackage[acronym,toc]{glossaries}
+\setacronymstyle{long-short}
+\makeglossaries
+\input{chapters/acronyms}
 
 \interfootnotelinepenalty=10000
 
@@ -28,10 +35,22 @@
 \newcommand{\thesisreviewertwo}{Prof. Dr. Second Reviewer}
 \newcommand{\thesisadvisorone}{Tobias Schlöder}
 \newcommand{\thesistimestart}{2023-03-01} % on titlepage
-\newcommand{\longdate}{1st September 2023} % on signature lines
-\newcommand{\thesistimeend}{2023-09-01} % on titlepage
-\newcommand{\thesistimehandin}{2023-09-01} % on second page 'preamble'
+\newcommand{\longdate}{2nd October 2023} % on signature lines
+\newcommand{\thesistimeend}{2023-10-02} % on titlepage
+\newcommand{\thesistimehandin}{2023-10-02} % on second page 'preamble'
 \newcommand{\thesispagehead}{\thesisentopic} % page heading
+
+
+% ----------------- referencing ----------------
+\newcommand{\secref}[1]{Section~\ref{sec:#1}}
+\renewcommand{\subref}[1]{Subsection~\ref{sub:#1}}
+\newcommand{\chapref}[1]{Chapter~\ref{chap:#1}}
+\renewcommand{\eqref}[1]{Equation~(\ref{eq:#1})}
+\newcommand{\figref}[1]{Figure~\ref{fig:#1}}
+\newcommand{\tabref}[1]{Table~\ref{tab:#1}}
+\newcommand{\coderef}[1]{Code Example~\ref{code:#1}}
+\newcommand{\outref}[1]{Output~\ref{out:#1}}
+
 
 \hypersetup
 {

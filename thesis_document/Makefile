@@ -47,5 +47,5 @@ dist-clean: clean
 	mkdir -p $(OUT_DIR)/include
 	mkdir -p $(OUT_DIR)/figures
 	# -interaction=nonstopmode
-	latexmk -outdir=$(OUT_DIR) -pdf -use-make -file-line-error -shell-escape $<
+	latexmk -outdir=$(OUT_DIR) -pdf -use-make -file-line-error -shell-escape -g $<
 	cp -v $(foreach PDF, $(PDFNAMES),$(OUT_DIR)/$(PDF)) . || :

@@ -1,0 +1,22 @@
+\chapter{Approach}\label{chap:approach}
+Chapter on {\em how} I used the language models, what I tried, and what didn't work / I settled on.
+
+See \subref{list} for a list of the models used, \subref{criteria} for selection criteria and the respective Subsection for more details on each model.
+
+\section{Prompts}\label{sec:prompts}
+
+used a form of guidance \cite{guidance_2023}
+
+\section{Supervised Fine Tuning}\label{sec:sft}
+Was attempted multiple ways, utterly failed
+
+How much should I write about?
+
+curiousity with \verb`input_ids` and \verb`labels`? resulted in broken model, probably learned that it's 'finished', only outputting EOS tokens. Not sure if doing this otherwise would actually change anything though
+
+Attempts at mask manipulation: not possible with causalLMs (they are all of this type)
+
+SFT: only published about 1months before deadline, a lot of magic that isn't documented properly, at all. Couldn't get it to run, gave up due to time limit.
+
+\section{Comparison}
+criteria for comparing the outputs with labels
