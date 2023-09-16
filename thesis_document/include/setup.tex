@@ -2,6 +2,8 @@
 \usepackage{changepage}
 \usepackage{subfig}
 \usepackage{float}
+\usepackage{minted}
+\usemintedstyle{pastie}
 % \usepackage[printonlyused,withpage]{acronym}
 \usepackage{csquotes}
 \usepackage[acronym,toc]{glossaries}
@@ -50,6 +52,15 @@
 \newcommand{\tabref}[1]{Table~\ref{tab:#1}}
 \newcommand{\coderef}[1]{Code Example~\ref{code:#1}}
 \newcommand{\outref}[1]{Output~\ref{out:#1}}
+
+\newcounter{code}
+\setcounter{code}{0}
+\newenvironment{codeboxed}[2]{
+    \begin{minipage}{\linewidth}\begin{center}\textbf{#1}\\\small #2\\[1ex]\begin{tabular}{|p{\textwidth}|}\hline}{
+    \\\hline\end{tabular}\end{center}\end{minipage}}
+
+\newcommand{\code}[3]{\refstepcounter{code}\label{code:#2}\begin{codeboxed}{Code Example \thecode}{#3}
+        \inputminted[linenos,fontsize=\small]{Python}{code/#1}\end{codeboxed}}
 
 
 \hypersetup

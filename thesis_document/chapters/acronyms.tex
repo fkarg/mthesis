@@ -1,3 +1,8 @@
+
+% --------------------------------------
+%           Acronyms
+% --------------------------------------
+
 \newacronym{LM}{LM}{Language Model}
 \newacronym{LLM}{LLM}{Large Language Model}
 \newacronym{NER}{NER}{Named Entity Recognition}
@@ -7,43 +12,106 @@
 
 \newacronym{TF-IDF}{TF-IDF}{Term Frequency - Inverse Document Frequency}
 \newacronym{BM25}{BM25}{\todo{explain bm25}}
-\newacronym{BERT}{BERT}{Bidirectional Encoder Representation from Transformers}
-\newacronym{SOTA}{SOTA}{State of the Art}
+\newacronym{BERT}{BERT}{Bidirectional Encoder Representation from Transformers \cite{devlin_bert_2018}}
+\newacronym{SOTA}{state-of-the-art}{State of the Art}
 \newacronym{NLP}{NLP}{Natural Language Processing}
+\newacronym{RoPE}{RoPE}{Rotary Positional Encoding \cite{su_roformer_2022}}
+\newacronym{GQA}{GQA}{Grouped Query Attention \cite{ainslie_gqa_2023}}
+\newacronym{GPT}{GPT}{Generative Pretrained Transformer}
 
 
+
+
+% --------------------------------------
+%           Terms
+% --------------------------------------
+
+\newglossaryentry{causal}{
+    name=causal language model,
+    description={Causal language modeling is the task of predicting the token following a sequence of tokens. This in contrast to e.g. a \gls{masked} }
+}
+
+\newglossaryentry{masked}{
+    name=masked language model,
+    description={Masked language modeling is the task of predicting the missing (replaced with marker tokens) words in a sentence based on the context provided by the surrounding words. This in contrast to e.g. a \gls{causal}}
+}
+
+
+
+
+% --------------------------------------
+%           Models
+% --------------------------------------
 
 
 
 \newglossaryentry{GPT2}{
     name=GPT2,
-    description={The second generation \textbf{G}enerative \textbf{P}retrained \textbf{T}ransformer \gls{LM} from \gls{OpenAI} \cite{radford_language_2019}.}
+    description={The second generation \textbf{G}enerative \textbf{P}retrained \textbf{T}ransformer \gls{LM} from \gls{OpenAI} \cite{radford_language_2019}}
 }
 
 \newglossaryentry{GPT3}{
     name=GPT3,
-    description={The third generation \textbf{G}enerative \textbf{P}retrained \textbf{T}ransformer \gls{LM} from \gls{OpenAI} \cite{brown_language_2020}.}
+    description={The third generation \textbf{G}enerative \textbf{P}retrained \textbf{T}ransformer \gls{LM} from \gls{OpenAI} \cite{brown_language_2020}}
+}
+
+\newglossaryentry{ChatGPT}{
+    name=ChatGPT,
+    description={A chat interface for \gls{GPT3}.5 or \gls{GPT4} from \gls{OpenAI}, which makes it easier to task the model}
 }
 
 \newglossaryentry{GPT4}{
     name=GPT4,
-    description={The fourth generation \textbf{G}enerative \textbf{P}retrained \textbf{T}ransformer \gls{LM} from \gls{OpenAI} \cite{openai_gpt4_2023}. Currently their most capable model.}
+    description={The fourth generation \textbf{G}enerative \textbf{P}retrained \textbf{T}ransformer \gls{LM} from \gls{OpenAI} \cite{openai_gpt4_2023}. Currently their most capable model}
 }
 
-\newglossaryentry{bloom}{
+\newglossaryentry{BLOOM}{
     name=BLOOM,
-    description={BigScience Large Open-science Open-access Multilingual Language Model, a 176 billion parameter open-source \gls{LLM} trained on \gls{Google} infrastructure in a concerted effort also including \gls{hf} and other organizations}
+    description={\textbf{B}igScience \textbf{L}arge \textbf{O}pen-science \textbf{O}pen-access \textbf{M}ultilingual \gls{LM}, a 176 billion parameter open-source \gls{LLM} created through a cooperation between \gls{Google}, \gls{hf} and various smaller organisations \cite{workshop_bloom_2022}}
 }
 
-
-\newglossaryentry{opt}{
+\newglossaryentry{OPT}{
     name=OPT,
-    description={Open Pretrained Transformer, a 178 billion parameter open-source \gls{LM} from \gls{Meta} research}
+    description={Open Pretrained Transformer, a 175 billion parameter open-source \gls{LM} from \gls{Meta} research \cite{zhang_opt_2022}}
 }
+
+\newglossaryentry{PaLM}{
+    name=PaLM,
+    description={extremely capable \gls{LLM} from \gls{Google} \cite{chowdhery_palm_2022}}
+}
+
+\newglossaryentry{llama}{
+    name=LLaMa,
+    description={A \gls{LLM}. See \subref{llama}}
+}
+
+\newglossaryentry{alpaca}{
+    name=Stanford Alpaca,
+    description={A \gls{LLM}. See \subref{alpaca}}
+}
+
+\newglossaryentry{vicuna}{
+    name=Vicuna,
+    description={A \gls{LLM}. See \subref{vicuna}}
+}
+
+\newglossaryentry{llama2}{
+    name=LLaMa 2,
+    description={A \gls{LLM}. See \subref{llama2}}
+}
+
+\newglossaryentry{falcon}{
+    name=Falcon,
+    description={A \gls{LLM}. See \subref{falcon}}
+}
+
+% --------------------------------------
+%           Organizations
+% --------------------------------------
 
 \newglossaryentry{Meta}{
     name=Meta,
-    description={Previously known as Facebook, Meta regularly open-sources \gls{SOTA} \glspl{LLM}
+    description={Previously known as Facebook, Meta is a deep learning powerhose and regularly open-sources new \gls{SOTA} machine learning models.
     }
 }
 
@@ -54,10 +122,16 @@
 
 \newglossaryentry{Google}{
     name=Google,
-    description={Search Engine giant}
+    description={Search engine giant turned AI powerhouse, well known for training supersized machine learning models with unrealistic hardware requirements for just about anyone else}
 }
 
 \newglossaryentry{hf}{
     name=HuggingFace,
-    description={American deep learning ecosystem Startup}
+    description={American deep learning ecosystem startup, having a well established framework to interface and abstract between similar models}
+}
+
+\newglossaryentry{tii}{
+    name=Technology Innovation Institute,
+    description={Abu Dhabi-based machine learning research institute.
+    }
 }
