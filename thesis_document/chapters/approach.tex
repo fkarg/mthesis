@@ -1,27 +1,35 @@
 \chapter{Approach}\label{chap:approach}
+\todo{approach chapter guideline: what did I do, why did I do it}
 Here, we describe some of our approach to using \glspl{LLM}, decisions made, lessons learned, and more.
 
-Specifically, we put little effort inprompt engineering, with the reason being that it should have little impact for fine-tuned models.
-
-
+Specifically, we put little effort in prompt engineering, with the reason being that it should have little impact for fine-tuned models.
 
 See \subref{list} for a list of the models used, \subref{criteria} for selection criteria for the models, and the respective Subsection for more details on each model, which is als linked in their glossary entry.
+\todo{rewrite when the rest becomes clearer}
 
 All source code for this work can be found at \url{https://github.com/fkarg/mthesis}.
 A release will tag the state at the time of submission.
 
+\section{Implementation}\label{sec:impl}
+As described in \secref{models}, it became clear during literature research that it might be worth comparing different models, and that additional models might become available in the near future.
+The \gls{hf} \gls{transformers} library is a well-established framework providing abstractions to load and train any deep learning architecture in a standardized format.
+Additionally, all open-access \glspl{LLM} are available directly through their portal, as are other parts of the open-source \gls{LLM} ecosystem.
+\todo{maybe add more details}
+
+
 \section{Prompts}\label{sec:prompts}
 \glspl{LLM} are capable of outputting a wide variety of text, and solving a broad array of different tasks.
-The way to get them to solve the task as requested is by \em{prompting} the model with a certain input.
+The way to get them to solve the task as requested is by {\em prompting} the model with a certain input.
 This is particularly emintent in instruct-based models (See \subref{instruct} for more details on instruction-based finetuning).
 
 \subsection{Prompt Engineering}\label{sub:engineering}
 Answers, even to the same prompts, across models and even from the same model, can vary substantially \cite{chen_how_2023}.
 Thus, a short-lived 'discipline' referred to as Prompt Engineering emerged, which attempted to scientifically approach how to write prompts to get the best results, out of either specific or all models.
 % This is particularly relevant for applications where potentially hostile users can directly or indirectly prompt a model, and thus 'Prompt Injection Attacks' where born \cite{greshake_more_2023}.
-As was found out, this is also a task that could be perfectly done by a \gls{LLM} \cite{zhou_large_2022}.
+As was quickly found out, this is also a task that can be done perfectly by a \gls{LLM} \cite{zhou_large_2022}.
 
 \subsection{Prompt Guidelines}\label{sub:guidelines}
+\todo{totally rewrite}
 A few general guidelines for prompts empirically emerged (mostly through people sharing results on twitter):
 \begin{itemize}
     \item Guidance for everything structure-based \cite{guidance_2023}
@@ -30,25 +38,60 @@ A few general guidelines for prompts empirically emerged (mostly through people 
 \end{itemize}
 
 \subsection{Prompts Used}\label{sub:prompts}
+\todo{totally rewrite}
 
-\code{prompt.py}{prompt1}{Example of prompt structure used}
+\code{prompt.py}{prompt1}{Not an actual example of prompt structure used}
 
 
 
 \section{Supervised Fine Tuning}\label{sec:sft}
-short intro to fine-tuning, why it is important. \secref{training} and \subref{finetune}
+\todo{rewrite}
+The name of \acrfull{GPT} came from the fact that it simply was a large pre-trained transformer model which could be fine-tuned for any specific task.
+The benefit of using using a pretrained model is that it requires substantially less compute, and maybe more importantly, examples to train on to achieve good results on a task \cite{gaddipati_comparative_2020}.
+Until \gls{GPT3} became so capable that, for most \gls{NLP} tasks, you don't need to fine-tune it at all.
 
+See \secref{training} for more details on pre-training a \gls{LLM} and \subref{finetune} for details on finetunig.
 
+What follows are excerpts of attempting to fine-tune a model, and attempts at understanding why it didn't work.
 
-curiousity with \verb`input_ids` and \verb`labels`? resulted in broken model, probably learned that it's 'finished', only outputting EOS tokens. Not sure if doing this otherwise would actually change anything though
+\subsection{Excerpt 1: Broken Models}\label{sub:brokenft}
+\todo{write subsection on broken models with more details}
+demonstrate that stuff just isn't documented, anywhere, and even the community doesn't know.
+\todo{figure out actual structure}
+
+nuances: tokenization of dataset prior to training. however, which part is doing what?
+
+building custom dataset: array with dicts, with the three required keys \verb`input_ids`, \verb`attention_maska`, and \verb`labels`. curiously, neither is documented particularly well so we tried what is recommended in various tutorials and official sources (e.g. microsoft \cite{deepspeedexamples_2023}): 
+
+put the \verb`token_ids` received from tokenization to both \verb`input_ids` and \verb`labels`.
+
+This did result in a model with differing weights than it had before. This model however, was broken as it did not generate anything that was not an EOS-token.
+this token is usually used as a stopping criterion during generation.
+? resulted in broken model, probably learned that it's 'finished', only outputting EOS tokens. Not sure if doing this otherwise would actually change anything though
 
 Attempts at mask manipulation: not possible with causalLMs (they are all of this type)
 
-SFT: only published about 1months before deadline, a lot of magic that isn't documented properly, at all. Couldn't get it to run, gave up due to time limit.
+\subsection{Excerpt 2: Broken Libraries}\label{sub:libraries}
+In a later attempt wie tried using the high-level \gls{hf} \verb`trl` (Transformer Reinforcement Learning) library, which seems to be built for our use-case exactly.
 
-\section{Comparison}
-criteria for comparing the outputs with labels
+However, this library is at best research-grade. The examples, while working with only a few lines, obscure the inner workings of the library.
+And good luck: it's also not documented. There is the \verb`DataCollatorForCompletionOnlyLM` collator, which takes a tokenizer, but also doesn't tokenize?!?
+\todo{rewrite subsection on broken libraries}
 
-coneversion between units (not super straightforward), a lot of unit mistakes
+examples only have \verb`text` field, there is a formatting function and whatnot, but this implies tokenization is happening later. nope, errors with 'missing field \verb`token_ids`'.
 
-solvents and additives: getting cid and
+trying out various things didn't work, until we ultimately didn't have time to continue.
+
+SFT: a lot of magic that isn't documented properly, at all. Couldn't get it to run, gave up due to time limit.
+
+% \mintinline{python}{trl} library \cite{hf_trl_supervised}
+
+\section{Criteria for Equality}\label{sec:equality}
+In this section we try to list the criteria we used to define equality between a result from a \gls{LLM} and the target label.
+\todo{write section on criteria for equality}
+
+for temperature and time we did conversion between units (not super straightforward), models had a bit of unit confusion
+(sometimes adding too many or too few zeros, though also often getting it right)
+
+solvents and additives: getting cid and comparing it (if it can be gotten in the first place though)
+
