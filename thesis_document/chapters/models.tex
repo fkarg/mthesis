@@ -1,0 +1,76 @@
+\section{Language Models Considered}\label{sec:models}
+\todo{figure out basic parameters (e.g. release date) of models used}
+\todo{for each model, at the end, quickly put in one sentence why it was used / not used}
+In this Section, we introduce the models used or considered for the benchmark.
+
+See \secref{basics} for an overview and broad categorization of various models mentioned here.
+
+\subsection{Criteria}\label{sub:criteria}
+Setting out for our work, the only real constraint we had is that the model has to be any decently capable open-source \gls{causal}.
+
+\subsection{OPT, BLOOM (Not Used)}
+\paragraph{OPT}\label{par:opt}\label{sub:OPT}
+The initial model set out for this work was \model{OPT} \cite{zhang_opt_2022}, a 175 billion parameter open-source \gls{LLM} trained by \gls{meta}, with partially similar capability as \gls{GPT3}. During early literature research, we encountered the similar but slightly more capable \model{BLOOM}.
+
+\paragraph{BLOOM}\label{par:bloom}\label{sub:BLOOM}
+\model{BLOOM} \cite{workshop_bloom_2022} is a 176 billion parameter open-source \gls{LLM} trained by a cooperation of numerous organizations, spearheaded by \gls{hf} and \gls{Google}. When compared to \model{OPT} across \gls{NLP} benchmarks, \model{BLOOM} appears to perform marginally better.
+
+\paragraph{Reasons for using neither}
+The original plan for this work would use \model{OPT} as only model. During early literature research, it seemed that \model{BLOOM} would be slightly more capable, so we intended to try it with both, and compare them. 
+While still in literature research, \model{llama} got released, and with being seemingly both smaller and significantly more capable, as well as having properly scaled-down versions readily available, it was easy to make the call of going forward with \model{llama} only. 
+\todo{slightly rewrite to more academic writing style}
+See \subref{llama} for more details on \model{llama}.
+
+\subsection{LLaMa (Used)}\label{sub:llama}
+\model{llama} is a suite of open-access \glspl{LLM} from \gls{meta} with sizes ranging from 7 billion to 65 billion parameters, and capabilities comparable to, and sometimes beating \gls{SOTA} (including \gls{GPT3}) at the time \cite{touvron_llama_2023}. \model{llama} can be seen as the culmination of distributed progress in one place.
+
+\model{llama} is not instruction fine-tuned. See \subref{instruct} for more details on instruction fine-tuning.
+For instruction-finetuned variants of \model{llama}, see \subref{alpaca} on \model{alpaca} or \subref{vicuna} on \model{vicuna}.
+
+\subsection{Alpaca (Not Used)}\label{sub:alpaca}
+The \model{alpaca} Project \cite{tatsulab_2023} aims to build and share an instruction-finetuned \model{llama} model.
+Due to uncertainty with the \model{llama} licence which this model is based on, no model weights where released officially.
+They did, however, release everything else to easily fine-tune your own \model{alpaca} when you already have the weights for \model{llama}.
+This becomes impractical for larger model variants due to increasing resource requirements. For this reason, we decided against including \model{alpaca} in our benchmark.
+
+See \subref{instruct} for more details on instruction fine-tuning.
+
+\subsection{Vicuna (Used Partially)}\label{sub:vicuna}
+\model{vicuna} is a family of instruction fine-tuned \model{llama}-variants, released by \gls{lmsys}. It is building on top of the training recipe of \model{alpaca}.
+However, not all weights of the corresponding \model{llama} sizes are available.
+The largest \model{llama}-model (65B) does not have a corresponding \model{vicuna} derivative available.
+
+in chatbot arena: beating out \model{llama} and \model{alpaca} \cite{zheng_judging_2023}
+\todo{write out in more detail}
+
+See \subref{instruct} for more details on instruction fine-tuning.
+
+\subsection{LLaMa 2 (Used)}\label{sub:llama2}
+\gls{meta} released \model{llama2} a few months after \model{llama}, in which they introduced few fundamental changes (making use of \gls{GQA} for the first time), trained on more tokens and released it under a different license. They also directly released its instruct variants.
+
+See \subref{instruct} for more details on instruction fine-tuning.
+
+\subsection{Falcon (Used)}\label{sub:falcon}
+The \model{falcon} \cite{zxhang_falcon_2023} family of language models are created by the Abu Dhabi-based \gls{tii}.
+\model{falcon} continues to dominate benchmarks with open-access models (in each respective parameter weight class), and also appears to rival some of the most capable closed-access models such as \gls{PaLM}.
+
+Their better performance for most tasks is assumed to mostly the result of longer training and higher-quality data sets \cite{zxhang_falcon_2023}.
+
+See \subref{instruct} for more details on instruction fine-tuning.
+
+\subsection{GPT4 (Not Used)}\label{sub:GPT4}
+\model{GPT4} is the fourth generation \gls{GPT} model from \gls{OpenAI} \cite{openai_gpt4_2023}.
+It is the single most capable \acrlong{LM} we currently know of.
+However, it is not open-source and only accessible through an API provided by \gls{OpenAI}.
+Additionally, \gls{OpenAI} continues to work on, change, and measurably degrade the capabalities \cite{chen_how_2023} of \model{GPT4}, which makes it a bad target for comparison.
+Even timestamped, supposedly 'unchanging' models have been claimed to measurably change in behaviour \cite{jw1224_hn}.
+
+\subsection{Final List}\label{sub:list}
+In conclusion, we used the following models and sizes of the aforementioned:
+\begin{itemize}
+    \item \model{llama} 7B, 13B, 30B, 65B (See \subref{llama} for more details on the model)
+    \item \model{vicuna} 7B, 13B, 33B (See \subref{vicuna} for more details on the model)
+    \item \model{llama2} 7B, 13B, 70B (See \subref{llama2} for more details on the model)
+    \item \model{falcon} 7B, 40B (See \subref{falcon} for more details on the model)
+    \item \model{falcon}-instruct 7B, 40B (See \subref{falcon} for more details on the model)
+\end{itemize}

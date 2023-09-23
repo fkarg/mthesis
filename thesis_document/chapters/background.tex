@@ -1,100 +1,70 @@
 \chapter{Background}\label{chap:background}
-\todo{write background}
-Core meta points:
-\begin{itemize}
-    \item up to five pages background
-    \item go from very general to very related to topic, end with questions to resolve
-\end{itemize}
+\todo{write overview of background}
+% Evaluation criteria:
+% Completeness (breadth)
+% Level of detail (depth)
+% Quality
 
-\section{General Work, Related}\label{sec:general}
-\todo{think about it if I actually want to include this section}
-ml models increasingly used in screening steps for materials discovery and property prediction
-% “Machine learning in materials discovery: Confirmed predictions and their underlying approaches"
-% “Recent advances and applications of deep learning methods in materials science"
+
+% \section{Building a Database}\label{sec:database}
+% The overarching goal of any Information Extraction task in the natural sciences is to build a database 
+% 
+% Such databases are often built using \texttt{chemdataextractor} \cite{swain_chemdataextractor_2016}.
+
+
 
 \section{Related Work}\label{sec:related}
-% \todo{write section}
-\todo{related work is only entity recognition stuff}
+\subsection{Information Extraction}\label{sub:extraction}
+Information Extraction is the \gls{NLP} task of extracting structured (machine-readable) information from unstructured text.
+One approach to information extraction is via \gls{NER}.
 
-\subsection{Rule-Based Entity Recognition}\label{sub:ER}
-There have long been rule-based approaches for the recognition of individual
-entities (e.g. Temperature). ChemTagger \cite{hawizy_chemicaltagger_2011}
-and others \cite{beard_comparative_2019, huang_database_2020}
-clearly demonstrated that simple rule-based systems can sometimes extract much
-of the requested information. They can often
-achieve high precision for simple, well-defined
-tasks, but tend to be highly specialized and
-are hard to adapt to differing circumstances.
+\subsection{Named Entity Recognition}\label{sub:NER}
+\gls{NER} seeks to locate and classify named entities mentioned in unstructured text into pre-defined categories \cite{li_survey_2022} such as temperature, timeframe, or chemical components, or any other named category that has been specified beforehand.
+Fundamentally speaking, this is what we are doing in our work.
+The usual \gls{NER} definition of an entity assumes \textit{rigid designators} \cite{laporte_rigid_2022}, i.e. that an entity only has one name to reference it.
 
-\todo{establish ER and NER}
+In our work, we are however expanding this usual \gls{NER} definition on rigid designators.
+First, references to temperature can include phrases such as `at room temperature' or `in boiling water', and may not just be numbers followed by their unit.
+Second, while Chemistry has normative rules on how molecules are named, it is possible for one molecule to have multiple valid names. This is sometimes referred to as the \textit{coreference problem} \cite{hobbs_coherence_1979}.
 
-
-
-\todo{Notes from Jehona Talk, adapt accordingly}
-\begin{itemize}
-    \item Techniques like TF-IDF or BM25 ??
-    \item 'it is called extractive because it extracts the answer from a agiven
-        context, rather than generating a new answer'
-    \item using haystack as llm framework
-    \item using a document store and memorizing architecture? dense retrieval:
-        'using dense embeddings rather than sparse ones'
-    \item
-\end{itemize}
-
-\paragraph{BM25}
-
-\gls{BM25} is a ranking function that ranks a set of documents based on the query terms appearing in each document, regardless of the inter-relationship between the query terms within a document (e.g., their relative proximity).
-
-\paragraph{TF-IDF}
-\gls{TF-IDF} is a handy algorithm that uses the frequency of words to determine how relevant those words are to a given document.
-
-\section{Language Models for Data Extraction Tasks}
-\todo{write lms for data extraction and then move it to background}
-It was shown that fine-tuning \gls{BERT} for \gls{NER} tasks in materials science has good results \cite{zhao_finetuning_2021}.
-
-\subsection{Using LLMs for Data Extraction}
-Fine-tuning \gls{GPT3} with 100 manual and 500 partially augmented examples of data extraction
-created one of the most sophisticated pipelines for information extraction \cite{dunn_structured_2022}.
-Most of our work will be similar to theirs. However,
-Chinchilla \cite{hoffmann_training_2022} and CoTR \cite{zhang_multimodal_2023}
-demonstrated that while achieving impressive capability, such large models are
-substantially overparametrized and undertrained. Additionally, while the
-results are state-of-the-art, GPT3 is only accessible through the API of
-OpenAI, a for-profit company. This considerably limits access to model
-internals.
-
-Our work differs from \cite{dunn_structured_2022} by addressing these two
-caveats. Instead of GPT3, we use a similarly capable open-source model called
-OPT \cite{zhang_opt_2022}. Self-hosting enables us to do deep introspection
-necessary for state-of-the-art prompt engineering and gives us the required
-freedom to attempt distillation \cite{sun_patient_2019}, which addresses
-overparametrization. Distillation promises substantial model parameter
-reduction with little loss in accuracy (50x parameter reduction while keeping
-95\% accuracy), and has been confirmed to have similar compression characteristics
-for other large language models.
-\todo{rewrite section on LLMs}
+% It is then possible to automatically construct tabular databases based on the extracted data \cite{zhao_finetuning_2021} (BERT-SFT for matsci).
 
 
+\subsection{Rule-Based Entity Recognition}
+There have long been rule-based approaches for the recognition of named entities (e.g. Temperature) for material science literature.
+ChemTagger \cite{hawizy_chemicaltagger_2011}, and others \cite{beard_comparative_2019, huang_database_2020}
+clearly demonstrated that systems based on regular expressions can accurately extract information in straightforward, well-defined situations.
+% They can often achieve high precision for simple, well-defined tasks
+However, these tools tend to be highly specialized which makes them hard to adapt to new or more complex queries or circumstances.
 
 
-\newpage
+\subsection{Language Models for Information Extraction}
+Modeling \gls{NER} as a sequence-to-sequence labeling problem, \cite{zhao_finetuning_2021} fine-tuned a pretrained \gls{BERT} instance and achieved an \gls{fscore} of 85\%, demonstrating both high precision and recall (where the \gls{fscore} is \glsdesc{fscore}).
+This demonstrated the fundamental capability of \glspl{LM} for this task.
+Most other work on \gls{NER} using \glspl{LM} has not been on materials science text but on general purpose text \cite{li_survey_2022}.
+
+Our work fundamentally differs, as we used \glspl{causal} wheras \gls{BERT} is a \gls{masked}. See \secref{masked} for an outlook on comparison with modern \gls{masked} architectures. See the later \secref{basics} on \acrlong{LM} basics.
+
+\subsection{LLMs for Information Extraction}
+\todo{write subsection on LLMs for IE}
+Our currently most capable models for \gls{NLP} (?) are \glspl{LLM}. See the later \subref{llm} for a more extensive introduction on \glspl{LLM}. 
+
+Using a \gls{LLM} such as \gls{GPT3} for a mixed task of \gls{NER} and relation extraction ended with very mixed results for \gls{NER}. \cite{dunn_structured_2022}
+We're doing \gls{NER} only.
+
+
+% Chinchilla \cite{hoffmann_training_2022} and CoTR \cite{zhang_multimodal_2023}
+% demonstrated that while achieving impressive capability, such large models are
+% substantially overparametrized and undertrained.
+
 \section{Scientific Question}\label{sec:question}
-\todo{expand scientific question}
 
-how well can we automate the extraction of parameters from scientific data using \glspl{LLM} with zero-shot
+The goals of this work are threefold
+\begin{enumerate}
+    \item Demonstrate zero-shot automated information extraction from scientific literature using open-access \glspl{LLM}.
+    \item Benchmark\todo{Benchmark or Compare?} the accuracy of currently available open-access \glspl{LLM} for automated information extraction from scientific literature.
+    \item Attempt fine-tuning of open-access \glspl{LLM} in order to increase accuracy.
+\end{enumerate}
 
-The goal of this work is to benchmark the accuracy of open source \glspl{LLM} to
-demonstrate automated extraction of unstructured text from scientific
-literature and create an automated pipeline for the creation of a database with otherwise non-machine readable information on \gls{MOF} synthesis or similar tasks.
-
-% By
-% doing so, we create a training pipeline that can be a) self-hosted and b)
-% adapted to other data extraction tasks. It may be provided as a service for
-% other research groups.
-%
-% In this work, we will use OPT \cite{zhang_opt_2022} to empirically test how
-% much accuracy can be improved via 1) fine-tuning and 2) prompt engineering.
-% Additionally, we intend to 3) test how accuracy and compute requirements will be
-% affected by reduction of model size via distillation \cite{sun_patient_2019}.
-% A reduction in parameters would make it considerably less compute intensive to
-% run the final model.
+As part of this work, we will create a flexible automated pipeline for the extraction of non-machine readable information in \gls{MOF} synthesis.
+Refer to \secref{impl} for more details on implementation.

@@ -1,4 +1,5 @@
 \usepackage{tabularx}
+\usepackage{hyperref}
 \usepackage{changepage}
 \usepackage{subfig}
 \usepackage{float}
@@ -9,6 +10,12 @@
 % \showlabels{cite}
 % \showlabels{gls}
 % \showlabels{todo}
+
+\usepackage{xparse}
+\NewDocumentCommand{\ShowInline}{v}{%
+#1%
+}
+\usepackage{fancyvrb}
 
 \usepackage{csquotes}
 \usepackage[acronym,toc]{glossaries}
@@ -57,6 +64,7 @@
 \newcommand{\tabref}[1]{Table~\ref{tab:#1}}
 \newcommand{\coderef}[1]{Code Example~\ref{code:#1}}
 \newcommand{\outref}[1]{Output~\ref{out:#1}}
+\newcommand{\model}[1]{\hyperref[sub:#1]{\gls*{#1}}}
 
 \newcounter{code}
 \setcounter{code}{0}

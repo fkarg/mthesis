@@ -2,50 +2,65 @@
 \todo{approach chapter guideline: what did I do, why did I do it}
 Here, we describe some of our approach to using \glspl{LLM}, decisions made, lessons learned, and more.
 
-Specifically, we put little effort in prompt engineering, with the reason being that it should have little impact for fine-tuned models.
+Specifically, we put little effort in prompt engineering, with the argument that it should have little impact for fine-tuned models, the main part of our work. As it turns out (See \secref{sft} for more details on training failures), this ended up not being the case.
 
 See \subref{list} for a list of the models used, \subref{criteria} for selection criteria for the models, and the respective Subsection for more details on each model, which is als linked in their glossary entry.
 \todo{rewrite when the rest becomes clearer}
 
-All source code for this work can be found at \url{https://github.com/fkarg/mthesis}.
-A release will tag the state at the time of submission.
+All source code for this work can be found at \url{https://github.com/fkarg/mthesis}, and a tag will mark the state at the time of submission.
 
 \section{Implementation}\label{sec:impl}
-As described in \secref{models}, it became clear during literature research that it might be worth comparing different models, and that additional models might become available in the near future.
-The \gls{hf} \gls{transformers} library is a well-established framework providing abstractions to load and train any deep learning architecture in a standardized format.
-Additionally, all open-access \glspl{LLM} are available directly through their portal, as are other parts of the open-source \gls{LLM} ecosystem.
-\todo{maybe add more details}
+As partially described before in \secref{models}, it became appearent during literature research that it might be valuable to compare different models, and that additional models might become available in the near future.
+The \acrlong{transformers} library is a well-established framework providing abstractions to load, manipulate and train any deep learning architecture in a standardized format.
+Additionally, all open-access \glspl{LLM} are available directly through the \gls{hf} portal.
 
+Most other libraries used are either straightforward (\texttt{torch, einops, accelerate, bitsandbytes} to get the models to run) or common ecosystem choices (e.g. \texttt{typer, rich} as cli interface).
+Proportionally speaking, the custom dataloader(s) and the main module have the highest \gls{LOC} counts.
 
-\section{Prompts}\label{sec:prompts}
-\glspl{LLM} are capable of outputting a wide variety of text, and solving a broad array of different tasks.
-The way to get them to solve the task as requested is by {\em prompting} the model with a certain input.
+\input{chapters/models}
+
+\section{Prompts Used}\label{sec:prompts}
+\glspl{LLM} are capable of very generic tasks, based on the input they are asked to repsond to.
+The way to get them to solve a task as requested is by \textit{prompting} the model with a certain input.
 This is particularly emintent in instruct-based models (See \subref{instruct} for more details on instruction-based finetuning).
 
-\subsection{Prompt Engineering}\label{sub:engineering}
-Answers, even to the same prompts, across models and even from the same model, can vary substantially \cite{chen_how_2023}.
-Thus, a short-lived 'discipline' referred to as Prompt Engineering emerged, which attempted to scientifically approach how to write prompts to get the best results, out of either specific or all models.
-% This is particularly relevant for applications where potentially hostile users can directly or indirectly prompt a model, and thus 'Prompt Injection Attacks' where born \cite{greshake_more_2023}.
-As was quickly found out, this is also a task that can be done perfectly by a \gls{LLM} \cite{zhou_large_2022}.
+We have not put much effort in figuring out the best prompts, primarily because any amount of fine-tuning would be more effective than doing so. You can read more on what went wrong trying to do that in the following \secref{sft}.
 
-\subsection{Prompt Guidelines}\label{sub:guidelines}
-\todo{totally rewrite}
-A few general guidelines for prompts empirically emerged (mostly through people sharing results on twitter):
-\begin{itemize}
-    \item Guidance for everything structure-based \cite{guidance_2023}
-    \item Chain-Of-Thought for reasoning \cite{wei_chainofthought_2022}
-    \item Reflexion for even bigger models \cite{shinn_reflexion_2023}
-\end{itemize}
+As used \textit{guidance} \cite{guidance_2023}, and specifically the library \texttt{jsonformer} \cite{1rgs_2023}, for getting structured information as an output.
+In effect, guidance provides `guard rails' for models generating output.
+Specifically, the model does not have to generate the tokens for the structure of json, but only the tokens for the content of the json.
 
-\subsection{Prompts Used}\label{sub:prompts}
-\todo{totally rewrite}
+\code{schema.py}{schema}{The schema provided for the model to follow. Model output termination would happen after generation of a token for `\mintinline{python}{"}' for strings or `\texttt{,}' for numbers, or a number of other dedicated 'end of generation' tokens. See \coderef{output} for what an output for this schema might look like.}
 
-\code{prompt.py}{prompt1}{Not an actual example of prompt structure used}
+You can see the schema we used for guidance in \coderef{schema}. Additionally, you can find the full prompt used in \coderef{prompt} and an example output in \coderef{output}.
+
+\code{prompt.py}{prompt}{Prompt used to generate output. \mintinline{python}{"{output}"} delineates where the model provides an answer. See \coderef{output} for what may be filled in.}
+
+\code{example_output.py}{output}{Exemplary output based on the prompt shown in \coderef{prompt}.}
+
+% \subsection{Prompt Engineering}\label{sub:engineering}
+% Answers, even to the same prompts, across models and even from the same model, can vary substantially \cite{chen_how_2023}.
+% Thus, a short-lived 'discipline', Prompt Engineering, emerged.
+% Prompt Engineering attempted to find out how to write prompts to get the best results, out of either specific or all models.
+% It was quickly found out that this is a task that can be automated with the help of a \gls{LLM} \cite{zhou_large_2022}.
+
+% additional relevancy for applications where potentially hostile users can directly or indirectly prompt a model, and thus 'Prompt Injection Attacks' where born \cite{greshake_more_2023}.
+
+% \subsection{Prompt Guidelines}\label{sub:guidelines}
+% \todo{totally rewrite}
+% A few general guidelines for prompts empirically emerged (mostly through people sharing results on twitter):
+% \begin{itemize}
+%     \item Guidance for everything structure-based \cite{guidance_2023}
+%     \item Chain-Of-Thought for reasoning \cite{wei_chainofthought_2022}
+%     \item Reflexion for even bigger models \cite{shinn_reflexion_2023}
+% \end{itemize}
+
+% \subsection{Prompts Used}\label{sub:prompts}
 
 
 
 \section{Supervised Fine Tuning}\label{sec:sft}
-\todo{rewrite}
+\todo{rewrite section on SFT}
 The name of \acrfull{GPT} came from the fact that it simply was a large pre-trained transformer model which could be fine-tuned for any specific task.
 The benefit of using using a pretrained model is that it requires substantially less compute, and maybe more importantly, examples to train on to achieve good results on a task \cite{gaddipati_comparative_2020}.
 Until \gls{GPT3} became so capable that, for most \gls{NLP} tasks, you don't need to fine-tune it at all.

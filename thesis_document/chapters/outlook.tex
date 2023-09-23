@@ -12,13 +12,15 @@ Using tools from mechanistic interpretability \cite{conmy_automated_2023} it sho
 
 \todo{fix (sub)section references not resolving}
 
+We prompted the model for both 
+
 \section{Fine-Tuning}\label{sec:out-sft}
-While attempted, we where not successfull in fine-tuning one of the selected models (See \secref{sft} for details on our work on fine-tuning, and \subref{finetun} for details on training and fine-tuning \glspl{LM} in general).
+While attempted, we where not successfull in fine-tuning one of the selected models (See \secref{sft} for details on our work on fine-tuning, and \subref{finetune} for details on training and fine-tuning \glspl{LM} in general).
 \todo{expand outlook section on fine-tuning}
 
 \section{Different Frameworks}\label{sub:frameworks}
 In recent months a new ecosystem of \gls{LLM} orchestration frameworks emerged.
-They are often building on top of the abstraction capabilities of the \gls{hf} \verb`transformer` library, and bring additional tooling for using \glspl{LLM} for agentic use-cases, but also interfacing, chaining and fine-tuning for various use-cases.
+They are often building on top of the abstraction capabilities of the \acrshort{transformers} library, and bring additional tooling for using \glspl{LLM} for agentic use-cases, but also interfacing, chaining and fine-tuning for various use-cases.
 Most prominent for that are currently LangChain \cite{langchain_2023} and HayStack \cite{haystack_2023}, though with the current pace of new frameworks emerging, this may change over time.
 We did not make a comparison due to time constraints.
 
@@ -28,5 +30,5 @@ Since data extraction for our use-case has been established to work well with fi
 We did not make a comparison due to time and resource constraints.
 
 \section{Comparison to Masked Language Models}\label{sec:masked}
-The task of knowledge extraction may be well suited to \glspl{masked} modern \gls{BERT}-based architectures such as T5 \cite{raffel_exploring_2020}.
+The task of knowledge extraction may be well suited to \glspl{masked} modern \gls{BERT}-derived architectures such as T5 \cite{raffel_exploring_2020}.
 We did not make a comparison due to time constraints.

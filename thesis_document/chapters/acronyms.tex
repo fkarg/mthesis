@@ -3,6 +3,11 @@
 %           Acronyms
 % --------------------------------------
 
+\newacronym{MLP}{MLP}{Multi-Layer Perceptron}
+\newacronym{LOC}{LOC}{Lines of Code}
+\newacronym{ReLU}{ReLU}{Rectified Linier Unit}
+\newacronym{SwiGLU}{SwiGLU}{Swish Gated Linear Unit}
+\newacronym{ML}{ML}{Machine Learning}
 \newacronym{LM}{LM}{Language Model}
 \newacronym{LLM}{LLM}{Large Language Model}
 \newacronym{NER}{NER}{Named Entity Recognition}
@@ -11,7 +16,7 @@
 
 
 \newacronym{TF-IDF}{TF-IDF}{Term Frequency - Inverse Document Frequency}
-\newacronym{BM25}{BM25}{\todo{explain bm25}}
+\newacronym{BM25}{BM25}{Okapi Best-Matching}
 \newacronym{BERT}{BERT}{Bidirectional Encoder Representation from Transformers \cite{devlin_bert_2018}}
 \newacronym{SOTA}{state-of-the-art}{State of the Art}
 \newacronym{NLP}{NLP}{Natural Language Processing}
@@ -19,9 +24,7 @@
 \newacronym{GQA}{GQA}{Grouped Query Attention \cite{ainslie_gqa_2023}}
 \newacronym{GPT}{GPT}{Generative Pretrained Transformer}
 
-% \newacronym{transformers}{\verb`transformers`}{\verb`transformers` \cite{huggingface_2023}}
-\newacronym{transformers}{transformers}{transformers \cite{huggingface_2023}}
-
+\newacronym{transformers}{\texttt{transformers}}{\gls{hf} \texttt{transformers} \cite{huggingface_2023}}
 
 
 % --------------------------------------
@@ -38,6 +41,11 @@
     description={Masked language modeling is the task of predicting the missing (replaced with marker tokens) words in a sentence based on the context provided by the surrounding words. This in contrast to e.g. a \gls{causal}}
 }
 
+
+\newglossaryentry{fscore}{
+    name=F-Score,
+    description={\textbf{Definition.} $ 2\times \frac{precision\ \cdot\ recall}{precision + recall}$}
+}
 
 
 
@@ -69,12 +77,12 @@
 
 \newglossaryentry{BLOOM}{
     name=BLOOM,
-    description={\textbf{B}igScience \textbf{L}arge \textbf{O}pen-science \textbf{O}pen-access \textbf{M}ultilingual \gls{LM}, a 176 billion parameter open-source \gls{LLM} created through a cooperation between \gls{Google}, \gls{hf} and various smaller organisations \cite{workshop_bloom_2022}}
+    description={\textbf{B}igScience \textbf{L}arge \textbf{O}pen-science \textbf{O}pen-access \textbf{M}ultilingual \gls{LM}, a 176 billion parameter open-source \gls{LLM} created through a cooperation between \gls{Google}, \gls{hf} and various smaller organisations \cite{workshop_bloom_2022}.}
 }
 
 \newglossaryentry{OPT}{
     name=OPT,
-    description={Open Pretrained Transformer, a 175 billion parameter open-source \gls{LM} from \gls{Meta} research \cite{zhang_opt_2022}}
+    description={Open Pretrained Transformer, a 175 billion parameter open-source \gls{LM} from \gls{meta} research \cite{zhang_opt_2022}}
 }
 
 \newglossaryentry{PaLM}{
@@ -84,34 +92,34 @@
 
 \newglossaryentry{llama}{
     name=LLaMa,
-    description={A \gls{LLM}. See \subref{llama}}
+    description={A \gls{LLM} from \gls{meta}. See \subref{llama} for details}
 }
 
 \newglossaryentry{alpaca}{
     name=Stanford Alpaca,
-    description={A \gls{LLM}. See \subref{alpaca}}
+    description={A \gls{LLM} based on \gls{llama}. See \subref{alpaca} for details}
 }
 
 \newglossaryentry{vicuna}{
     name=Vicuna,
-    description={A \gls{LLM}. See \subref{vicuna}}
+    description={One of the \glspl{LLM} used.  See \subref{vicuna} for details}
 }
 
 \newglossaryentry{llama2}{
     name=LLaMa 2,
-    description={A \gls{LLM}. See \subref{llama2}}
+    description={One of the \glspl{LLM} used. See \subref{llama2} for details}
 }
 
 \newglossaryentry{falcon}{
     name=Falcon,
-    description={A \gls{LLM}. See \subref{falcon}}
+    description={One of the \glspl{LLM} used. See \subref{falcon} for details}
 }
 
 % --------------------------------------
 %           Organizations
 % --------------------------------------
 
-\newglossaryentry{Meta}{
+\newglossaryentry{meta}{
     name=Meta,
     description={Previously known as Facebook, Meta is a deep learning powerhose and regularly open-sources new \gls{SOTA} machine learning models.
     }
@@ -134,12 +142,11 @@
 
 \newglossaryentry{tii}{
     name=Technology Innovation Institute,
-    description={Abu Dhabi-based machine learning research institute.
-    }
+    description={Abu Dhabi-based machine learning research institute}
 }
 
 \newglossaryentry{lmsys}{
     name=LMSYS,
-    description={The Large Model Systems Organization develops large models and systems that are open, accessible, and scalable}
+    description={The Large Model Systems Organization eponymously develops large models and systems that are open, accessible, and scalable}
 }
 
