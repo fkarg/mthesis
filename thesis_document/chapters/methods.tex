@@ -17,6 +17,8 @@ The models part of the benchmark are introduced in \secref{models}.
 We will first establish the fundamentals of the transformer architecture in \subref{transformer} and take a look at the development to a \acrlong{LLM} in \subref{llm} before combining a number of common adaptions to visualize how a modern transformer architecture often looks like in \subref{modern}.
 \todo{rewrite methods basics referecing when the other parts are finished}
 
+LLM Overview \cite{naveed_comprehensive_2023}
+
 \input{figures/transformer}
 
 \subsection{The Transformer Architecture}\label{sub:transformer}
@@ -47,6 +49,8 @@ Grouping some of the query heads for \gls{GQA} \cite{ainslie_gqa_2023} work bett
 This architecture, as described here and visualized in \figref{modern_transformer}, is shared with small variations by the \glspl{LLM} introduced later in \secref{models}.
 Apart from \model{llama2}, most other \glspl{LLM} do not use \gls{GQA}.
 
+Please refer to \cite{naveed_comprehensive_2023} for further details.
+
 \subsection{Large Language Models}\label{sub:llm}
 
 \gls{GPT2} \cite{radford_language_2019} is a very straightforward transformer architecture, but scaled up more than previous models.
@@ -65,21 +69,34 @@ For more details on most of the aforementioned models, see \secref{models}.
 
 
 \section{Training Large Language Models}\label{sec:training}
-\todo{write section on training methods}
+\todo{write overeview of training methods}
+\todo{mhm ... not quite happy how this section turned out. We'll see}
+
 
 \subsection{Pretraining}\label{sub:pretraining}
-for main training usually crossentropy loss on text, decent batchsizes, large scale distributed.
-\todo{write subsection on pretraining}
+Fundamentally, the objective of a \gls{causal} is to predict the next token based on the current token sequence.
+The prediction of one token thus only depends on previous tokens.
+For such scenarios, the reward is modeled as the likelyhood of predicting the correct token in the sequence.
+
+To do the training, a high-quality dataset is also needed, numerous of which are publicly available \cite{redpajamadata_2023}.
+You can find more details on this and additional parameters such as batch size and large scale distributed training in \cite{tirumala_d4_2023}.
 
 \subsection{Fine-Tuning}\label{sub:finetune}
-specialized, mostly task-specific training making use of transfer-learning from a generalized model, making them capable for tasks where not much data is available
-\todo{write subsection on finetuning}
+Fine-tuning exploits \textit{transfer learning} by continuing to train (See the previous \subref{pretraining} for details on training in general) a previously \textit{pre-trained} model, usually with a lower training rate and on very specialized data \cite{gaddipati_comparative_2020}.
+This allows \textit{transferring} previosly learned features to accomplish a different task by making small adaptations.
+
+As such, most fine-tuning and its resulting models is highly specialized.
 
 \subsection{Fine-Tuning on Instructions}\label{sub:instruct}
-mostly just changing 'expectation distribution' of model, giving preferred answers when interacting with the model for most people
+Pre-trained or task-specific fine-tuned  models have learned context dependent token sequence likelihoods.
+This is useful for predicting the 'next' token on a wikipedia article or novel, but this does not make it easy to utilize the model in other ways.
 
-a model fine-tuned on a instruction dataset or setting is commonly referred to as a 'instruct'-variant.
-\todo{write subsection on instruction-finetuning}
+Essentially, fine-tuning on instructions guides the output by shifting the learned context-dependent token sequence likelihoods, providing more control over model outputs.
+This results in users having a preference for the outputs of smaller models, over substantially bigger models, when the smaller model has been instruction-finetuned \cite{ouyang_training_2022}, as it makes the model more 'useful' in a naive sense.
+A model fine-tuned on  a instruction dataset is commonly referred to as a \textit{instruct}-variant.
+
+You can find more information on instruction-finetuning in \cite{ouyang_training_2022, tirumala_d4_2023}.
+
 
 % \subsection{RLHF}\label{sub:rlhf}
 % learning preference policy to later fine-tune the large model on. basically lobotomization, as it drastically reduces capability.
