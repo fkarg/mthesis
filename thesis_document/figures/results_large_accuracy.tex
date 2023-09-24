@@ -1,9 +1,13 @@
 \begin{figure}[!htbp]
     \begin{centering}
         \includegraphics[width=\textwidth]{img/overview_large_accuracy}
-        \caption[Large Model Accuracy]{\textbf{Large Model Accuracy} description
+        \caption[Overview of Large Model Accuracy]{\textbf{Overview of the Accuracy of Models with a Size of 30B parameters or more.}
+        Leftmost is the average over all models.
+        The accuracy for almost all \ttemp and \ttime is around within a few percantage points of 95\%.
+        For \tsolv, accuracy is still mostly around 60\%. \model{vicuna} 33B is still trailing behind (there is no \model{vicuna} 65B variant available).
+        The accuracy of \model{llama} 30B on \tsolv is worse than that of any other \model{llama} size, trailing not too far behind \model{vicuna}.
         }
-        \label{fig:7b_acc}
+        \label{fig:large_acc}
     \end{centering}
 \end{figure}
 

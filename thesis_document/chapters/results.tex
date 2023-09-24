@@ -15,15 +15,22 @@
 \input{figures/results_13b_accuracy}
 \input{figures/results_large_accuracy}
 
-\todo{results chapter guideline: what did the experiments show, what does that mean}
+\section{7B Parameter Models}\label{sec:result:7b}
+As can be seen in \figref{7b_acc}, most models achieve decent accuracies in extracting \ttemp and \ttime data.
+Most models hover just below 60\% in \tsolv accuracy, with \model{vicuna} being an outlier, achieving an accuracy of only 27\%.
+\todo{build graph of unit mistakes}
 
-Write.
-\todo{write chapter on results}
+\section{13B Parameter Models}\label{sec:result:13b}
+See \figref{13b_acc}. 
+\model{vicuna} substantially improved its \tsolv accuracy compared to its 7B variant, where it is now only 10 \glspl{pp} behind \model{llama} and \model{llama2}.
+\model{vicuna} 13B is also the weakest in accuracy for \ttemp and \ttime, trailing by about 14 \glspl{pp}.
 
-Results section for each model?
-\todo{potentially a section for each model (size) seperately}
+\section{Large Models}\label{sec:result:large}
+See \figref{large_acc}. As much as scores between models differ in \secref{result:7b}, differences between large models are marginal at best
+
+\section{Discussion}\label{sec:discussion}
+\todo{what does it all mean}
 
 
-
-\verb!2023-09-09 16:05:36 ERROR    pcp: Could not find `cid` for [distilled H2O]!
+% \verb!2023-09-09 16:05:36 ERROR    pcp: Could not find `cid` for [distilled H2O]!
 

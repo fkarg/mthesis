@@ -1,7 +1,11 @@
 \begin{figure}[!htbp]
     \begin{centering}
         \includegraphics[width=\textwidth]{img/overview_7b_accuracy}
-        \caption[7B Model Accuracy]{\textbf{7B Model Accuracy} description
+        \caption[Overview of 7B Models Accuracy]{\textbf{Overview of the Accuracy of Models with a Size of 7B parameters.}
+        On the left is average over all 7B sized models.
+        Accuracy on \ttemp and \ttime is within 3 \glspl{pp} of the other, for each model except for \model{llama}, where the difference is 30 \glspl{pp}.
+        For most models, accuracy on \tsolv prediction is a few \glspl{pp} below 60\%, where \model{vicuna} is an outlier with only 27\% accuracy.
+        \model{llama2} has the highest accuracy for both \ttemp and \ttime, but \model{falcon} is slightly more accurate in \tsolv prediction on our dataset.
         }
         \label{fig:7b_acc}
     \end{centering}

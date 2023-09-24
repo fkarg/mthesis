@@ -38,6 +38,9 @@ You can see the schema we used for guidance in \coderef{schema}. Additionally, y
 
 \code{example_output.py}{output}{Exemplary output based on the prompt shown in \coderef{prompt}.}
 
+\textbf{Note} that while all code includes \texttt{additive}, later figures in \chapref{results} do not.
+This is due to mistaken modeling of the task on our part, which resulted in a horrendous accuracay. \todo{put in worst and best accuracy scores for additives}
+
 % \subsection{Prompt Engineering}\label{sub:engineering}
 % Answers, even to the same prompts, across models and even from the same model, can vary substantially \cite{chen_how_2023}.
 % Thus, a short-lived 'discipline', Prompt Engineering, emerged.
@@ -58,21 +61,31 @@ You can see the schema we used for guidance in \coderef{schema}. Additionally, y
 % \subsection{Prompts Used}\label{sub:prompts}
 
 
+\section{Data Source}\label{sec:data}
+We used 905 synthesis paragraphs which were used to create parts of the publicly accessible labels in the databases SynMOF\_A and SynMOF\_M \cite{luo_mof_2022}.
+We defaulted to get a label from SynMOF\_M (manually annotated) if it was available, and manually confirmed the validity of the SynMOF\_A label (generated from automatic extraction) if it existed.
+\todo{check again if default was A or M}
+In total, we had labels for 905 synthesis paragraphs which we fully utilisied.
+All proportional results in the later \chapref{results} are based on the accuracy over 905 items.
 
 \section{Supervised Fine Tuning}\label{sec:sft}
 \todo{rewrite section on SFT}
-The name of \acrfull{GPT} came from the fact that it simply was a large pre-trained transformer model which could be fine-tuned for any specific task.
-The benefit of using using a pretrained model is that it requires substantially less compute, and maybe more importantly, examples to train on to achieve good results on a task \cite{gaddipati_comparative_2020}.
-Until \gls{GPT3} became so capable that, for most \gls{NLP} tasks, you don't need to fine-tune it at all.
+The name of \acrfull{GPT} came from the fact that it was a large pre-trained transformer model which could be fine-tuned for any specific task.
+\glspl{LLM} tend to have been pretrained on so much data that they have become generally capable of most tasks even with no fine-tuning \cite{brown_language_2020}.
+Fine-tuning a pretrained model instead of a non-pretrained model requires substantially less compute, and sometimes more importantly, hardly any examples to train on to achieve similar results for most tasks \cite{gaddipati_comparative_2020}.
 
 See \secref{training} for more details on pre-training a \gls{LLM} and \subref{finetune} for details on finetunig.
 
-What follows are excerpts of attempting to fine-tune a model, and attempts at understanding why it didn't work.
+In the end, we aboned fine-tuning due to time constraints. See \secref{out-sft} on an outlook for fine-tuning.
+
+What follows are two excerpts of what we encountered when attempting to fine-tune \glspl{LLM} using the \gls{transformers} library.
+While they are by no means exhaustive, other failed approaches followed a similar pattern of wrong or lacking documentation among numerous locally fixed bugs.
 
 \subsection{Excerpt 1: Broken Models}\label{sub:brokenft}
-\todo{write subsection on broken models with more details}
-demonstrate that stuff just isn't documented, anywhere, and even the community doesn't know.
-\todo{figure out actual structure}
+Since we have a custom dataset, we also need to write a custom dataloader.
+An item of the dataloader can just be the text of the synthesis paragraph -- in a dictionary, as a very specific key.
+There is however, only partial and conflicting documentation on the existance and usage of these keys.
+\todo{continue writing excerpt 1 from here on}
 
 nuances: tokenization of dataset prior to training. however, which part is doing what?
 
