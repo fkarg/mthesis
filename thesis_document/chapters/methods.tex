@@ -17,24 +17,42 @@ The models part of the benchmark are introduced in \secref{models}.
 We will first establish the fundamentals of the transformer architecture in \subref{transformer} and take a look at the development to a \acrlong{LLM} in \subref{llm} before combining a number of common adaptions to visualize how a modern transformer architecture often looks like in \subref{modern}.
 \todo{rewrite methods basics referecing when the other parts are finished}
 
+\input{figures/transformer}
 
 \subsection{The Transformer Architecture}\label{sub:transformer}
-\input{figures/transformer}
-All modern language models are based on what Google introduced as the transformer architecture \cite{vaswani_attention_2017} in 2017, see the caption in \figref{transformer} for a more detailed description.
-\todo{actually include parts on the encoder and decoder in text here. Don't just rely on the figure description}
+All modern language models are based on what Google introduced as the transformer architecture \cite{vaswani_attention_2017}. 
+This architecture originally consisted of an encoder and a decoder (See \figref{transformer} for more details).
 This new transformer architecture quickly established itself by outperforming other architectures available at the time with a fraction of the training cost.
 An Encoder-Only transformer architecture, specifically \gls{BERT} set a new \gls{SOTA} for all \gls{NLP} benchmarks established at the time.
+% This success was not limited to \gls{NLP} tasks.
 
-In 2019 \gls{OpenAI} introduced \gls{GPT2} \cite{radford_language_2019}, a very straightforward transformer architecture but scaled up more than previous models. \gls{GPT2} mainly demonstrated that bigger \glspl{LM} get more capable in general.
-\todo{kinda reads more like a history book}
-The biggest \gls{GPT2} variant had 1.5 billion parameters, which is 15x more parameters than the biggest \gls{BERT} variant had.
-Others introduced models with similar parameter counts and capabilities.
-\todo{figure out final main point I want to make}
 % Along with significantly increasing capability in \acrlong{NLP}, these models enabled more sophisticated requests for data extraction.
 
 % main difference to before: enabled more context compared to LSTM-based attention stuff (andscaling)
 
+\subsection{A Modern Transformer Architecture}\label{sub:modern}
+
+There have been various attempts at improving the transformer architecture \cite{shazeer_glu_2020, su_roformer_2022, ainslie_gqa_2023, bolya_hydra_2022, sukhbaatar_adaptive_2019, lu_understanding_2019, ye_understanding_2023, wu_memorizing_2022}, some of them more successful than others.
+When setting up a new transformer model, there are a few established improvements that are used with few exceptions.
+Compare with \figref{modern_transformer} for a graphic representation.
+
+As activation functions, early transformer architectures used \gls{ReLU}, but when comparing different activation functions, \gls{SwiGLU} \cite{shazeer_glu_2020} empirically work best for most situations.
+
+Instead of the previous sinusoidal positional encoding, using \gls{RoPE} works a lot better \cite{su_roformer_2022}. So does RMSNorm as LayerNorm \cite{ba_layer_2016}, when using it before instead of after each layer.
+
+Grouping some of the query heads for \gls{GQA} \cite{ainslie_gqa_2023} work better than no sharing or full individual heads \cite{bolya_hydra_2022}.
+
+\input{figures/modern_transformer}
+
+This architecture, as described here and visualized in \figref{modern_transformer}, is shared with small variations by the \glspl{LLM} introduced later in \secref{models}.
+Apart from \model{llama2}, most other \glspl{LLM} do not use \gls{GQA}.
+
 \subsection{Large Language Models}\label{sub:llm}
+
+\gls{GPT2} \cite{radford_language_2019} is a very straightforward transformer architecture, but scaled up more than previous models.
+The biggest \gls{GPT2} variant had 1.5 billion parameters, which is 15x more parameters than the biggest \gls{BERT} variant had.
+It mainly demonstrated that bigger \glspl{LM} get more capable in general -- and seemingly without limit.
+
 Models with more than a few billion parameters became generally referred to as a \acrlong{LLM}. \gls{GPT3}, the first such model with 176 billion parameters was introduced by \gls{OpenAI} in 2020 \cite{brown_language_2020}.
 \glspl{LLM} differ from previous models in both parameter count (usually many billions) and substantial advances in general capability.
 These models tend to have smaller siblings of the same architecture with fewer parameters, commonly in th steps of 7 billion, 13 billion, 30 billion, and 70 billion, though availability and exact parameter count varies.
@@ -45,18 +63,8 @@ The most recent and most capable generation of \glspl{LM} got introduced startin
 
 For more details on most of the aforementioned models, see \secref{models}.
 
-\subsection{The Modern Transformer Architecture}\label{sub:modern}
-See \figref{modern_transformer}.
-\todo{rewrite subsection on modern transformer}
 
-Over time, people figured stuff out. We have some explanations for why something works better, but most of it is still only speculation, and has been proven empirically more so than theoretically. 
-One of the first things they found was that using SwiGLU as activation function instead of ReLU improved results. \todo{glossary / acronym entries for ReLU, SwiGLU, MLP?}
-Instead of the previous sinusoidal positional encoding, they figured out that using \gls{RoPE} worked a lot better.
-Also, normalization before, not after each sub-layer works a lot better.
-As well as grouping some of the query heads for \gls{GQA}. This reduced parameters, speeds up evaluation and training, and delivers better results overall.
-\input{figures/modern_transformer}
-
-\section{Training Methods}\label{sec:training}
+\section{Training Large Language Models}\label{sec:training}
 \todo{write section on training methods}
 
 \subsection{Pretraining}\label{sub:pretraining}
@@ -73,7 +81,7 @@ mostly just changing 'expectation distribution' of model, giving preferred answe
 a model fine-tuned on a instruction dataset or setting is commonly referred to as a 'instruct'-variant.
 \todo{write subsection on instruction-finetuning}
 
-\subsection{RLHF}\label{sub:rlhf}
-learning preference policy to later fine-tune the large model on. basically lobotomization, as it drastically reduces capability.
-Well, write it a bit nicer than that.
-\todo{this is not really relevant for my thesis. remove? or write?}
+% \subsection{RLHF}\label{sub:rlhf}
+% learning preference policy to later fine-tune the large model on. basically lobotomization, as it drastically reduces capability.
+% Well, write it a bit nicer than that.
+% \todo{this is not really relevant for my thesis. remove? or write?}

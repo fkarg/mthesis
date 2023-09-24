@@ -1,12 +1,17 @@
-\begin{figure}[!htbp]
+\begin{figure}[!htb]
     \begin{centering}
-        \includegraphics{img/transformer}
-        \caption[Original Transformer Architecture]{\textbf{Original Transformer Architecture}. Image Source: \cite{vaswani_attention_2017}
+        \includegraphics[height=0.5\textheight]{img/transformer}
+        \caption[Original Transformer Architecture]{\textbf{Original Transformer Architecture.}
+        The architecture was originally conceptualized for translation between languages.
+        For that effect the text to translate (input) will be fully encoded to the embedding space, added to a positional encoding, and passed through alternating layers of self-attention and \gls{MLP} feed-forward layers with \gls{ReLU} activation, with residual connections and normalization after each.
+        Output is generated autoregressively (generating each output token one-by-one, and append it to outputs to generate the next one), and has an additional layer of cross-attention to the input embedding.
+        \Glspl{causal} are exclusively autoregressive decoder-only models.
+        % The text to translate \textit{from} is the input, and the model will autoregressively (append selected output token to the outputs to generate the next output token until the full output has been generated) generate the full output.
+        Image Source: \cite{vaswani_attention_2017}
         }
         \label{fig:transformer}
     \end{centering}
 \end{figure}
-\todo{write original transformer architecture description}
 
 % \begin{figure}[!htbp]
 %     \begin{centering}
