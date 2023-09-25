@@ -1,5 +1,4 @@
 \chapter{Approach}\label{chap:approach}
-\todo{approach chapter guideline: what did I do, why did I do it}
 Here, we describe some of our approach to using \glspl{LLM}, decisions made, lessons learned, and more.
 
 Specifically, we put little effort in prompt engineering, with the argument that it should have little impact for fine-tuned models, the main part of our work. As it turns out (See \secref{sft} for more details on training failures), this ended up not being the case.
@@ -8,13 +7,14 @@ See \subref{list} for a list of the models used, \subref{criteria} for selection
 \todo{rewrite when the rest becomes clearer}
 
 All source code for this work can be found at \url{https://github.com/fkarg/mthesis}, and a tag will mark the state at the time of submission.
+\todo{publish on day of submission}
 
 \section{Implementation}\label{sec:impl}
 As partially described before in \secref{models}, it became appearent during literature research that it might be valuable to compare different models, and that additional models might become available in the near future.
 The \acrlong{transformers} library is a well-established framework providing abstractions to load, manipulate and train any deep learning architecture in a standardized format.
 Additionally, all open-access \glspl{LLM} are available directly through the \gls{hf} portal.
 
-Most other libraries used are either straightforward (\texttt{torch, einops, accelerate, bitsandbytes} to get the models to run) or common ecosystem choices (e.g. \texttt{typer, rich} as cli interface).
+Most other libraries used are either straightforward (\texttt{torch}, \texttt{einops}, \texttt{accelerate}, \texttt{bitsandbytes} to get the models to run) or common ecosystem choices (e.g. \texttt{typer}, \texttt{rich} as cli interface).
 Proportionally speaking, the custom dataloader(s) and the main module have the highest \gls{LOC} counts.
 
 \input{chapters/models}
@@ -24,9 +24,9 @@ Proportionally speaking, the custom dataloader(s) and the main module have the h
 The way to get them to solve a task as requested is by \textit{prompting} the model with a certain input.
 This is particularly emintent in instruct-based models (See \subref{instruct} for more details on instruction-based finetuning).
 
-We have not put much effort in figuring out the best prompts, primarily because any amount of fine-tuning would be more effective than doing so. You can read more on what went wrong trying to do that in the following \secref{sft}.
+We have not put much effort in figuring out the best prompts, primarily because we would expect that any amount of fine-tuning to be more effective than improving the prompt. You can read more on what went wrong attempting to fine-tune in the following \secref{sft}.
 
-As used \textit{guidance} \cite{guidance_2023}, and specifically the library \texttt{jsonformer} \cite{1rgs_2023}, for getting structured information as an output.
+We used \textit{guidance} \cite{guidance_2023}, and specifically the library \texttt{jsonformer} \cite{1rgs_2023}, for getting structured information as an output.
 In effect, guidance provides `guard rails' for models generating output.
 Specifically, the model does not have to generate the tokens for the structure of json, but only the tokens for the content of the json.
 
@@ -85,6 +85,8 @@ An item of the dataloader can just be the text of the synthesis paragraph -- in 
 There is however, only partial and conflicting documentation on the existance and usage of these keys.
 \todo{continue writing excerpt 1 from here on}
 
+{
+\color{blue}
 nuances: tokenization of dataset prior to training. however, which part is doing what?
 
 building custom dataset: array with dicts, with the three required keys \verb`input_ids`, \verb`attention_maska`, and \verb`labels`. curiously, neither is documented particularly well so we tried what is recommended in various tutorials and official sources (e.g. microsoft \cite{deepspeedexamples_2023}): 
@@ -96,10 +98,13 @@ this token is usually used as a stopping criterion during generation.
 ? resulted in broken model, probably learned that it's 'finished', only outputting EOS tokens. Not sure if doing this otherwise would actually change anything though
 
 Attempts at mask manipulation: not possible with causalLMs (they are all of this type)
+}
 
 \subsection{Excerpt 2: Broken Libraries}\label{sub:libraries}
 In a later attempt wie tried using the high-level \gls{hf} \verb`trl` (Transformer Reinforcement Learning) library, which seems to be built for our use-case exactly.
 
+{
+\color{blue}
 However, this library is at best research-grade. The examples, while working with only a few lines, obscure the inner workings of the library.
 And good luck: it's also not documented. There is the \verb`DataCollatorForCompletionOnlyLM` collator, which takes a tokenizer, but also doesn't tokenize?!?
 \todo{rewrite subsection on broken libraries}
@@ -109,15 +114,17 @@ examples only have \verb`text` field, there is a formatting function and whatnot
 trying out various things didn't work, until we ultimately didn't have time to continue.
 
 SFT: a lot of magic that isn't documented properly, at all. Couldn't get it to run, gave up due to time limit.
-
+}
 % \mintinline{python}{trl} library \cite{hf_trl_supervised}
 
 \section{Criteria for Equality}\label{sec:equality}
 In this section we try to list the criteria we used to define equality between a result from a \gls{LLM} and the target label.
 \todo{write section on criteria for equality}
 
+{
+\color{blue}
 for temperature and time we did conversion between units (not super straightforward), models had a bit of unit confusion
 (sometimes adding too many or too few zeros, though also often getting it right)
 
 solvents and additives: getting cid and comparing it (if it can be gotten in the first place though)
-
+}

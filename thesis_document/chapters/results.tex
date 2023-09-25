@@ -15,22 +15,67 @@
 \input{figures/results_13b_accuracy}
 \input{figures/results_large_accuracy}
 
-\section{7B Parameter Models}\label{sec:result:7b}
+
+\section{First Look}\label{sec:result:first}
+
+\subsection{7B Parameter Models}\label{sub:result:7b}
 As can be seen in \figref{7b_acc}, most models achieve decent accuracies in extracting \ttemp and \ttime data.
 Most models hover just below 60\% in \tsolv accuracy, with \model{vicuna} being an outlier, achieving an accuracy of only 27\%.
-\todo{build graph of unit mistakes}
 
-\section{13B Parameter Models}\label{sec:result:13b}
+\subsection{13B Parameter Models}\label{sub:result:13b}
 See \figref{13b_acc}. 
 \model{vicuna} substantially improved its \tsolv accuracy compared to its 7B variant, where it is now only 10 \glspl{pp} behind \model{llama} and \model{llama2}.
 \model{vicuna} 13B is also the weakest in accuracy for \ttemp and \ttime, trailing by about 14 \glspl{pp}.
 
-\section{Large Models}\label{sec:result:large}
-See \figref{large_acc}. As much as scores between models differ in \secref{result:7b}, differences between large models are marginal at best
+\subsection{Large Models}\label{sub:result:large}
+See \figref{large_acc}. As much as scores between models differ in \subref{result:7b}, differences between large models are marginal at best
+
+\section{Unit Confusion}\label{sec:unitconfusion}
+\input{figures/results_7b_temp}
+\input{figures/results_7b_time}
+One interesting observation is that smaller models seem to do a lot of 'easy' mistakes.
+Not all such simple mistakes can be easily classified, but one certainly can: confusion of units.
+We counted all instances as \textit{unit confusion}, where the model provided one unit as answer (which was wrong), and we could get the correct \ttemp or \ttime only by using a different unit instead.
+
+For example, in one instances \model{falcon} confidently answered 20 °K, when the correct answer would have been 20 °C.
+
+\paragraph{Temperature Units}
+As can be seen in \figref{7b_temp}, only \model{falcon} experiences unit confusion for temperature -- and in particular the instruct-variant.
+It is unclear why that might be the case exactly, but it seems to be in part of the dataset \model{falcon} was trained on.
+
+\paragraph{Time Units}
+Unit confusion on \ttime seems to affect all models to some degree, as can be seen in \figref{7b_time}.
+Interestingly, \model{llama} seems to be affected the highest degree, followed by \model{falcon}.
+
+\paragraph{Other Mistakes}
+When looking through answers manually, we discovered additional 'clusters' of mistakes, e.g. adding one too many or too few zeros to \ttime or \ttemp responses.
+Smaller models have a higher tendency of making these mistakes, but we did not look into these failure modes further due to time constraints.
+
+\paragraph{Bigger-sized Models}
+Unit confusion on models sized 13B parameters or more is reduced to less than 0.5\% (0-4 answers to the 905 data points).
+
+\todo{build graphs for each model family -- if I have enough time for that}
+% \section{Unresolvable Solvents}
+
 
 \section{Discussion}\label{sec:discussion}
 \todo{what does it all mean}
+There are two interesting trends we can observe across models.
 
+\begin{enumerate}
+    \item Larger models are more accurate in the extraction of \ttemp and \ttime.
+    \item Accuracy in the extraction of \tsolv is largely the same regardless of model size.
+\end{enumerate}
+
+The first one is something we would pretty much expect, and it is good to have confirmation of that behaviour.
+However, even 13B-sized \model{llama} and \model{llama2} are only marginally worse than any of their bigger siblings, which indicates that even mid-sized models ought to already be fully capable of the extraction of simple parameters such as \ttemp and \ttime.
+
+The second, that we see mostly the same accuracy on \tsolv extraction, is indicative of the models getting \textit{confused} rather than fundamentally being incapable of doing it.
+The accuracy of just shy of 60\% also indicates that \textit{for the most part} it is clear what the task is.
+This suggests that this task could benefit substantially from additional prompt engineering, and maybe even more from fine-tuning. See \secref{out-prompt} and \secref{out-sft} for the outlook on each respectively.
+
+
+% Some of the answers given are hilarious too \todo{put some example hallucinations in the results chapter}
 
 % \verb!2023-09-09 16:05:36 ERROR    pcp: Could not find `cid` for [distilled H2O]!
 

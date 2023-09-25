@@ -43,15 +43,16 @@ Modeling \gls{NER} as a sequence-to-sequence labeling problem, \cite{zhao_finetu
 This demonstrated the fundamental capability of \glspl{LM} for this task.
 Most other work on \gls{NER} using \glspl{LM} has not been on materials science text but on general purpose text \cite{li_survey_2022}.
 
-Our work fundamentally differs, as we used \glspl{causal} wheras \gls{BERT} is a \gls{masked}. See \secref{masked} for an outlook on comparison with modern \gls{masked} architectures. See the later \secref{basics} on \acrlong{LM} basics.
+Our work fundamentally differs, as we use \glspl{causal} wheras \gls{BERT} is a \gls{masked}. See \secref{masked} for an outlook on comparison with modern \gls{masked} architectures. See the later \secref{basics} for more details on \acrlong{LM}.
 
 \subsection{LLMs for Information Extraction}
 \todo{write subsection on LLMs for IE}
+{\color{blue}
 Our currently most capable models for \gls{NLP} (?) are \glspl{LLM}. See the later \subref{llm} for a more extensive introduction on \glspl{LLM}. 
 
 Using a \gls{LLM} such as \gls{GPT3} for a mixed task of \gls{NER} and relation extraction ended with very mixed results for \gls{NER}. \cite{dunn_structured_2022}
 We're doing \gls{NER} only.
-
+}
 
 % Chinchilla \cite{hoffmann_training_2022} and CoTR \cite{zhang_multimodal_2023}
 % demonstrated that while achieving impressive capability, such large models are
@@ -67,4 +68,4 @@ The goals of this work are threefold
 \end{enumerate}
 
 As part of this work, we will create a flexible automated pipeline for the extraction of non-machine readable information in \gls{MOF} synthesis.
-Refer to \secref{impl} for more details on implementation.
+Refer to \chapref{approach} for more details on our approach, specifically \secref{impl} for more details on our implementation, \secref{models} for more details on the models used, and \secref{data} for more details on the data source.

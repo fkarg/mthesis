@@ -38,15 +38,20 @@ There have been various attempts at improving the transformer architecture \cite
 When setting up a new transformer model, there are a few established improvements that are used with few exceptions.
 Compare with \figref{modern_transformer} for a graphic representation.
 
-As activation functions, early transformer architectures used \gls{ReLU}, but when comparing different activation functions, \gls{SwiGLU} \cite{shazeer_glu_2020} empirically work best for most situations.
+As activation functions, early transformer architectures used \gls{ReLU}, but when comparing different activation functions, \gls{SwiGLU} % \cite{shazeer_glu_2020}
+empirically work best for most situations.
 
-Instead of the previous sinusoidal positional encoding, using \gls{RoPE} works a lot better \cite{su_roformer_2022}. So does RMSNorm as LayerNorm \cite{ba_layer_2016}, when using it before instead of after each layer.
+Instead of the previous sinusoidal positional encoding, using \gls{RoPE} works a lot better
+% \cite{su_roformer_2022}
+. So does RMSNorm as LayerNorm \cite{ba_layer_2016}, when using it before instead of after each layer.
 
-Grouping some of the query heads for \gls{GQA} \cite{ainslie_gqa_2023} work better than no sharing or full individual heads \cite{bolya_hydra_2022}.
+Grouping some of the query heads for \gls{GQA} 
+% \cite{ainslie_gqa_2023}
+work better than no sharing or full individual heads \cite{bolya_hydra_2022}.
 
 \input{figures/modern_transformer}
 
-This architecture, as described here and visualized in \figref{modern_transformer}, is shared with small variations by the \glspl{LLM} introduced later in \secref{models}.
+This architecture, as roughly described here and visualized in \figref{modern_transformer}, is shared with small variations by the \glspl{LLM} introduced later in \secref{models}.
 Apart from \model{llama2}, most other \glspl{LLM} do not use \gls{GQA}.
 
 Please refer to \cite{naveed_comprehensive_2023} for further details.
@@ -59,13 +64,14 @@ It mainly demonstrated that bigger \glspl{LM} get more capable in general -- and
 
 Models with more than a few billion parameters became generally referred to as a \acrlong{LLM}. \gls{GPT3}, the first such model with 176 billion parameters was introduced by \gls{OpenAI} in 2020 \cite{brown_language_2020}.
 \glspl{LLM} differ from previous models in both parameter count (usually many billions) and substantial advances in general capability.
-These models tend to have smaller siblings of the same architecture with fewer parameters, commonly in th steps of 7 billion, 13 billion, 30 billion, and 70 billion, though availability and exact parameter count varies.
+These models tend to have smaller siblings of the same architecture with fewer parameters, often in the steps of 7 billion, 13 billion, 30 billion, and 70 billion, though availability and exact parameter count varies.
 Other Organisations trained \glspl{LLM} of this generation as well, some of them open-source, which demonstrated similar capabilities.
 The most well-known models of this wave were \model{BLOOM} and \model{OPT} (throughout 2022).
+\todo{still gives quite the history vibe. is that okay?}
 
 The most recent and most capable generation of \glspl{LM} got introduced starting early 2023, after the release of \gls{ChatGPT} sparked worldwide interest in \glspl{LLM}. Progress happened fast and many incorporated numerous of the collectively found possible improvements. \glspl{LLM} of this generation are mostly classified so by their capability, and less so through parameter size, albeit their parameter counts still tend to be in the dozens of billions. Models of this category include the open-source \model{llama} and its well-known derivatives \model{alpaca} and \model{vicuna}, \model{falcon}, as well as most recently \model{llama2}.
 
-For more details on most of the aforementioned models, see \secref{models}.
+For more information on most of the aforementioned models, see \secref{models}.
 
 
 \section{Training Large Language Models}\label{sec:training}
