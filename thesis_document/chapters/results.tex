@@ -17,6 +17,9 @@
 
 
 \section{First Look}\label{sec:result:first}
+\textbf{Note} that while all code (refer to \secref{impl}) includes \texttt{additive}, figures in this chapter do not.
+This is decsion was made due to mistaken modeling of the task, which resulted in horrendous accuracay.
+\todo{put in worst and best accuracy scores for additives}
 
 \subsection{7B Parameter Models}\label{sub:result:7b}
 As can be seen in \figref{7b_acc}, most models achieve decent accuracies in extracting \ttemp and \ttime data.
@@ -78,4 +81,55 @@ This suggests that this task could benefit substantially from additional prompt 
 % Some of the answers given are hilarious too \todo{put some example hallucinations in the results chapter}
 
 % \verb!2023-09-09 16:05:36 ERROR    pcp: Could not find `cid` for [distilled H2O]!
+
+
+\section{Supervised Fine Tuning}\label{sec:sft}
+\glspl{LLM} tend to have been pretrained on so much data that they have become generally capable of most tasks even with no fine-tuning \cite{brown_language_2020}.
+Fine-tuning a pretrained model instead of a non-pretrained model requires substantially less compute, and sometimes more importantly, hardly any examples to train on to achieve similar results for most tasks \cite{gaddipati_comparative_2020}.
+
+See \secref{training} for more details on pre-training a \gls{LLM} and \subref{finetune} for details on finetunig.
+
+In the end, we abandoned fine-tuning due to time constraints. See \secref{con:sft} for conclusions and \secref{out-sft} for an outlook on fine-tuning.
+
+What follows are two excerpts of what we encountered when attempting to fine-tune \glspl{LLM} using \gls{transformers}.
+While they are by no means exhaustive, other failed approaches followed a similar pattern of wrong or lacking documentation among numerous locally fixed bugs.
+
+\subsection{Excerpt 1: Broken Models}\label{sub:brokenft}
+Since we have a custom dataset, we also need to write a custom dataloader.
+An item of the dataloader can just be the text of the synthesis paragraph -- in a dictionary, as a very specific key.
+There is however, only partial and conflicting documentation on the existance and usage of these keys.
+\todo{continue writing excerpt 1 from here on}
+
+{
+\color{blue}
+nuances: tokenization of dataset prior to training. however, which part is doing what?
+
+building custom dataset: array with dicts, with the three required keys \verb`input_ids`, \verb`attention_maska`, and \verb`labels`. curiously, neither is documented particularly well so we tried what is recommended in various tutorials and official sources (e.g. microsoft \cite{deepspeedexamples_2023}): 
+
+put the \verb`token_ids` received from tokenization to both \verb`input_ids` and \verb`labels`.
+
+This did result in a model with differing weights than it had before. This model however, was broken as it did not generate anything that was not an EOS-token.
+this token is usually used as a stopping criterion during generation.
+? resulted in broken model, probably learned that it's 'finished', only outputting EOS tokens. Not sure if doing this otherwise would actually change anything though
+
+Attempts at mask manipulation: not possible with causalLMs (they are all of this type)
+}
+
+\subsection{Excerpt 2: Broken Libraries}\label{sub:libraries}
+In a later attempt wie tried using the high-level \gls{hf} \verb`trl` (Transformer Reinforcement Learning) library, which seems to be built for our use-case exactly.
+
+{
+\color{blue}
+However, this library is at best research-grade. The examples, while working with only a few lines, obscure the inner workings of the library.
+And good luck: it's also not documented. There is the \verb`DataCollatorForCompletionOnlyLM` collator, which takes a tokenizer, but also doesn't tokenize?!?
+\todo{rewrite subsection on broken libraries}
+
+examples only have \verb`text` field, there is a formatting function and whatnot, but this implies tokenization is happening later. nope, errors with 'missing field \verb`token_ids`'.
+
+trying out various things didn't work, until we ultimately didn't have time to continue.
+
+SFT: a lot of magic that isn't documented properly, at all. Couldn't get it to run, gave up due to time limit.
+}
+% \mintinline{python}{trl} library \cite{hf_trl_supervised}
+
 

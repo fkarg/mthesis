@@ -13,12 +13,12 @@
 
 
 
-\section{Related Work}\label{sec:related}
-\subsection{Information Extraction}\label{sub:extraction}
+% \section{Related Work}\label{sec:related}
+\section{Information Extraction}\label{sec:extraction}
 Information Extraction is the \gls{NLP} task of extracting structured (machine-readable) information from unstructured text.
 One approach to information extraction is via \gls{NER}.
 
-\subsection{Named Entity Recognition}\label{sub:NER}
+\section{Named Entity Recognition}\label{sec:NER}
 \gls{NER} seeks to locate and classify named entities mentioned in unstructured text into pre-defined categories \cite{li_survey_2022} such as temperature, timeframe, or chemical components, or any other named category that has been specified beforehand.
 Fundamentally speaking, this is what we are doing in our work.
 The usual \gls{NER} definition of an entity assumes \textit{rigid designators} \cite{laporte_rigid_2022}, i.e. that an entity only has one name to reference it.
@@ -30,7 +30,7 @@ Second, while Chemistry has normative rules on how molecules are named, it is po
 % It is then possible to automatically construct tabular databases based on the extracted data \cite{zhao_finetuning_2021} (BERT-SFT for matsci).
 
 
-\subsection{Rule-Based Entity Recognition}
+\section{Rule-Based Entity Recognition}
 There have long been rule-based approaches for the recognition of named entities (e.g. Temperature) for material science literature.
 ChemTagger \cite{hawizy_chemicaltagger_2011}, and others \cite{beard_comparative_2019, huang_database_2020}
 clearly demonstrated that systems based on regular expressions can accurately extract information in straightforward, well-defined situations.
@@ -38,34 +38,22 @@ clearly demonstrated that systems based on regular expressions can accurately ex
 However, these tools tend to be highly specialized which makes them hard to adapt to new or more complex queries or circumstances.
 
 
-\subsection{Language Models for Information Extraction}
+\section{Language Models for Information Extraction}
 Modeling \gls{NER} as a sequence-to-sequence labeling problem, \cite{zhao_finetuning_2021} fine-tuned a pretrained \gls{BERT} instance and achieved an \gls{fscore} of 85\%, demonstrating both high precision and recall (where the \gls{fscore} is \glsdesc{fscore}).
 This demonstrated the fundamental capability of \glspl{LM} for this task.
 Most other work on \gls{NER} using \glspl{LM} has not been on materials science text but on general purpose text \cite{li_survey_2022}.
 
 Our work fundamentally differs, as we use \glspl{causal} wheras \gls{BERT} is a \gls{masked}. See \secref{masked} for an outlook on comparison with modern \gls{masked} architectures. See the later \secref{basics} for more details on \acrlong{LM}.
 
-\subsection{LLMs for Information Extraction}
-\todo{write subsection on LLMs for IE}
-{\color{blue}
-Our currently most capable models for \gls{NLP} (?) are \glspl{LLM}. See the later \subref{llm} for a more extensive introduction on \glspl{LLM}. 
+\section{LLMs for Information Extraction}
+\glspl{LLM}, usually in the form of a \gls{causal}, are a recent phenomenon, and at the forefront of \gls{NLP} research.
+There is not much prior work on \gls{NER} using an \gls{LLM}.
+A combined \gls{NER} and Relation Extraction approach using \gls{GPT3} has been tried with some success \cite{dunn_structured_2022}.
+Since their primary focus is on relation extraction, \glspl{fscore} for the \gls{NER} task varied wildly between 0.4 and 0.95.
+Our work differs by comparing multiple open-access and more capable \glspl{LLM}, as well as comparing different parameters.
 
-Using a \gls{LLM} such as \gls{GPT3} for a mixed task of \gls{NER} and relation extraction ended with very mixed results for \gls{NER}. \cite{dunn_structured_2022}
-We're doing \gls{NER} only.
-}
+See the later \subref{llm} for a more extensive introduction on \glspl{LLM}. 
 
 % Chinchilla \cite{hoffmann_training_2022} and CoTR \cite{zhang_multimodal_2023}
 % demonstrated that while achieving impressive capability, such large models are
 % substantially overparametrized and undertrained.
-
-\section{Scientific Question}\label{sec:question}
-
-The goals of this work are threefold
-\begin{enumerate}
-    \item Demonstrate zero-shot automated information extraction from scientific literature using open-access \glspl{LLM}.
-    \item Benchmark\todo{Benchmark or Compare?} the accuracy of currently available open-access \glspl{LLM} for automated information extraction from scientific literature.
-    \item Attempt fine-tuning of open-access \glspl{LLM} in order to increase accuracy.
-\end{enumerate}
-
-As part of this work, we will create a flexible automated pipeline for the extraction of non-machine readable information in \gls{MOF} synthesis.
-Refer to \chapref{approach} for more details on our approach, specifically \secref{impl} for more details on our implementation, \secref{models} for more details on the models used, and \secref{data} for more details on the data source.
