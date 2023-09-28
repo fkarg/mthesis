@@ -20,7 +20,7 @@ Last but not least, \subref{llm} provides information on the scaling up and deve
 \input{figures/transformer}
 
 \subsection{The Transformer Architecture}\label{sub:transformer}
-All modern language models are based on what \gls{Google} introduced as the transformer architecture \cite{vaswani_attention_2017}. 
+All modern language models are based on what \gls{Google} introduced as the transformer architecture \cite{vaswani_attention_2017}.
 This architecture originally was designed for translation, with an encoder and a decoderpart (See \figref{transformer} for more details).
 Text to translate would be first encoded to the embedding space by the encoder, and the decoder would autoregressively (only one token for each full forward pass, where the most recent one will be appended to the output) generate the output, token by token.
 

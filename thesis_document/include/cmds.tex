@@ -6,11 +6,11 @@
                                                        % it's just an abbrev.
                                                        % for the long command
 
-\newcommand{\arr}[2]{\begin{array}{#1}#2\end{array}}   % to create arrays. very 
+\newcommand{\arr}[2]{\begin{array}{#1}#2\end{array}}   % to create arrays. very
                                                        % useful in math env
 
-\renewcommand{\d}{\ensuremath{\text{d}}}               % as the differential 
-                                                       % operator, e.g. 
+\renewcommand{\d}{\ensuremath{\text{d}}}               % as the differential
+                                                       % operator, e.g.
                                                        % \frac{\d x}{\d t}
 
 \newcommand{\NN}{\mathbb{N}}                           % or change it to
@@ -24,7 +24,7 @@
 %% |    Commands and Environments    |
 %% -----------------------------------
 \newcommand{\margtodo}{\marginpar{\textbf{\textcolor{kitcolor}{ToDo}}}{}}   % used by \todo command
-% \newcommand{\todo}[1]{{\textbf{\textcolor{kitcolor}{[\margtodo{}#1]}}}{}}   % for todo-notes inside 
+% \newcommand{\todo}[1]{{\textbf{\textcolor{kitcolor}{[\margtodo{}#1]}}}{}}   % for todo-notes inside
 % \renewcommand{\todo}[2][]{\todo[color=red,#1]{#2}}
 
                                                        % the document
@@ -35,7 +35,7 @@
                                                        % short and long descrip.
 
 \newcommand{\xfigure}[5]{\begin{figure}[#1]            % a quick command for
-\centering                                             % including graphics 
+\centering                                             % including graphics
 \includegraphics[scale=#2]{./fig/#3}                   % with all necessary vars
 \xcaption{#4}{#5}
 \label{fig:#3}
