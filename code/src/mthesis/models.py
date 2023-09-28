@@ -9,6 +9,7 @@ from transformers import (
 )
 from torch.optim import AdamW
 
+
 class JsonformerHFModel(PreTrainedModel):
     def __init__(self, **kwargs):
         super().__init__(self, **kwargs)
@@ -30,9 +31,9 @@ class JsonformerModel(pl.LightningModule):
         model_path: str | None = None,
         model_name: str | None = None,
         model_type: str | None = None,
+        tokenizer_path: str | None = None,
         load_params: bool = True,
     ):
-
         super().__init__()
         if load_params and model_path is not None:
             self.model = AutoModelForCausalLM.from_pretrained(
@@ -43,7 +44,7 @@ class JsonformerModel(pl.LightningModule):
                 device_map="auto",
             )
             self.tokenizer = AutoTokenizer.from_pretrained(
-                model_path,
+                tokenizer_path if tokenizer_path else model_path,
                 use_fast=True,
                 return_tensors="pt",
             )
@@ -72,7 +73,9 @@ class JsonformerModel(pl.LightningModule):
         return Jsonformer(self.model, self.tokenizer, self.schema, text)()
 
     def forward2(self, text: str):
-        input_tokens = self.tokenizer.encode(text, return_tensors="pt").to(self.model.device)
+        input_tokens = self.tokenizer.encode(text, return_tensors="pt").to(
+            self.model.device
+        )
         return self.model(text)
 
     def training_step(self, batch, batch_idx):

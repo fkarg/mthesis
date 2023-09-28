@@ -2,6 +2,7 @@ import yaml
 import os
 import sys
 import logging
+from rich.pretty import pprint
 
 log = logging.getLogger(__name__)
 
@@ -64,3 +65,20 @@ def read_paragraph(paragraph_id: str, dataset_path: str = None):
         for char in ["\n", "\u2009", "\u2005", "\xa0"]:
             paragraph_text = paragraph_text.replace(char, " ")
     return paragraph_text
+
+
+def count_occurences(iterable: iter, counters: dict = None):
+    if counters is None:
+        counters = {
+            "additive": {},
+            "solvent": {},
+            "temperature": {},
+            "time": {},
+            "temperature_unit": {},
+            "time_unit": {},
+        }
+    for item in iterable:
+        for k, v in item.items():
+            counters[k][v] = counters[k].get(v, 0) + 1
+    pprint(counters)
+    return counters

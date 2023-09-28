@@ -96,7 +96,7 @@ class LabeledMOFDataset(MOFDataset):
         """
         dataset_path: path from which to load synthesis paragraphs
         label_cols: mapping from parameters to columns in label files (where the label for the parameter can be read from).
-        from_csv: load dataset from csv filepath instead.
+        from_csv: load dataset from csv filepath instead (if path is provided)
         """
         self.labels = dict()
         self.label_cols = label_cols
@@ -107,18 +107,16 @@ class LabeledMOFDataset(MOFDataset):
                 self._from_csv(from_csv)
                 return
             except Exception:
-                log.error(f"Failed loading dataset from CSV '{from_csv}'. Will reconstruct instead.")
+                log.error(
+                    f"Failed loading dataset from CSV '{from_csv}'. Will reconstruct instead."
+                )
 
         # load paragraphs first
         super().__init__(dataset_path)
 
         # now load label data
-        labels_path_A = os.path.join(
-            dataset_path, "../results", "SynMOF_A_out.csv"
-        )
-        labels_path_M = os.path.join(
-            dataset_path, "../results", "SynMOF_M_out.csv"
-        )
+        labels_path_A = os.path.join(dataset_path, "../results", "SynMOF_A_out.csv")
+        labels_path_M = os.path.join(dataset_path, "../results", "SynMOF_M_out.csv")
 
         labels_A = pd.read_csv(labels_path_A, sep=";")
         labels_M = pd.read_csv(labels_path_M, sep=";")
@@ -167,13 +165,18 @@ class LabeledMOFDataset(MOFDataset):
 
                 if parameter in ["additive", "solvent"]:
                     synonyms = cid2syns(answer_a)
+                    found = False
+
+                    self.labels[paragraph_id][parameter + "_cid"] = answer_a
 
                     for syn in synonyms:
-                        if syn in self.paragraphs[paragraph_id]:
+                        if syn.lower() in self.paragraphs[paragraph_id].lower():
                             self.labels[paragraph_id][parameter] = syn
+                            found = True
                             break
-
-                    self.labels[paragraph_id][parameter] = synonyms[0]
+                    if not found:
+                        log.warning(f"Didn't find synonym for {synonyms[0]} in text. Selecting it as default. Available: {len(synonyms)}")
+                        self.labels[paragraph_id][parameter] = synonyms[0]
                 elif parameter in ["time", "temperature"]:
                     self.labels[paragraph_id][parameter] = answer_a
             self.labels[paragraph_id]["temperature_unit"] = "C"
@@ -188,19 +191,19 @@ class LabeledMOFDataset(MOFDataset):
         paragraph_id, <parameters>, context
         idx, <labels>, <context>
         """
-        keys = ["paragraph_id"] + list(self.label_cols.keys()) + ["context"]
-        with open(filename, "w", newline='') as f:
-            writer = csv.DictWriter(f, fieldnames=keys, delimiter=';')
+        keys = ["paragraph_id"] + list(self.label_cols.keys()) + ["context", "temperature_unit", "time_unit"]
+        with open(filename, "w", newline="") as f:
+            writer = csv.DictWriter(f, fieldnames=keys, delimiter=";")
 
             # write header
             writer.writeheader()
 
             for idx in self.paragraphs.keys():
                 writer.writerow(
-                    { "paragraph_id": idx,
-                      "context": self.paragraphs[idx]
-                    } | { p: v for p, v in self.labels[idx].items() }
+                    {"paragraph_id": idx, "context": self.paragraphs[idx]}
+                    | {p: v for p, v in self.labels[idx].items()}
                 )
+        log.info(f"[dataset] Saved to [{filename}]")
 
     def _from_csv(self, from_csv: str):
         log.info(f"[dataset]: Loading LabeledMofDataset from csv '{from_csv}'")
@@ -208,16 +211,18 @@ class LabeledMOFDataset(MOFDataset):
         # - self.paragraphs: dict[paragraph_id -> context]
         # - self.paragraph_list: list[(paragraph_id, context)]
         # - self.labels: dict[paragraph_id, parameter -> str | float | None]
-        with open(from_csv, newline='') as f:
-            reader = csv.DictReader(f, delimiter=';')
+        with open(from_csv, newline="") as f:
+            reader = csv.DictReader(f, delimiter=";")
             for row in reader:
                 idx = row["paragraph_id"]
                 self.paragraphs[idx] = row["context"]
-                self.labels[idx] = { k: row[k] for k in self.label_cols.keys() }
-                self.labels[idx]["temperature_unit"] = "C"
-                self.labels[idx]["time_unit"] = "h"
+                self.labels[idx] = {k: row[k] for k in self.label_cols.keys()}
+                if not self.labels[idx].get("temperature_unit"):
+                    self.labels[idx]["temperature_unit"] = "C"
+                if not self.labels[idx].get("time_unit"):
+                    self.labels[idx]["time_unit"] = "h"
         self.paragraph_list = list(self.paragraphs.items())
-        log.info(f"[dataset]: Finished loading. #Items: {len(self)}")
+        log.info(f"[dataset]: Finished loading from csv. #Items: {len(self)}")
 
     def __getitem__(self, idx: int | str) -> dict:
         # return item at position idx.
@@ -246,7 +251,10 @@ class LabeledMOFDatasetTokens(LabeledMOFDataset):
         if kwargs["from_csv"] and load_untokenized:
             return
 
-        self.tokenized = {k: tokenizer.encode(self.paragraphs[k] + "\n" + str(self.labels[k])) for k in self.paragraphs.keys()}
+        self.tokenized = {
+            k: tokenizer.encode(self.paragraphs[k] + "\n" + str(self.labels[k]))
+            for k in self.paragraphs.keys()
+        }
 
     def __getitem__(self, idx: int | str) -> dict:
         try:
@@ -255,10 +263,13 @@ class LabeledMOFDatasetTokens(LabeledMOFDataset):
             idx, _ = self.paragraph_list[idx]
             return self.tokenized[idx]
 
+
 class InstructionMOFDataset(LabeledMOFDataset):
-    """ Basically, a LabeledMOFDataset, but we're returning instructions here.
-    """
+    """Basically, a LabeledMOFDataset, but we're returning instructions here."""
+
     def __init__(self, *args, **kwargs):
+        log.info(str(args))
+        log.info(str(kwargs))
         super().__init__(*args, **kwargs)
 
     def __getitem__(self, idx: int | str) -> dict:
@@ -270,23 +281,27 @@ class InstructionMOFDataset(LabeledMOFDataset):
             idx, paragraph = self.paragraph_list[idx]
 
         label = self.labels[idx]
+        label_text = f"### Answer: \n {label}"
 
-        schema = json.dumps({
-            "type": "object",
-            "properties": {
-                "additive": {"type": "string"},
-                "solvent": {"type": "string"},
-                "temperature": {"type": "number"},
-                "temperature_unit": {"type": "string"},
-                "time": {"type": "number"},
-                "time_unit": {"type": "string"},
-            },
-        })
+        schema = json.dumps(
+            {
+                "type": "object",
+                "properties": {
+                    "additive": {"type": "string"},
+                    "solvent": {"type": "string"},
+                    "temperature": {"type": "number"},
+                    "temperature_unit": {"type": "string"},
+                    "time": {"type": "number"},
+                    "time_unit": {"type": "string"},
+                },
+            }
+        )
 
-        instruction = f"Output result in the following JSON schema format:\n{schema}"
+        instruction = f"### Task: Extract the required synthesis parameters from the paragraph above in the following JSON schema format:\n{schema}"
         # "instruction": "Detect the sentiment of the tweet.",
         # "input": row_dict["tweet"],
         # "output": sentiment_score_to_name(row_dict["sentiment"])
+        combined = f"{paragraph}\n\n{instruction}\n\n{label_text}"
 
         # use wrapper TokenizeDataSet
         return {
@@ -294,33 +309,35 @@ class InstructionMOFDataset(LabeledMOFDataset):
             "instruction": instruction,
             "input": paragraph,
             "output": label,
+            "text": combined,
         }
 
 
-class TokenizeDataSet(torch.utils.data.Dataset):
-    """ Iterate through full dataset ahead of time for tokenization.
-    """
-    def __init__(self, dataset: torch.utils.data.Dataset, tokenizer):
+class TokenizeField(torch.utils.data.Dataset):
+    """Tokenize a specified field upon request."""
+
+    def __init__(self, dataset: torch.utils.data.Dataset, tokenizer, field: str):
         self.dataset = dataset
         self.tokenizer = tokenizer
+        self.field = field
 
     def __len__(self):
         return len(self.dataset)
 
     def __getitem__(self, idx: int | str) -> dict:
         item = self.dataset[idx]
-        tok = lambda t: self.tokenizer(
-                t,
-                add_special_tokens=True,
-                return_tensors="pt",
-                # padding=True,
-                # truncation=True,
-                # max_length=tokenizer_max_length,
-            )
-        return tok(str(item))
+        enc = self.tokenizer(
+            item[self.field],
+            add_special_tokens=True,
+            return_tensors="pt",
+            # padding=True,
+            # truncation=True,
+            # max_length=tokenizer_max_length,
+        )
+        item["input_ids"] = enc["input_ids"]
+        item["attention_mask"] = enc["attention_mask"]
+        return item
 
-class SingleSampleDataset(torch.utils.data.Dataset):
-    pass
 
 class MOFDataModule(pl.LightningDataModule):
     def __init__(self):

@@ -1,11 +1,11 @@
 #!/bin/bash
-#SBATCH --job-name=run_7b
-#SBATCH --output=results/run_7b_%j.out
-#SBATCH --error=results/run_7b_%j.err
-#SBATCH --partition=dev_gpu_4_a100
+#SBATCH --job-name=run_13b
+#SBATCH --output=results/run_13b_%j.out
+#SBATCH --error=results/run_13b_%j.err
+#SBATCH --partition=gpu_4_a100
 #SBATCH --ntasks-per-node=1
 #SBATCH --gres=gpu:1
-#SBATCH --time=30:00
+#SBATCH --time=6:00:00
 #SBATCH --nodes=1
 #SBATCH --mail-type=NONE
 
@@ -14,7 +14,7 @@ cd $SLURM_SUBMIT_DIR
 source ~/.bashrc
 module load devel/cuda
 
-echo "run_7b"
+echo "run_13b"
 echo "GPU:1"
 echo
 echo "NVDIA-SMI OUTPUT"
@@ -23,5 +23,5 @@ nvidia-smi
 cd ~/llms/mthesis/code
 
 # poetry run main train --stats stats_7b.yml --settings settings/settings_7b.yml
-poetry run main train --settings settings/settings_7b.yml
-# poetry run main evaluate --stats-path stats_7b.yml --settings settings/settings_7b.yml
+# poetry run main train --settings settings/settings_7b.yml
+poetry run main evaluate --stats-path stats_13b.yml --settings settings/settings_13b.yml
