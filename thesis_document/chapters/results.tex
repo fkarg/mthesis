@@ -1,4 +1,5 @@
 \chapter{Results and Discussion}\label{chap:results}
+\todo{make quick recap on approach for who starts reading here}
 % Evaluation Criteria:
 % - Quality of explanation (written)
 % - Support with diagrams, tables and figures
@@ -18,7 +19,7 @@
 
 \section{First Look}\label{sec:result:first}
 \textbf{Note} that while all code (refer to \secref{impl}) includes \texttt{additive}, figures in this chapter do not.
-This is decsion was made due to mistaken modeling of the task, which resulted in horrendous accuracay.
+This is decsion was made due to mistaken modeling of the task, which resulted in horrendous accuracy.
 \todo{put in worst and best accuracy scores for additives}
 
 \subsection{7B Parameter Models}\label{sub:result:7b}
@@ -26,19 +27,19 @@ As can be seen in \figref{7b_acc}, most models achieve decent accuracies in extr
 Most models hover just below 60\% in \tsolv accuracy, with \model{vicuna} being an outlier, achieving an accuracy of only 27\%.
 
 \subsection{13B Parameter Models}\label{sub:result:13b}
-See \figref{13b_acc}. 
+See \figref{13b_acc}.
 \model{vicuna} substantially improved its \tsolv accuracy compared to its 7B variant, where it is now only 10 \glspl{pp} behind \model{llama} and \model{llama2}.
 \model{vicuna} 13B is also the weakest in accuracy for \ttemp and \ttime, trailing by about 14 \glspl{pp}.
 
 \subsection{Large Models}\label{sub:result:large}
-See \figref{large_acc}. As much as scores between models differ in \subref{result:7b}, differences between large models are marginal at best
+See \figref{large_acc}. As much as scores between models differ in \subref{result:7b}, differences between large models are marginal at best. \todo{write results subsection on large models}
 
 \section{Unit Confusion}\label{sec:unitconfusion}
 \input{figures/results_7b_temp}
 \input{figures/results_7b_time}
 One interesting observation is that smaller models seem to do a lot of 'easy' mistakes.
 Not all such simple mistakes can be easily classified, but one certainly can: confusion of units.
-We counted all instances as \textit{unit confusion}, where the model provided one unit as answer (which was wrong), and we could get the correct \ttemp or \ttime only by using a different unit instead.
+\informal{We} counted all instances as \textit{unit confusion}, where the model provided one unit as answer (which was wrong), and \informal{we} could get the correct \ttemp or \ttime only by using a different unit instead.
 
 For example, in one instances \model{falcon} confidently answered 20 °K, when the correct answer would have been 20 °C.
 
@@ -51,11 +52,11 @@ Unit confusion on \ttime seems to affect all models to some degree, as can be se
 Interestingly, \model{llama} seems to be affected the highest degree, followed by \model{falcon}.
 
 \paragraph{Other Mistakes}
-When looking through answers manually, we discovered additional 'clusters' of mistakes, e.g. adding one too many or too few zeros to \ttime or \ttemp responses.
-Smaller models have a higher tendency of making these mistakes, but we did not look into these failure modes further due to time constraints.
+When looking through answers manually, \informal{we} discovered additional 'clusters' of mistakes, e.g. adding one too many or too few zeros to \ttime or \ttemp responses.
+Smaller models have a higher tendency of making these mistakes, but \informal{we} did not look into these failure modes further due to time constraints.
 
 \paragraph{Bigger-sized Models}
-Unit confusion on models sized 13B parameters or more is reduced to less than 0.5\% (0-4 answers to the 905 data points).
+Unit confusion on models sized 13B parameters or more is happening in less than 0.5\% of cases (in 0-4 answers of 905 data points).
 
 \todo{build graphs for each model family -- if I have enough time for that}
 % \section{Unresolvable Solvents}
@@ -63,17 +64,17 @@ Unit confusion on models sized 13B parameters or more is reduced to less than 0.
 
 \section{Discussion}\label{sec:discussion}
 \todo{what does it all mean}
-There are two interesting trends we can observe across models.
+There are two interesting trends \informal{we} can observe across models.
 
 \begin{enumerate}
     \item Larger models are more accurate in the extraction of \ttemp and \ttime.
     \item Accuracy in the extraction of \tsolv is largely the same regardless of model size.
 \end{enumerate}
 
-The first one is something we would pretty much expect, and it is good to have confirmation of that behaviour.
+The first one is something \informal{we} would pretty much expect, and it is good to have confirmation of that behaviour.
 However, even 13B-sized \model{llama} and \model{llama2} are only marginally worse than any of their bigger siblings, which indicates that even mid-sized models ought to already be fully capable of the extraction of simple parameters such as \ttemp and \ttime.
 
-The second, that we see mostly the same accuracy on \tsolv extraction, is indicative of the models getting \textit{confused} rather than fundamentally being incapable of doing it.
+The second, that \informal{we} see mostly the same accuracy on \tsolv extraction, is indicative of the models getting \textit{confused} rather than fundamentally being incapable of doing it.
 The accuracy of just shy of 60\% also indicates that \textit{for the most part} it is clear what the task is.
 This suggests that this task could benefit substantially from additional prompt engineering, and maybe even more from fine-tuning. See \secref{out-prompt} and \secref{out-sft} for the outlook on each respectively.
 
@@ -89,13 +90,13 @@ Fine-tuning a pretrained model instead of a non-pretrained model requires substa
 
 See \secref{training} for more details on pre-training a \gls{LLM} and \subref{finetune} for details on finetunig.
 
-In the end, we abandoned fine-tuning due to time constraints. See \secref{con:sft} for conclusions and \secref{out-sft} for an outlook on fine-tuning.
+In the end, \informal{we} abandoned fine-tuning due to time constraints. See \secref{con:sft} for conclusions and \secref{out-sft} for an outlook on fine-tuning.
 
-What follows are two excerpts of what we encountered when attempting to fine-tune \glspl{LLM} using \gls{transformers}.
+What follows are two excerpts of what \informal{we} encountered when attempting to fine-tune \glspl{LLM} using \gls{transformers}.
 While they are by no means exhaustive, other failed approaches followed a similar pattern of wrong or lacking documentation among numerous locally fixed bugs.
 
 \subsection{Excerpt 1: Broken Models}\label{sub:brokenft}
-Since we have a custom dataset, we also need to write a custom dataloader.
+Since \informal{we} have a custom dataset, we also need to write a custom dataloader.
 An item of the dataloader can just be the text of the synthesis paragraph -- in a dictionary, as a very specific key.
 There is however, only partial and conflicting documentation on the existance and usage of these keys.
 \todo{continue writing excerpt 1 from here on}
@@ -104,7 +105,7 @@ There is however, only partial and conflicting documentation on the existance an
 \color{blue}
 nuances: tokenization of dataset prior to training. however, which part is doing what?
 
-building custom dataset: array with dicts, with the three required keys \verb`input_ids`, \verb`attention_maska`, and \verb`labels`. curiously, neither is documented particularly well so we tried what is recommended in various tutorials and official sources (e.g. microsoft \cite{deepspeedexamples_2023}): 
+building custom dataset: array with dicts, with the three required keys \verb`input_ids`, \verb`attention_maska`, and \verb`labels`. curiously, neither is documented particularly well so we tried what is recommended in various tutorials and official sources (e.g. microsoft \cite{deepspeedexamples_2023}):
 
 put the \verb`token_ids` received from tokenization to both \verb`input_ids` and \verb`labels`.
 
@@ -116,7 +117,7 @@ Attempts at mask manipulation: not possible with causalLMs (they are all of this
 }
 
 \subsection{Excerpt 2: Broken Libraries}\label{sub:libraries}
-In a later attempt wie tried using the high-level \gls{hf} \verb`trl` (Transformer Reinforcement Learning) library, which seems to be built for our use-case exactly.
+In a later attempt \informal{we} tried using the high-level \gls{hf} \verb`trl` (Transformer Reinforcement Learning) library, which seems to be built for \informal{our} use-case exactly.
 
 {
 \color{blue}
@@ -131,5 +132,8 @@ trying out various things didn't work, until we ultimately didn't have time to c
 SFT: a lot of magic that isn't documented properly, at all. Couldn't get it to run, gave up due to time limit.
 }
 % \mintinline{python}{trl} library \cite{hf_trl_supervised}
+
+\todo{add note on additives, detection if one was there in the first place: alternatively outlook}
+\todo{explain that we model NER differently, which is why fscore doesn't make sense}
 
 

@@ -1,38 +1,48 @@
 \chapter{Approach}\label{chap:approach}
-Here, we describe some of our approach to using \glspl{LLM}, decisions made, lessons learned, and more.
+\todo{mention different modeling of NER task}
+This chapter describes all relevant decisions of the approach taken, as well as their reasons.
 
-Specifically, we put little effort in prompt engineering, with the argument that it should have little impact for fine-tuned models, the main part of our work. As it turns out (See \secref{sft} for more details on training failures), this ended up not being the case.
+First, \secref{impl} broadly describes the implementation, as well as libraries and frameworks used.
+In \secref{models} descriptions and references to the various models considered for this work can be found.
+\secref{prompts} discusses how the models where prompted in detail, and why little effort and experimentation was done with different prompts.
+The dataset used, and how it was processed is described in \secref{data}, before it is depicted how the comparison for equality was done in \secref{equality}.
 
-See \subref{list} for a list of the models used, \subref{criteria} for selection criteria for the models, and the respective Subsection for more details on each model, which is als linked in their glossary entry.
-\todo{rewrite when the rest becomes clearer}
 
+\section{Implementation}\label{sec:impl}
 All source code for this work can be found at \url{https://github.com/fkarg/mthesis}, and a tag will mark the state at the time of submission.
 \todo{publish on day of submission}
 
-\section{Implementation}\label{sec:impl}
-As partially described before in \secref{models}, it became appearent during literature research that it might be valuable to compare different models, and that additional models might become available in the near future.
-The \acrlong{transformers} library is a well-established framework providing abstractions to load, manipulate and train any deep learning architecture in a standardized format.
+It became appearent during literature research that a comparison between different models would be valuable, and that additional models can be expected to be released in time to be included in this work.
+Thus, almost all code ought to be model-agnostic.
+The \acrlong{transformers} library is the perfect candidate for that: it is a well-established framework providing abstractions to load, manipulate and train any deep learning architecture in a standardized format.
 Additionally, all open-access \glspl{LLM} are available directly through the \gls{hf} portal.
 
-Most other libraries used are either straightforward (\texttt{torch}, \texttt{einops}, \texttt{accelerate}, \texttt{bitsandbytes} to get the models to run) or common ecosystem choices (e.g. \texttt{typer}, \texttt{rich} as cli interface; \texttt{pubchempy} to resolve and convert chemical compounds; etc).
-Proportionally speaking, the custom dataloader(s) and the main module have the highest \gls{LOC} counts.
+\paragraph{Dependencies}
+Most other dependencies used are either straightforward (\texttt{torch}, \texttt{einops}, \texttt{accelerate}, \texttt{bitsandbytes} to get the models to run) or common ecosystem choices (e.g. \texttt{typer} and \texttt{rich} for the cli interface; \texttt{pubchempy} to resolve and convert chemical compounds; etc).
+
+\paragraph{Modularity}
+Proportionally speaking, the main module (with 36\%), dataloader (with 23\%), and unit conversion module (with 11\%) have the highest \gls{LOC} counts. Everything else is split in six more supporting modules.
+
 
 \input{chapters/models}
 
-\section{Prompts Used}\label{sec:prompts}
-\glspl{LLM} are capable of very generic tasks, based on the input they are asked to repsond to.
+
+\section{Prompts}\label{sec:prompts}
+\glspl{LLM} are capable of very generic tasks, based on the input they are asked to respond to.
 The way to get them to solve a task as requested is by \textit{prompting} the model with a certain input.
-This is particularly emintent in instruct-based models (See \subref{instruct} for more details on instruction-based finetuning).
+This is particularly eminent in models fine-tuned for instruction-based or chat-based interaction.
 
-We have not put much effort in figuring out the best prompts, primarily because we would expect that any amount of fine-tuning to be more effective than improving the prompt. You can read more on what went wrong attempting to fine-tune in the following \secref{sft}.
+In this work, not put much effort was put in achieving the best prompts.
+This was due to the expectation that even small amounts of fine-tuning would be more effective than the best prompt.
+More details on fine-tuning attempts in this work can be found in the later \secref{sft}.
 
-We used \textit{guidance} \cite{guidance_2023}, and specifically the library \texttt{jsonformer} \cite{1rgs_2023}, for getting structured information as an output.
+\informal{We} used \textit{guidance} \cite{guidance_2023}, and specifically the library \texttt{jsonformer} \cite{1rgs_2023}, for getting structured information as an output.
 In effect, guidance provides `guard rails' for models generating output.
 Specifically, the model does not have to generate the tokens for the structure of json, but only the tokens for the content of the json.
 
 \code{schema.py}{schema}{The schema provided for the model to follow. Model output termination would happen after generation of a token for `\mintinline{python}{"}' for strings or `\texttt{,}' for numbers, or a number of other dedicated 'end of generation' tokens. See \coderef{output} for what an output for this schema might look like.}
 
-You can see the schema we used for guidance in \coderef{schema}. Additionally, you can find the full prompt used in \coderef{prompt} and an example output in \coderef{output}.
+\informal{You} can see the schema \informal{we} used for guidance in \coderef{schema}. Additionally, you can find the full prompt used in \coderef{prompt} and an example output in \coderef{output}.
 
 \code{prompt.py}{prompt}{Prompt used to generate output. \mintinline{python}{"{output}"} delineates where the model provides an answer. See \coderef{output} for what may be filled in.}
 
@@ -60,25 +70,28 @@ You can see the schema we used for guidance in \coderef{schema}. Additionally, y
 
 
 \section{Data Source}\label{sec:data}
-We used 905 synthesis paragraphs which were used to create parts of the publicly accessible labels in the databases SynMOF\_A and SynMOF\_M \cite{luo_mof_2022}.
-We defaulted to get a label from SynMOF\_M (manually annotated) if it was available, and manually confirmed the validity of the SynMOF\_A label (generated from automatic extraction) if it existed.
+\informal{We} used 905 synthesis paragraphs which were used to create parts of the publicly accessible labels in the databases SynMOF\_A and SynMOF\_M \cite{luo_mof_2022}.
+\informal{We} defaulted to get a label from SynMOF\_M (manually annotated) if it was available, and manually confirmed the validity of the SynMOF\_A label (generated from automatic extraction) if it existed.
 \todo{check again if default was A or M}
-In total, we had labels for 905 synthesis paragraphs which we fully utilisied.
-All proportional results in the later \chapref{results} are based on the accuracy over 905 items.
+In total, \informal{we} had labels for 905 synthesis paragraphs which \informal{we} fully utilized.
+All proportional results in the later \chapref{results} are based on the accuracy of over 905 items.
 
 \section{Criteria for Equality}\label{sec:equality}
-In this section we try to list the criteria we used to define equality between a result from a \gls{LLM} and the target label.
-\todo{write section on criteria for equality}
+In this section \informal{we} list the criteria used for equality between a result from a \gls{LLM} and the target label.
+\draft{
+First, the criteria for \ttemp and \ttime and dealing with unit conversions is described in \subref{ttunit}.
+Second, \subref{compsolv} describes how compounds are compared.
+}
 
 \subsection{Time and Temperature}\label{sub:ttunit}
-In our dataset (See \secref{data} for more details on the data source), all temperature information was encoded in degrees celsius, and all time information in hours.
+In \informal{our} dataset (See \secref{data} for more details on the data source), all temperature information was encoded in degrees celsius, and all time information in hours.
 Without a field for the unit (See \secref{prompts} for the prompts and structure used), models would use arbitrary units, often those used in the paragraph they are extracting from.
-Since the task is not accurate unit conversion, but simply information extraction, we added fields for units.
+Since the task is not accurate unit conversion, but simply information extraction, \informal{we} added fields for units.
 
 Unit conversions for \ttemp and \ttime happen automatically and convert to a unified format. This ensures that durations of both '24h' and '1 day' are seen as equal.
 
 \subsection{Compounds}\label{sub:compsolv}
-Instead of names from chemical compounds, our database (See \secref{data} for more information on the data source) has the \texttt{pubchempy}-\texttt{cid} (compound id) as label for solvents and additives (if used).
+Instead of names from chemical compounds, \informal{our} database (See \secref{data} for more information on the data source) has the \texttt{pubchempy}-\texttt{cid} (compound id) as label for solvents and additives (if used).
 Most compounds have multiple different synonyms they are known by, e.g. `water' has one \texttt{cid} and 319 distinct synonyms it can get resolved from.
 
 Thus, it is tried to resolve the answer from the model to a \texttt{cid}, and compare it with the given label.

@@ -5,32 +5,31 @@ The knowledge gained while doing so, allows us to ask more, and better questions
 \todo{write outlook}
 
 \section{More Prompt Engineering}\label{sec:out-prompt}
-During this work, a lot of effort was put in attempting to fine-tune the models used (See \secref{sft} for details on our work, and \subref{finetune} for details on training and fine-tuning \glspl{LM} in general).
+During this work, a lot of effort was put in attempting to fine-tune the models used (See \secref{sft} for details on \informal{our} work, and \subref{finetune} for details on training and fine-tuning \glspl{LM} in general).
 Thus, not much effort was put in getting the most of out prompt engineering.
 Better prompts could potentially be automatically generated to work well across models \cite{zhou_large_2022}.
 Using tools from mechanistic interpretability \cite{conmy_automated_2023} it should be possible to generate highly-specialized prompts \cite{rumbelow_solidgoldmagikarp_2023} for each model.
 
 % \todo{try duration_in_h and temperature_in_C as prompts}
 
-\todo{fix (sub)section references not resolving}
 
-We prompted the model for both 
+\informal{We} prompted the model for both 
 
 \section{Fine-Tuning}\label{sec:out-sft}
-While attempted, we where not successfull in fine-tuning one of the selected models (See \secref{sft} for details on our work on fine-tuning, and \subref{finetune} for details on training and fine-tuning \glspl{LM} in general).
+While attempted, \informal{we} where not successfull in fine-tuning one of the selected models (See \secref{sft} for details on \informal{our} work on fine-tuning, and \subref{finetune} for details on training and fine-tuning \glspl{LM} in general).
 \todo{expand outlook section on fine-tuning}
 
 \section{Different Frameworks}\label{sub:frameworks}
 In recent months a new ecosystem of \gls{LLM} orchestration frameworks emerged.
 They are often building on top of the abstraction capabilities of the \acrshort{transformers} library, and bring additional tooling for using \glspl{LLM} for agentic use-cases, but also interfacing, chaining and fine-tuning for various use-cases.
 Most prominent for that are currently LangChain \cite{langchain_2023} and HayStack \cite{haystack_2023}, though with the current pace of new frameworks emerging, this may change over time.
-We did not make a comparison due to time constraints.
+A comparison was not done due to time constraints.
 
 
-\section{Next-Gen Models such as GPT4}\label{sec:next-gen}
-Since data extraction for our use-case has been established to work well with fine-tuning \gls{GPT3} \cite{dunn_structured_2022}, it should in expectation work even better with \gls{GPT4}.
-We did not make a comparison due to time and resource constraints.
+\section{Next-Gen Models}\label{sec:next-gen}
+Since data extraction for \informal{our} use-case has been established to work with fine-tuning \gls{GPT3} \cite{dunn_structured_2022}, it should in expectation work even better with newer models like \gls{GPT4}.
+A comparison was not done due to time and resource constraints.
 
 \section{Comparison to Masked Language Models}\label{sec:masked}
 The task of knowledge extraction may be well suited to \glspl{masked} modern \gls{BERT}-derived architectures such as T5 \cite{raffel_exploring_2020}.
-We did not make a comparison due to time constraints.
+A comparison was not done due to time constraints.
