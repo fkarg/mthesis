@@ -19,9 +19,10 @@ Practically, this is a constraint towards open-source or at least open-access mo
 
 Second, at this point dozens of \glspl{LLM} have been trained, and weights made available.
 One model was trained purely as a marketing pitch to sell computing systems \cite{dey_cerebrasgpt_2023}.
-Thus, models were selected partially based on proven capability in other domains.
+To vastly condense the number of models to consider, each base model ought to have demonstrated foundational capability in other domains.
+Additionally, due to the nature of the task, it would be valuable to include both base models and instruct-based derivatives.
 
-Third, all else being equal a smaller model is preferred.
+Third, all else being equal, a smaller model is preferred.
 This is due smaller models being less resource intensive to evaluate and fine-tune.
 Having a smaller variant of a model is a nice bonus which enables faster iteration during development.
 
@@ -34,7 +35,7 @@ The initial model set out for this work was \model{OPT} \cite{zhang_opt_2022}, a
 \model{BLOOM} \cite{workshop_bloom_2022} is a 176 billion parameter open-source \gls{LLM} trained by a cooperation of numerous organizations, spearheaded by \gls{hf} and \gls{Google}. When compared to \model{OPT} across \gls{NLP} benchmarks, \model{BLOOM} appears to perform marginally better.
 
 \paragraph{Reasons for Using Neither}
-The original plan for this work would use \model{OPT} as only model. During early literature research, it seemed that \model{BLOOM} would be slightly more capable, which changed the intention to compare both.
+The original plan for this work would use \model{OPT} as the only model. During early literature research, it seemed that \model{BLOOM} would be slightly more capable, which changed the intention to compare both.
 Not soon after, the smaller and seemingly much more capable \model{llama} was released, which prompted the decision of creating a model-agnostic pipeline instead, focusing on \model{llama} first.
 See the next \subref{llama} for more details on \model{llama}.
 

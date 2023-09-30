@@ -66,7 +66,7 @@ For a more comprehensive overview on the modern transformer architecture and mod
 
 \gls{GPT2} \cite{radford_language_2019} is a decoder-only \gls{LM} mostly based on the original transformer architecture, scaled up more than previous models.
 Compared to other models at the time, \gls{GPT2} had up to 15x more parameters than \gls{BERT} -- 1.5 billion.
-\gls{GPT2} indicated that bigger \glspl{LM} get more capable in general, only constrained by computational resources.
+\gls{GPT2} indicated that bigger \glspl{LM} are more capable in general, only constrained by computational resources.
 Models after that seem to only confirm this, and various scaling laws with diminishing returns have been observed \cite{rae_scaling_2022, hoffmann_training_2022}.
 Models with multiple billion parameters became generally referred to as \acrfullpl{LLM}.
 
@@ -106,8 +106,8 @@ For more details on pretraining and nuances necessary for large scale distribute
 
 \subsection{Fine-Tuning}\label{sub:finetune}
 Fine-tuning exploits \textit{transfer learning} by continuing to train (See the previous \subref{pretraining} for details on training in general) a previously \textit{pre-trained} model, usually with a lower training rate and on very specialized data \cite{gaddipati_comparative_2020}.
-This allows \textit{transferring} previosly learned features to accomplish a different task by making small adaptations.
-The main benefits include using substantially less computational resources and training examples \cite{gaddipati_comparative_2020}, both of which tend to be hard to aquire, depending on the task.
+This allows \textit{transferring} previously learned features to accomplish a different task by making small adaptations.
+The main benefits include using substantially less computational resources and training examples \cite{gaddipati_comparative_2020}, both of which tend to be hard to acquire, depending on the task.
 
 As such, fine-tuning and the resulting models are usually highly specialized to their task.
 
@@ -117,9 +117,9 @@ This is useful for predicting the 'next' token on a wikipedia article or novel, 
 
 Essentially, fine-tuning on instructions guides the output by shifting the learned context-dependent token sequence likelihood, providing more control over model outputs.
 This results in users having a preference for the outputs of smaller models, over substantially bigger models, when the smaller model has been instruction fine-tuned \cite{ouyang_training_2022}, as it makes the model more 'useful' in a naive sense.
-A model fine-tuned on  a instruction dataset is commonly referred to as a \textit{instruct}-variant.
+A model fine-tuned on  a instruction dataset is commonly referred to as an \textit{instruct}-variant.
 
-Refer to \cite{ouyang_training_2022, tirumala_d4_2023} for more information on instruction-based fine-tuning.
+More information on instruction-based fine-tuning can be found in \cite{ouyang_training_2022, tirumala_d4_2023}.
 
 
 % \subsection{RLHF}\label{sub:rlhf}

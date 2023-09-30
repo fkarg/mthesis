@@ -33,12 +33,12 @@
 
 \newglossaryentry{causal}{
     name=causal language model,
-    description={Causal language modeling is the task of predicting the token following a sequence of tokens. This in contrast to e.g. a \gls{masked} }
+    description={A causal language model predicts the likelihood of the next token based on a sequence of tokens. By sampling one of the predicted tokens, output can be generated autoregressively. This in contrast to e.g. a \gls{masked}.}
 }
 
 \newglossaryentry{masked}{
     name=masked language model,
-    description={Masked language modeling is the task of predicting the missing (replaced with marker tokens) words in a sentence based on the context provided by the surrounding words. This in contrast to e.g. a \gls{causal}}
+    description={A masked language model predicts all masked (often missing) tokens in a sequence based on the context provided by the surrounding tokens. This in contrast to e.g. a \gls{causal}.}
 }
 
 
@@ -49,7 +49,8 @@
 
 \newglossaryentry{pp}{
     name=percentage point,
-    description={One percentage point denotes an absolute increase of 1\% in the underlying measure. }
+    description={One percentage point denotes an absolute increase of 1\% in the underlying measure.
+    }
 }
 
 
@@ -61,62 +62,74 @@
 
 \newglossaryentry{GPT2}{
     name=GPT2,
-    description={The second generation \textbf{G}enerative \textbf{P}retrained \textbf{T}ransformer \gls{LM} from \gls{OpenAI} \cite{radford_language_2019}}
+    description={The second generation \textbf{G}enerative \textbf{P}retrained \textbf{T}ransformer \gls{LM} from \gls{OpenAI} \cite{radford_language_2019}.
+    }
 }
 
 \newglossaryentry{GPT3}{
     name=GPT3,
-    description={The third generation \textbf{G}enerative \textbf{P}retrained \textbf{T}ransformer \gls{LM} from \gls{OpenAI} \cite{brown_language_2020}}
+    description={The third generation \textbf{G}enerative \textbf{P}retrained \textbf{T}ransformer \gls{LM} from \gls{OpenAI} \cite{brown_language_2020}.
+    }
 }
 
 \newglossaryentry{ChatGPT}{
     name=ChatGPT,
-    description={A chat interface for \gls{GPT3}.5 or \gls{GPT4} from \gls{OpenAI}, which makes it easier to interface with the model. Refer to \secref{instruct} for more information on instruct-based models, chat variants are an extension of.}
+    description={A chat interface for \gls{GPT3}.5 or \gls{GPT4} from \gls{OpenAI}, which makes it easier to interface with the model. Refer to \secref{instruct} for more information on instruct-based models, chat variants are an extension of.
+    }
 }
 
 \newglossaryentry{GPT4}{
     name=GPT4,
-    description={The fourth generation \textbf{G}enerative \textbf{P}retrained \textbf{T}ransformer \gls{LM} from \gls{OpenAI} \cite{openai_gpt4_2023}. Currently their most capable model}
+    description={The fourth generation \textbf{G}enerative \textbf{P}retrained \textbf{T}ransformer \gls{LM} from \gls{OpenAI} \cite{openai_gpt4_2023}. Currently their most capable model.
+    }
 }
 
 \newglossaryentry{BLOOM}{
     name=BLOOM,
-    description={\textbf{B}igScience \textbf{L}arge \textbf{O}pen-science \textbf{O}pen-access \textbf{M}ultilingual \gls{LM}, a 176 billion parameter open-source \gls{LLM} created through a cooperation between \gls{Google}, \gls{hf} and various smaller organisations \cite{workshop_bloom_2022}.}
+    description={\textbf{B}igScience \textbf{L}arge \textbf{O}pen-science \textbf{O}pen-access \textbf{M}ultilingual \gls{LM}, a 176 billion parameter open-source \gls{LLM} created through a cooperation between \gls{Google}, \gls{hf} and various smaller organisations \cite{workshop_bloom_2022}.
+    }
 }
 
 \newglossaryentry{OPT}{
     name=OPT,
-    description={Open Pretrained Transformer, a 175 billion parameter open-source \gls{LM} from \gls{meta} research \cite{zhang_opt_2022}}
+    description={Open Pretrained Transformer, a 175 billion parameter open-source \gls{LM} from \gls{meta} research \cite{zhang_opt_2022}.
+    }
 }
 
 \newglossaryentry{PaLM}{
     name=PaLM,
-    description={extremely capable \gls{LLM} from \gls{Google} \cite{chowdhery_palm_2022}}
+    description={An extremely capable \gls{LLM} from \gls{Google} \cite{chowdhery_palm_2022}.
+    }
 }
 
 \newglossaryentry{llama}{
     name=LLaMa,
-    description={A \gls{LLM} from \gls{meta}. See \subref{llama} for details}
+    description={A \gls{LLM} from \gls{meta}. See \subref{llama} for details.
+    }
 }
 
 \newglossaryentry{alpaca}{
     name=Stanford Alpaca,
-    description={A \gls{LLM} based on \gls{llama}. See \subref{alpaca} for details}
+    description={A \gls{LLM} based on \gls{llama}. See \subref{alpaca} for details.
+    }
 }
 
 \newglossaryentry{vicuna}{
     name=Vicuna,
-    description={One of the \glspl{LLM} used.  See \subref{vicuna} for details}
+    description={One of the \glspl{LLM} used. Based on \model{llama}. See \subref{vicuna} for details.
+    }
 }
 
 \newglossaryentry{llama2}{
     name=LLaMa 2,
-    description={One of the \glspl{LLM} used. See \subref{llama2} for details}
+    description={One of the \glspl{LLM} used. Created by \gls{meta}, successor of \model{llama}. See \subref{llama2} for details.
+    }
 }
 
 \newglossaryentry{falcon}{
     name=Falcon,
-    description={One of the \glspl{LLM} used. See \subref{falcon} for details}
+    description={One of the \glspl{LLM} used. Created by the \gls{tii}. See \subref{falcon} for details.
+    }
 }
 
 % --------------------------------------
@@ -125,32 +138,41 @@
 
 \newglossaryentry{meta}{
     name=Meta,
-    description={Previously known as Facebook, Meta is a deep learning powerhose and regularly open-sources new \gls{SOTA} machine learning models.
-    }
+    description={Previously known as Facebook, Meta is a deep learning powerhose and regularly open-sources new \gls{SOTA} machine learning models.}
 }
 
 \newglossaryentry{OpenAI}{
     name=OpenAI,
-    description={American AI company, trailbrlazing at the frontier of scaling deep learning architectures and algorithmic breakthroughs for doing so. Their currently most well-known models are the \gls{GPT} family of models, particularly \gls{GPT2}, \gls{GPT3} and \gls{GPT4}}
+    description={American AI company, trailbrlazing at the frontier of scaling deep learning architectures and algorithmic breakthroughs for doing so. Their currently most well-known models are the \gls{GPT} family of models, particularly \gls{GPT2}, \gls{GPT3} and \gls{GPT4}.}
 }
 
 \newglossaryentry{Google}{
     name=Google,
-    description={Now called Alphabet, search engine giant turned AI powerhouse, well known for training supersized machine learning models with unrealistic hardware requirements for just about anyone else}
+    description={Now called Alphabet, search engine giant turned AI powerhouse, well known for training supersized machine learning models with unrealistic hardware requirements for just about anyone else.}
 }
+
+\newglossaryentry{microsoft}{
+    name=Microsoft,
+    description={Large Tech Giant, recently starting a cooperation with \gls{OpenAI} by investing USD\$10 Billion and integrating \gls{GPT4} and other models in their services}
+}
+
 
 \newglossaryentry{hf}{
     name=HuggingFace,
-    description={American deep learning ecosystem startup, having a well established framework to interface and abstract between similar models}
+    description={American deep learning ecosystem startup, having a well established framework to interface and abstract between similar models.}
 }
 
 \newglossaryentry{tii}{
     name=Technology Innovation Institute,
-    description={Abu Dhabi-based machine learning research institute}
+    text=TII,
+    first={Technology Innovation Institute (TII)},
+    description={Abu Dhabi-based machine learning research institute.}
 }
 
 \newglossaryentry{lmsys}{
-    name=LMSYS,
-    description={The Large Model Systems Organization eponymously develops large models and systems that are open, accessible, and scalable}
+    name=Large Model Systems Organization,
+    text=LMSYS,
+    first={Large Model Systems Organization (LMSYS)},
+    description={The Large Model Systems Organization eponymously develops large models and systems that are open, accessible, and scalable.}
 }
 

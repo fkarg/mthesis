@@ -1,5 +1,4 @@
 \chapter{Results and Discussion}\label{chap:results}
-\todo{make quick recap on approach for who starts reading here}
 % Evaluation Criteria:
 % - Quality of explanation (written)
 % - Support with diagrams, tables and figures
@@ -11,25 +10,46 @@
 % - Comparison with related work
 % - Discussion of implications
 % - Discussion of limitations
+\section{Overview}
+\subsection{Recap}
+\draft{Before, ....}
+\todo{make quick recap on approach for who starts reading here}
+
+\subsection{What's to come}
+\draft{In this Chapter, ...}
+
+\subsection{Note on differences to impl}
+\todo{redo subsection titles and structure}
+\textbf{Note} that while all code (refer to \secref{impl} for notes on implementation) includes \texttt{additive}, figures in this chapter do not.
+This decision was made due to mistaken modeling of the task, which resulted in horrendous accuracy.
+7B-sized models all had less than 1\% correct (except for Vicuna with 2.5\%), and even large models had either below 1\% or around 15\% correct (\model{llama2} and \model{falcon}, not the instruct-variant).
+
+Instead of literal extraction, the task should have been modeled as classification task.
+This was not redone due to time constraints.
+
 
 \input{figures/results_7b_accuracy}
 \input{figures/results_13b_accuracy}
 \input{figures/results_large_accuracy}
 
 
-\section{First Look}\label{sec:result:first}
-\textbf{Note} that while all code (refer to \secref{impl}) includes \texttt{additive}, figures in this chapter do not.
-This is decsion was made due to mistaken modeling of the task, which resulted in horrendous accuracy.
-\todo{put in worst and best accuracy scores for additives}
+\section{Accuracy Overview}\label{sec:result:first}
 
 \subsection{7B Parameter Models}\label{sub:result:7b}
-As can be seen in \figref{7b_acc}, most models achieve decent accuracies in extracting \ttemp and \ttime data.
-Most models hover just below 60\% in \tsolv accuracy, with \model{vicuna} being an outlier, achieving an accuracy of only 27\%.
+As can be seen in \figref{7b_acc}, most models achieve a decent accuracy in extracting \ttemp and \ttime data.
+Most models hover a few \glspl{pp} below 60\% in \tsolv accuracy, with \model{vicuna} being an outlier, achieving an accuracy of only 47\%.
+
+\model{llama2} has the highest accuracy for both \ttemp and \ttime, but \model{falcon} is two \glspl{pp} more accurate in \tsolv prediction on our dataset.
+Based on this, it seems that \model{llama2}-7B already achieves close to the highest accuracy for extraction of \ttemp, and is close behind on \ttime.
+
 
 \subsection{13B Parameter Models}\label{sub:result:13b}
-See \figref{13b_acc}.
-\model{vicuna} substantially improved its \tsolv accuracy compared to its 7B variant, where it is now only 10 \glspl{pp} behind \model{llama} and \model{llama2}.
-\model{vicuna} 13B is also the weakest in accuracy for \ttemp and \ttime, trailing by about 14 \glspl{pp}.
+
+As can be seen in \figref{13b_acc}, accuracy improved on average, but primarily for \model{llama}.
+In fact, the accuracy of \model{vicuna}-13B even slightly degraded when compared to \model{vicuna}-7B on \ttemp and \ttime, and it mostly stayed stagnant for \model{llama2}.
+\model{llama} increased accuracy on \ttemp by 6 \glspl{pp}, but particularly on \ttime by 33 \glspl{pp}. More information on what happened there can be found in \secref{unitconfusion}.
+
+\model{vicuna}-13B is the weakest in accuracy for \ttemp and \ttime, trailing by about 14 \glspl{pp} behind \model{llama} and \model{llama2}. In expecation, \model{falcon}-instruct-13B should still be worse, but \model{falcon} does not have a 13B variant.
 
 \subsection{Large Models}\label{sub:result:large}
 See \figref{large_acc}. As much as scores between models differ in \subref{result:7b}, differences between large models are marginal at best. \todo{write results subsection on large models}
@@ -37,6 +57,7 @@ See \figref{large_acc}. As much as scores between models differ in \subref{resul
 \section{Unit Confusion}\label{sec:unitconfusion}
 \input{figures/results_7b_temp}
 \input{figures/results_7b_time}
+\input{figures/results_7b_solv}
 One interesting observation is that smaller models seem to do a lot of 'easy' mistakes.
 Not all such simple mistakes can be easily classified, but one certainly can: confusion of units.
 \informal{We} counted all instances as \textit{unit confusion}, where the model provided one unit as answer (which was wrong), and \informal{we} could get the correct \ttemp or \ttime only by using a different unit instead.
@@ -51,9 +72,14 @@ It is unclear why that might be the case exactly, but it seems to be in part of 
 Unit confusion on \ttime seems to affect all models to some degree, as can be seen in \figref{7b_time}.
 Interestingly, \model{llama} seems to be affected the highest degree, followed by \model{falcon}.
 
+
+\paragraph{Solvents}\label{par:solv}
+
 \paragraph{Other Mistakes}
 When looking through answers manually, \informal{we} discovered additional 'clusters' of mistakes, e.g. adding one too many or too few zeros to \ttime or \ttemp responses.
 Smaller models have a higher tendency of making these mistakes, but \informal{we} did not look into these failure modes further due to time constraints.
+
+% (sometimes adding too many or too few zeros, though also often getting it right)
 
 \paragraph{Bigger-sized Models}
 Unit confusion on models sized 13B parameters or more is happening in less than 0.5\% of cases (in 0-4 answers of 905 data points).

@@ -1,5 +1,4 @@
 \chapter{Approach}\label{chap:approach}
-\todo{mention different modeling of NER task}
 This chapter describes all relevant decisions of the approach taken, as well as their reasons.
 
 First, \secref{impl} broadly describes the implementation, as well as libraries and frameworks used.
@@ -33,20 +32,25 @@ The way to get them to solve a task as requested is by \textit{prompting} the mo
 This is particularly eminent in models fine-tuned for instruction-based or chat-based interaction.
 
 In this work, not put much effort was put in achieving the best prompts.
-This was due to the expectation that even small amounts of fine-tuning would be more effective than the best prompt.
+This was due to the expectation that even small amounts of fine-tuning would be more effective in guiding model outputs than the best prompt could be.
 More details on fine-tuning attempts in this work can be found in the later \secref{sft}.
 
-\informal{We} used \textit{guidance} \cite{guidance_2023}, and specifically the library \texttt{jsonformer} \cite{1rgs_2023}, for getting structured information as an output.
-In effect, guidance provides `guard rails' for models generating output.
-Specifically, the model does not have to generate the tokens for the structure of json, but only the tokens for the content of the json.
+\paragraph{Structured Output}
+\texttt{guidance} \cite{guidance_2023}, originally from \gls{microsoft} research, allows more effective control over \glspl{LLM} than traditional prompting or chaining does.
+Effectively, it provides a harness around the \gls{LLM}, providing support for the model in generating structured information, and making use of additional output structures such as CoT \cite{wei_chainofthought_2022} to result in higher-quality outputs.
 
-\code{schema.py}{schema}{The schema provided for the model to follow. Model output termination would happen after generation of a token for `\mintinline{python}{"}' for strings or `\texttt{,}' for numbers, or a number of other dedicated 'end of generation' tokens. See \coderef{output} for what an output for this schema might look like.}
+For this work, specifically the library \texttt{jsonformer} \cite{1rgs_2023} is used, which does not provide the full feature suite of the \texttt{guidance} library.
+At the time of deciding, \texttt{guidance} did not support models through the \gls{transformers} library yet.
 
-\informal{You} can see the schema \informal{we} used for guidance in \coderef{schema}. Additionally, you can find the full prompt used in \coderef{prompt} and an example output in \coderef{output}.
+The schema used for guidance can be seen in \coderef{schema}.
+Additionally, the full prompt used can be seen in \coderef{prompt}, and an example output in \coderef{output}.
+
+
+\code{schema.py}{schema}{The schema provided for the model to follow. Model output termination would happen after generation of a token for `\mintinline{python}{"}' for strings or `\texttt{,}' for numbers, or a number of other dedicated 'end of generation' tokens, e.g. \texttt{<EOS>}. See \coderef{output} for what an output for this schema might look like.}
 
 \code{prompt.py}{prompt}{Prompt used to generate output. \mintinline{python}{"{output}"} delineates where the model provides an answer. See \coderef{output} for what may be filled in.}
 
-\code{example_output.py}{output}{Exemplary output based on the prompt shown in \coderef{prompt}.}
+\code{example_output.py}{output}{Exemplary output based on the prompt shown in \coderef{prompt}, and schema shown in \coderef{schema}.}
 
 
 % \subsection{Prompt Engineering}\label{sub:engineering}
@@ -70,31 +74,44 @@ Specifically, the model does not have to generate the tokens for the structure o
 
 
 \section{Data Source}\label{sec:data}
-\informal{We} used 905 synthesis paragraphs which were used to create parts of the publicly accessible labels in the databases SynMOF\_A and SynMOF\_M \cite{luo_mof_2022}.
-\informal{We} defaulted to get a label from SynMOF\_M (manually annotated) if it was available, and manually confirmed the validity of the SynMOF\_A label (generated from automatic extraction) if it existed.
-\todo{check again if default was A or M}
-In total, \informal{we} had labels for 905 synthesis paragraphs which \informal{we} fully utilized.
+As data source, 905 synthesis paragraphs to create parts of the publicly accessible labels in the database SynMOF\_A and SynMOF\_M \cite{luo_mof_2022} where used.
+
+Labels where taken from SynMOF\_A exclusively. Data from SynMOF\_A was extracted automatically, but confirmed and validated manually for correctness.
+% In total, those 905 labels and synthesis paragraphs where fully utilized during evaluation.
 All proportional results in the later \chapref{results} are based on the accuracy of over 905 items.
+A split in test and training dataset was performed for training, but this should not influence the accuracy for evaluation regardless.
+% Only a fraction of that would have been used for training purposes.
+%, as fine-tuning with a few hundred examples is more than sufficient \cite{dunn_structured_2022}.
 
 \section{Criteria for Equality}\label{sec:equality}
-In this section \informal{we} list the criteria used for equality between a result from a \gls{LLM} and the target label.
-\draft{
-First, the criteria for \ttemp and \ttime and dealing with unit conversions is described in \subref{ttunit}.
-Second, \subref{compsolv} describes how compounds are compared.
-}
+This section defines the criteria for determining equality between a result from a \gls{LLM} and the target label.
+The criteria for \ttemp and \ttime and dealing with unit conversions is described in \subref{ttunit}.
+Then, \subref{compsolv} detailes how compounds are compared.
 
 \subsection{Time and Temperature}\label{sub:ttunit}
-In \informal{our} dataset (See \secref{data} for more details on the data source), all temperature information was encoded in degrees celsius, and all time information in hours.
+In the dataset (See \secref{data} for more details on the data source), all temperature information is encoded in degrees celsius, and all time information in hours.
 Without a field for the unit (See \secref{prompts} for the prompts and structure used), models would use arbitrary units, often those used in the paragraph they are extracting from.
-Since the task is not accurate unit conversion, but simply information extraction, \informal{we} added fields for units.
+Since the task is not accurate unit conversion, but information extraction, a field for \ttemp and \ttime units was added.
 
-Unit conversions for \ttemp and \ttime happen automatically and convert to a unified format. This ensures that durations of both '24h' and '1 day' are seen as equal.
+Unit conversions for \ttemp and \ttime happen automatically before comparison and convert to a unified format, degrees celsius and hours respectively.
+This ensures that durations of both '24h' and '1 day' are seen as equal, even though the strings are different.
 
 \subsection{Compounds}\label{sub:compsolv}
-Instead of names from chemical compounds, \informal{our} database (See \secref{data} for more information on the data source) has the \texttt{pubchempy}-\texttt{cid} (compound id) as label for solvents and additives (if used).
-Most compounds have multiple different synonyms they are known by, e.g. `water' has one \texttt{cid} and 319 distinct synonyms it can get resolved from.
+Instead of names from chemical compounds, the database (See \secref{data} for more information on the data source) has the \texttt{pubchempy}-\texttt{cid} (compound id) as label for solvents and additives (if applicable).
+Most compounds have multiple different synonyms they are known by, e.g. `water' has one \cid (which is 962) and 319 distinct synonyms it can get resolved from.
+Surprisingly, while the list of synonyms includes both `distilled water' and `H2O', it does not include `distilled H2O', which is mentioned verbatim in eight of the 905 synthesis paragraphs, and suggested as an answer by some models.
+For more details on compound resolution problems, see the paragraph on Solvents in Section~\ref{par:solv}.
 
-Thus, it is tried to resolve the answer from the model to a \texttt{cid}, and compare it with the given label.
-For training purposes, the custom dataloader would search for any of the synonyms in the paragraph and use it as 'label'-text if found, or the first synonym if none could be easily identified.
+For each answer provided from the model for \tadd and \tsolv, an attempt at resolving the \cid is made.
+If a \cid is found, it is compared with the label \cid.
+An answer is counted as `wrong' when the resolved \cid is different to the label, but also when resolving fails.
+Thus, the answer `distilled H2O' would be counted as `wrong', since it could not be resolved to a valid \cid.
 
-% (sometimes adding too many or too few zeros, though also often getting it right)
+% \subsection{F-Score}\label{sub:fscore}
+% \draft{
+% we don't attempt to assign categories to sections, instead extract the information directly
+% }
+% \todo{explain why fscore doesn't make much sense for us}
+
+% For training purposes, the custom dataloader would search for any of the synonyms in the paragraph and use it as 'label'-text if found, or the first synonym if none could be easily identified.
+

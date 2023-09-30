@@ -4,42 +4,52 @@
 % Level of detail (depth)
 % Quality
 
-This chapter gives a short introduction for the parts of \acrlong{NLP} necessary for this work, and highlights other relevant work.
+This chapter gives a short introduction to the parts of \acrlong{NLP} necessary for this work, and highlights other relevant work.
 
-First, \secref{extraction} broadly defines the \gls{NLP} task of Information Extraction.
-\secref{NER} extends this by defining \gls{NER} and how this expands this definition.
-Then, \secref{rule-based} highlights early approaches and solutions, \secref{lmie} explains how \gls{LM} are being used for such tasks, and finally \secref{llmie} references the usages of \glspl{LLM} for this use-case.
+First, \subref{extraction} broadly defines the \gls{NLP} task of Information Extraction.
+\subref{NER} extends this by defining \gls{NER} and how this work expands upon the usual definition of \gls{NER}.
+Then, \subref{rule-based} highlights early approaches and solutions, \subref{lmie} explains how \gls{LM} are being used for such tasks, and finally \subref{llmie} references the usages of \glspl{LLM} for this use-case.
 
+
+\todo{maybe put a short explanation of 'label' here somewhere}
 
 
 
 % \section{Building a Database}\label{sec:database}
-% The overarching goal of any Information Extraction task in the natural sciences is to build a database
-%
-% Such databases are often built using \texttt{chemdataextractor} \cite{swain_chemdataextractor_2016}.
 
+\section{Natural Language Processing Tasks}\label{sec:NLP}
+\draft{
+Natural Language Processing is the field of study for ...
+}
+\todo{extend NLP definition}
 
-% \section{Related Work}\label{sec:related}
-\section{Information Extraction}\label{sec:extraction}
+\subsection{Information Extraction}\label{sub:extraction}
 Information Extraction is the \gls{NLP} task of extracting structured (machine-readable) information from unstructured text.
 In most cases the extended goal of information extraction in the natural sciences is to create a database of the extracted information.
 One approach to information extraction is via \gls{NER}.
 
-\section{Named Entity Recognition}\label{sec:NER}
-\gls{NER} seeks to locate and classify named entities (e.g. `water') mentioned in unstructured text into pre-defined categories \cite{li_survey_2022} such as temperature, timeframe, or chemical components, or any other named category that has been specified beforehand.
-This is what is done in this work.
+The overarching goal of Information Extraction tasks in materials sciences is to build a database of the extracted information.
+Such databases are then used to train further models used to predict attributes or synthesis conditions \cite{luo_mof_2022}, or to substantially improve automated experimentation \cite{shi_automated_2021}.
+% Such databases are often built using \texttt{chemdataextractor} \cite{swain_chemdataextractor_2016}.
+
+\subsection{Named Entity Recognition}\label{sub:NER}
+\gls{NER} seeks to locate and classify named entities (e.g. `water') mentioned in unstructured text into pre-defined categories \cite{li_survey_2022} such as temperature, timeframe, chemical components, or any other named category that has been specified beforehand.
+% This is what is done in this work.
 
 The usual \gls{NER} definition of an entity assumes \textit{rigid designators} \cite{laporte_rigid_2022}, i.e. that an entity only has one name to reference it.
+This work uses the usual definition of \gls{NER}, but loosens the expectation of rigid designators in the following ways:
 
-In this work, an extension of this usual \gls{NER} definition on rigid designators is used.
-First, references to temperature can include phrases such as `at room temperature' or `in boiling water', and may not just be numbers followed by their unit.
-Second, while Chemistry has normative rules on how molecules are named, it is possible for one molecule to have multiple valid names.
+\begin{itemize}
+    \item First, references to temperature can include phrases such as `at room temperature' or `in boiling water', and may not just be numbers followed by their unit.
+    \item Second, while Chemistry has normative rules on how molecules are named, it is possible for one molecule to have multiple valid names.
 In \gls{NLP}, this is sometimes referred to as the \textit{coreference problem} \cite{hobbs_coherence_1979}.
+\end{itemize}
 
 % It is then possible to automatically construct tabular databases based on the extracted data \cite{zhao_finetuning_2021} (BERT-SFT for matsci).
 
+\section{Related Work}
 
-\section{Rule-Based Entity Recognition}\label{sec:rule-based}
+\subsection{Rule-Based Entity Recognition}\label{sub:rule-based}
 There have long been rule-based approaches for the recognition of named entities (e.g. temperature) for material science literature.
 ChemTagger \cite{hawizy_chemicaltagger_2011}, and others \cite{beard_comparative_2019, huang_database_2020}
 clearly demonstrated that systems based on regular expressions can accurately extract information in straightforward, well-defined situations.
@@ -47,21 +57,25 @@ clearly demonstrated that systems based on regular expressions can accurately ex
 However, these tools tend to be highly specialized which makes them hard to adapt to new or more complex queries or circumstances.
 
 
-\section{Language Models for Information Extraction}\label{sec:lmie}
-Modeling \gls{NER} as a sequence-to-sequence labeling problem, Zhao et al. fine-tuned a number of pretrained \gls{BERT} instances and achieved an \gls{fscore} of 85\% \cite{zhao_finetuning_2021}, demonstrating both high precision and recall (where the \gls{fscore} is \glsdesc{fscore}).
+\subsection{Language Models for Information Extraction}\label{sub:lmie}
+\gls{NER} is sometimes modelled as a sequence-to-sequence labeling problem \cite{zhao_finetuning_2021, dunn_structured_2022}.
+Zhao et al. fine-tuned a number of pretrained \gls{BERT} instances and achieved an \gls{fscore} of 85\% \cite{zhao_finetuning_2021}, demonstrating both high precision and recall (where the \gls{fscore} is \glsdesc{fscore}).
 This demonstrated the fundamental capability of \glspl{LM} for this task.
 Most other work on \gls{NER} using \glspl{LM} has not been on materials science text but on general purpose text \cite{li_survey_2022}.
 
-This work fundamentally differs, by using \glspl{causal} wheras \gls{BERT} is a \gls{masked}. See \secref{masked} for an outlook on comparison with modern \gls{masked} architectures. See the later \secref{basics} for more details on Language Models.
 
-\section{LLMs for Information Extraction}\label{sec:llmie}
+In this work, \gls{NER} is not modeled as a sequence-to-sequence labeling problem, which is why \gls{fscore} is not an applicable metric for accuracy.
+Additionally, in this work \glspl{causal} are used, whereas \gls{BERT} is a \gls{masked}.
+See \secref{masked} for an outlook on comparison with modern \gls{masked} architectures. See the later \secref{basics} for more details on Language Models.
+
+\subsection{LLMs for Information Extraction}\label{sub:llmie}
 \glspl{LLM}, usually in the form of a \gls{causal}, are a recent phenomenon, and at the forefront of \gls{NLP} research.
 There is not much prior work on \gls{NER} using a \gls{LLM}.
 A combined \gls{NER} and Relation Extraction approach using \gls{GPT3} has been tried with some success \cite{dunn_structured_2022}.
-Since their primary focus is on relation extraction, \glspl{fscore} for the \gls{NER} task varied wildly between 0.4 and 0.95.
-This work differs on two counts from \cite{dunn_structured_2022}, 1) a benchmark and comparison of multiple open-access \glspl{LLM} is done 2) the \gls{NER} task is modeled differently.
+The primary focus of Dunn et al. \cite{dunn_structured_2022} is on relation extraction, which is why \glspl{fscore} for the \gls{NER} task vary between 0.4 and 0.95.
+This work differs on two counts from \cite{dunn_structured_2022}: 1) a benchmark and comparison of multiple open-access \glspl{LLM} is done 2) the entire focus of this work is on the extended \gls{NER} task.
 
-See the later \subref{llm} for a more extensive introduction on \glspl{LLM}.
+A more extensive introduction to \glspl{LLM} is given in the later \subref{llm}.
 
 % Chinchilla \cite{hoffmann_training_2022} and CoTR \cite{zhang_multimodal_2023}
 % demonstrated that while achieving impressive capability, such large models are
