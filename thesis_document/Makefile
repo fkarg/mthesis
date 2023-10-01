@@ -42,7 +42,7 @@ dist-clean: clean
 	# nix-shell -p git-latexdiff
 	git latexdiff --latexmk --main main.tex --output main-diff.pdf HEAD --
 
-%.pdf: %.tex *.tex */*.tex references.bib
+%.pdf: %.tex *.tex */*.tex references.bib code/* img/*
 	mkdir -p $(OUT_DIR)/chapters
 	mkdir -p $(OUT_DIR)/include
 	mkdir -p $(OUT_DIR)/figures

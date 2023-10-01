@@ -1,45 +1,35 @@
 \chapter{Introduction}\label{chap:introduction}
-\todo{find a first section for introduction chapter}
 
 % clear and concise:
-% Presentation of the topic and the background
-% Motivation of importance
-% Research gap, research question
+%  Presentation of the topic and the background
+Unstructured scientific literature contains a vast amount of materials science knowledge, and is the only place to get it.
+However, this places it squarely out of reach for further processing, which makes it difficult or impossible to build on a large part of prior work.
+%  Motivation of importance
+\gls{ML} models are increasingly used in screening steps for materials discovery and property prediction \cite{saal_machine_2020, luo_mof_2022, choudhary_recent_2022}, among other steps.
+% These models continue to get better, but often the biggest bottleneck is a lack of data.
+In general, more high-quality data improves the output quality of \gls{ML} models considerably \cite{hoffmann_empirical_2022}.
+%  Research gap, research question
+Currently, the amount of data accessible to train such models is limited, \todo{@Tobias check} in particular from older or less known work.
+
+Over the last year, \glspl{LLM} rose to public prominence since the launch of \gls{ChatGPT}.
+Regardless of public perception, recent improvements across \gls{NLP} benchmarks are undeniable \cite{devlin_bert_2018, openai_gpt4_2023}.
+In this work, \glspl{LLM} are used for information extraction of scientific text on synthesisizing \glspl{MOF}.
+
 % Structure of the thesis
+\draft{
+Structure.
+}
 % Short summary of main results
-
-
-\glspl{LLM} have recently become a hot topic of public attention, which started with the release of \gls{ChatGPT}.
-% notoriety
-
-
-\gls{ML} models are increasingly used in screening steps for materials discovery and property prediction \cite{saal_machine_2020, luo_mof_2022, choudhary_recent_2022}.
-But the amount of data accessible for such models is limited, particularly for new, experimental or very recent work.
-\todo{write introduction chapter}
-
 \draft{
-It has been well established that more high-quality data makes models more accurate \cite{hoffmann_empirical_2022}.
+Results summary.
 }
-
-\draft{
-Trying to use \glspl{LLM} for \gls{NER} on scientific text synthesizing \glspl{MOF}.
-}
-
-\draft{
-basic problem: access to knowledge buried deep within unknown papers.
-A vast amount of hard-earned scientific knowledge is scattered across millions of research literature.
-Often, this research is not in standardized machine-readable formats, which makes it difficult or impossible to
-build on a large part of prior work using powerful tools to extract further knowledge.
-}
-
-% \section{Basics}
 
 % \section{Motivation}
 % Take for example the field of synthesizing Metal-Organic Frameworks (MOFs)
 % \cite{zhou_introduction_2012}. While numerous detailed descriptions of
 % synthesis procedures exist, they are not available in machine-readable formats,
 % which prevents effective application of state-of-the-art techniques such as
-% automated experimentation \cite{shi_automated_2021} or synthesis prediction
+% automated experimentation \cite{shi_automated_2021} or synthesis parameter prediction
 % \cite{luo_mof_2022}. Thus, we intend to create a pipeline for deriving
 % machine-readable information on MOF synthesis parameters from given questions
 % on provided scientific articles.
@@ -52,44 +42,6 @@ build on a large part of prior work using powerful tools to extract further know
 %     \item results in tremendous duplicates and other unnecessary work
 %     \item a lot of insights to be gained from such a database, as well as automated experimental design (and possibly execution)
 % \end{itemize}
-
-% How to construct a Nature summary paragraph
-% One or two sentences providing a basic
-% introduction to the field, comprehensible to
-% a scientist in any discipline.
-
-%  Two to three sentences of more detailed
-%  background, comprehensible to scientists in
-%  related disciplines.
-
-%  One sentence clearly stating the general
-%  problem being addressed by this particular
-%  study.
-
-%  One sentence summarizing the main result
-%  (with the words “here we show” or their
-%  equivalent).
-
-%  Two or three sentences explaining what the
-%  main result reveals in direct comparison to
-%  what was thought to be the case previously,
-%  or how the main result adds to previous
-%  knowledge.
-
-%  One or two sentences to put the results
-%  into a more general context.
-
-%  Two or three sentences to provide a broader
-%  perspective, readily comprehensible to a
-%  scientist in any discipline, may be
-%  included in the first paragraph if the
-%  editor considers that the accessibility of
-%  the paper is significantly enhanced by
-%  their inclusion. Under these circumstances,
-%  the length of the paragraph can be up to
-%  300 words. (This example is 190 words
-%  without the final section, and 250 words
-%  with it).
 
 
 \section{Scientific Question}\label{sec:question}
@@ -107,9 +59,9 @@ The approach chosen in this work will be discussed in more detail \chapref{appro
 
 \newpage
 collection of todos
-\todo{maybe move glossary before introduction}
-\todo{Do I want to introduce e.g. context length properly?}
-\todo{Make sure I use passive voice everywhere (no 'we' or 'our')}
-\todo{mention different modeling of NER task ... Results?}
+\todo{find a first section for introduction chapter}
+
+explain stuff somewhere
+\todo{explain context length somewhere}
 \todo{explain zero-shot somewhere}
 \todo{explain causal and masked language models somewhere}

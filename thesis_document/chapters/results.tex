@@ -15,6 +15,7 @@
 \draft{Before, ....}
 \todo{make quick recap on approach for who starts reading here}
 
+\todo{add note on additives, detection if one was there in the first place: alternatively outlook}
 \subsection{What's to come}
 \draft{In this Chapter, ...}
 
@@ -149,7 +150,19 @@ More information on pre-training a \gls{LLM} can be found in \secref{training}, 
 In the end, fine-tuning was abandoned for this work due to lack of success and time constraints. See \secref{con:sft} for conclusions and \secref{out:sft} for an outlook on comparisons with fine-tuned models.
 
 What follows are two excerpts of what was encountered when attempting to fine-tune \glspl{LLM} using th \gls{transformers} library.
-While these excerpts are by no means exhaustive, other failed approaches followed similar patterns of wrong or lacking documentation among numerous locally fixed bugs.
+These excerpts are by no means exhaustive, as many hours of bugfixing where necessary to even get to these points.
+Further hours, while sometimes yielding different errors, yielded no additional results or insight.
+Neither did interacting with the community, where a number of people had slightly different but very similar problems, almost always with no answer in any official or unofficial forum.
+
+% Other failed attempts tended to follow similar patterns of:
+% 
+% \begin{itemize}
+%     \item Example demonstrated in official documentation, but individual parts have no documentation available.
+%     \item Straightforward attempts to slightly adjust official examples fails due to hidden complexity the short and elegant example abstracted away.
+%     \item The error is very obscure and far removed from the actual configuration.
+%     \item \textit{Some} information can be found in official and unofficial forums, blog posts, and source code. Most of the time, it's other people with the same problem and no solution.
+% \end{itemize}
+
 
 \subsection{Excerpt 1: Broken Models}\label{sub:brokenft}
 Since for this work a custom dataset is used, it also requires a custom dataloader.
@@ -184,8 +197,10 @@ This is true in cases where \mpy{"<EOS>"} denotes a switch from user-generated t
 Nonetheless, this is not the case here. Even when ignoring the \textit{first} such token, no further \mpy{"<EOS>"}-tokens should follow immediately after.
 
 At this point, it is unclear what exactly happened.
+Looking through source code of used modules from the \gls{transformers} library provided little insight.
 The main hypothesis for the failure is that the optimizer trained the model that \textit{no additional output} is required, since both \mpy{"input_ids"} and \mpy{"label"} where equal.
-However, this seems to work for other groups in certain circumstances, so it remains unclear what happened.
+However, this approach seems to work for other groups in certain circumstances, which substantially reduces the credibility of the hypothesis.
+So far, no other potential explanation has been found.
 
 Additionally, attempts at mask manipulation were not possible due to the nature of \gls{causal} which all \glspl{LLM} are.
 Other sources tokenize different text for \mpy{"label"}, though this is more rare and exact usage is inconsistent.
@@ -193,23 +208,20 @@ No further attempts at this approach where made due to focusing on other, seemin
 
 
 \subsection{Excerpt 2: Broken Libraries}\label{sub:libraries}
-In a later attempt \informal{we} tried using the high-level \gls{hf} \verb`trl` (Transformer Reinforcement Learning) library, which seems to be built for \informal{our} use-case exactly.
+Another attempt made use of the high-level \gls{hf} \texttt{trl} (Transformer Reinforcement Learning) library, purpose-built for use-cases of (supervised) fine-tuning.
 
-{
-\color{blue}
-However, this library is at best research-grade. The examples, while working with only a few lines, obscure the inner workings of the library.
-And good luck: it's also not documented. There is the \verb`DataCollatorForCompletionOnlyLM` collator, which takes a tokenizer, but also doesn't tokenize?!?
-\todo{rewrite subsection on broken libraries}
+\begin{sloppypar}
+The couple of examples provided, while working with only a few lines of code, obscure the complex and undocumented inner workings of the library.
+Usually, a \texttt{DataCollator} is used to batch-process multiple items from the dataloader, and items from the dataloader are already tokenized.
+However, the in examples used but otherwise undocumented \texttt{DataCollatorForCompletionOnlyLM} (or more specifically, the underlying \texttt{DataCollatorForLanguageModeling}) attempts to abstract away the process of tokenization, so that any dataloader providing text samples could be used, independent of tokenization.
+This abstraction would generally reduce redundant boilerplate code.
+\end{sloppypar}
 
-examples only have \verb`text` field, there is a formatting function and whatnot, but this implies tokenization is happening later. nope, errors with 'missing field \verb`token_ids`'.
+\code{error.py}{error}{Counterintuitively, this is not a \mpy{KeyError}.}
 
-trying out various things didn't work, until we ultimately didn't have time to continue.
+\begin{sloppypar}
+After inspecting some of the working examples to learn that the dataloaders provided a \mpy{"text"}-key, and adapting other code accordingly to \textit{not} tokenize it beforehand, this resultet in a \mpy{ValueError} missing \mpy{"input_ids"}, as can be seen in the full message in \coderef{error}.
+When instead tokenizing before the \texttt{DataCollatorForCompletionOnlyLM}, it would fail, complaining that it will do tokenization itself.
+\end{sloppypar}
 
-SFT: a lot of magic that isn't documented properly, at all. Couldn't get it to run, gave up due to time limit.
-}
-% \mintinline{python}{trl} library \cite{hf_trl_supervised}
-
-\todo{add note on additives, detection if one was there in the first place: alternatively outlook}
-\todo{explain that we model NER differently, which is why fscore doesn't make sense}
-
-
+% \subsection{Community Support}

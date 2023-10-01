@@ -1,15 +1,33 @@
 \chapter{Conclusion}\label{chap:conclusion}
-\todo{conclusion chapter guideline: what was learned from results based on initial question from the experiments and from other sources?}
-todo: write
-\todo{write conclusion chapter}
+% \todo{conclusion chapter guideline: what was learned from results based on initial question from the experiments and from other sources?}
 
 
-\todo{answering the scientific questions asked}
+Coming back to the initially posed goals of this work from \secref{question}:
 
-See scientific question in \secref{question}
+\begin{enumerate}
+    \item Demonstrate zero-shot automated information extraction from scientific literature using open-access \glspl{LLM}.
+    \item Benchmark and compare the accuracy of currently available open-access \glspl{LLM} for the automated information extraction from scientific literature.
+    \item Attempt fine-tuning of open-access \glspl{LLM} in order to increase accuracy.
+\end{enumerate}
 
-\section{Benchmarking}
-\section{Fine-Tuning}\label{sec:con:sft}
-\section{Automated Pipeline}
+First, zero-shot automated information extraction from scientific literature was successfully demonstrated with high accuracy achieved by most models of all sizes, as detailed in \secref{result:first}.
 
-\section{Lessons Learned}
+Second, the capabilities of some of the most capable open-access \glspl{LLM} was measured and compared specifically for the information extraction task on scientific data, detailed also in \secref{result:first}.
+Furthermore, analyzing frequent mistakes in \secref{mistakes} gave additional insight in failure modes and further venues for inquiry and improvement.
+
+Generally speaking, this work demonstrated and measured the fundamental capability of various models for information extraction tasks for scientific literature in a zero-shot setting with a easily configurable pipeline.
+This pipeline can easily be configured to extract additional parameters, and even hybrid systems (automatic extraction with manual oversight) for more complex parameters could substantially increase data quality for various domains of research.
+This means that \glspl{LLM} can be powerful tools for information extraction, even in setups where the model is self-hosted.
+
+Third, a lot of time and effort was put in attempting to fine-tune models for the information extraction task, which was substantially harder than initially assumed, and eventually abandoned.
+\secref{sft} has excerpts of the difficulties encountered, which gives some insight to the task of fine-tuning in practice.
+
+
+
+
+
+
+
+
+
+

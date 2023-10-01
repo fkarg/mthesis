@@ -1,9 +1,44 @@
 \addchap{Abstract}\label{chap:abstract}
 \pagenumbering{arabic}
-Abstract goes here. \todo{write abstract}
+
+% How to write an abstract
+%  One or two sentences providing a basic
+%  introduction to the field, comprehensible to
+%  a scientist in any discipline.
+A majority of materials science knowledge is contained in unstructered text scattered throughout the body of scientific literature, out of reach for increasingly capable but data-starved \acrlong{ML} models that are being used more and more at every step of the materials creation process.
+%  Two to three sentences of more detailed
+%  background, comprehensible to scientists
+%  in related disciplines.
+Thus, the extraction of such information from unstructured scientific literature and conversion to machine-readable formats has become a challenge of \acrlong{NLP}.
+Recently, \acrlongpl{LLM} have gained prominence for their general capabilities across \acrlong{NLP} tasks, including \acrlong{NER}.
+%  One sentence clearly stating the general
+%  problem being addressed by this particular
+%  study.
+%However, such information is often not accessible in a machine-readable format.
+%  One sentence summarizing the main result
+%  (with the words “here we show” or their
+%  equivalent).
+This work demonstrates that automated information extraction from materials science literature is possible with high accuracy using models of only 13 billion parameters and without fine-tuning.
+%  Two or three sentences explaining what the
+%  main result reveals in direct comparison to
+%  what was thought to be the case previously,
+%  or how the main result adds to previous
+%  knowledge.
+In fact, 13 billion parameter sized variants from both \model{llama} and \model{llama2} achieved an accuracy of 95 to 98\% for the extraction of temperature and time information from unstructured text.
+Additionally, the 7 billion parameter sized \model{falcon} achieved an accuracy of 79\% on the extraction of solvent information from synthesis paragraphs on the creation of \acrlongpl{MOF}.
+%Contrary to expectation, fine-tuning is harder than expected with few resources available.
+%  One or two sentences to put the results
+%  into a more general context.
+The smaller size of these models, their open-access availability, and no necessity for additional fine-tuning enables the usage of most consumer hardware, making these capabilities far more accessible than previously expected.
+%  Two or three sentences to provide a broader
+%  perspective, readily comprehensible to a
+%  scientist in any discipline.
+
+% This means, that even for more sophisticated information extraction tasks fine-tuning might not be necessary, particularly with more generally capable models in the future.
 
 \addchap{Zusammenfassung}
 Deutsche Zusammenfassung hier. \todo{write zusammenfassung}
+
 
 \cleardoublepage
 % \pagenumbering{arabic}
@@ -13,3 +48,6 @@ Deutsche Zusammenfassung hier. \todo{write zusammenfassung}
 % - Alph: use uppercase letters (A, B, C, ...)
 % - roman: use lowercase roman numerals (i, ii, iii, ...)
 % - Roman: use uppercase roman numerals (I, II, III, ...)
+
+
+
