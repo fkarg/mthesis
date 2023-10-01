@@ -2,12 +2,12 @@
     \begin{centering}
         \includegraphics[width=0.9\textwidth]{img/overview_large_accuracy}
         \caption[Overview of Large Model Accuracy]{\textbf{Overview of the Accuracy of Models with a Size over 30B parameters.}
-        Leftmost is the average over all models.
-        The accuracy for \ttemp and \ttime is within a few percantage points of 95\% for all models.
-        For \tsolv, accuracy is still mostly around 60\%. \model{vicuna} 33B is still trailing behind (there is no \model{vicuna} 65B variant available from \gls{lmsys}).
-        The accuracy of \model{llama} 30B on \tsolv is worse than that of any other \model{llama} size, being only slightly ahead of \model{vicuna}.
+        Leftmost is the average over all models upwards of 30B parameters.
+        On average, the accuracy for \ttemp is 98\%, 97\% for \ttime and 68\% for \tsolv.
+        \model{llama2} does not have a 30B or 33B-sized variant.
+        There is also no \model{vicuna}-65B variant made available from \gls{lmsys}.
+        \model{llama2} and both \model{falcon} models achieve 72\% accuracy on \tsolv extraction, 6-11 \glspl{pp} more than other models.
         }
         \label{fig:large_acc}
     \end{centering}
 \end{figure}
-

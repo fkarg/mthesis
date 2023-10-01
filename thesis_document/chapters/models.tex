@@ -9,7 +9,7 @@ See \secref{basics} for an overview and broad categorization of the models menti
 For this work, the following criteria where chosen:
 \begin{enumerate}
     \item It is possible to get the full model weights.
-    \item The selected models ought to be decently capable \gls{causal}.
+    \item The selected models ought to be decently capable \glspl{causal}.
     \item Ceteris paribus, a smaller model is better.
 \end{enumerate}
 
@@ -23,8 +23,8 @@ To vastly condense the number of models to consider, each base model ought to ha
 Additionally, due to the nature of the task, it would be valuable to include both base models and instruct-based derivatives.
 
 Third, all else being equal, a smaller model is preferred.
-This is due smaller models being less resource intensive to evaluate and fine-tune.
-Having a smaller variant of a model is a nice bonus which enables faster iteration during development.
+This is due to smaller models being less resource intensive to evaluate and fine-tune.
+Smaller variants of larger models additionally enable faster and less resource intensive iteration during development.
 
 
 \subsection{OPT, BLOOM (Not Used)}
@@ -34,14 +34,14 @@ The initial model set out for this work was \model{OPT} \cite{zhang_opt_2022}, a
 \paragraph{BLOOM}\label{par:bloom}\label{sub:BLOOM}
 \model{BLOOM} \cite{workshop_bloom_2022} is a 176 billion parameter open-source \gls{LLM} trained by a cooperation of numerous organizations, spearheaded by \gls{hf} and \gls{Google}. When compared to \model{OPT} across \gls{NLP} benchmarks, \model{BLOOM} appears to perform marginally better.
 
-\paragraph{Reasons for Using Neither}
+\paragraph{Reasons for Using Neither Model}
 The original plan for this work would use \model{OPT} as the only model. During early literature research, it seemed that \model{BLOOM} would be slightly more capable, which changed the intention to compare both.
 Not soon after, the smaller and seemingly much more capable \model{llama} was released, which prompted the decision of creating a model-agnostic pipeline instead, focusing on \model{llama} first.
 See the next \subref{llama} for more details on \model{llama}.
 
 \subsection{LLaMa (Used)}\label{sub:llama}
-\model{llama} is a family of open-access \glspl{LLM} from \gls{meta} with sizes ranging from 7 billion to 65 billion parameters, and capabilities comparable to, and sometimes beating \gls{SOTA} (including the substantially larger \gls{GPT3}) at the time of release \cite{touvron_llama_2023}.
-\model{llama} can be seen as the first culmination of progress on \glspl{LLM} in one place.
+\model{llama} is a family of open-access \glspl{LLM} provided by \gls{meta} with sizes ranging from 7 billion to 65 billion parameters, and capabilities comparable to, and sometimes beating \gls{SOTA} (including the substantially larger \gls{GPT3}) at the time of release \cite{touvron_llama_2023}.
+\model{llama} can be seen as the first culmination of progress on \glspl{LLM} up to this point, in one place.
 
 \model{llama} is not instruction fine-tuned. See \subref{instruct} for more details on instruction fine-tuning.
 For instruction fine-tuned variants of \model{llama}, see \subref{alpaca} on \model{alpaca} or \subref{vicuna} on \model{vicuna}.
@@ -55,7 +55,7 @@ For this reason, it was decided against including \model{alpaca} in the benchmar
 
 
 \subsection{Vicuna (Used Partially)}\label{sub:vicuna}
-\model{vicuna} is a family of instruction fine-tuned \model{llama}-variants, released by \gls{lmsys}. It is building on top of the training recipe of \model{alpaca}.
+\model{vicuna} is a family of instruction fine-tuned \model{llama}-variants, released by \gls{lmsys}. It is built on top of the training recipe of \model{alpaca}.
 However, not all weights of the corresponding \model{llama} sizes are available.
 The largest \model{llama}-model (65B) does not have a corresponding \model{vicuna} derivative available.
 In a tournament format between different \glspl{LLM}, \model{vicuna} provided user-preferred answers more often than \model{llama} and \model{alpaca} \cite{zheng_judging_2023}, among others.
@@ -71,10 +71,10 @@ For each size, \model{llama2} was released in four versions: 1) the base model 2
 
 \subsection{Falcon (Used)}\label{sub:falcon}
 The \model{falcon} \cite{zxhang_falcon_2023} family of language models are created by the Abu Dhabi-based \gls{tii}.
-Since its release, \model{falcon} is to be at the top of most benchmarks between open-access models (in each respective parameter size category) \cite{zxhang_falcon_2023}.
+Since its release, \model{falcon} is at the top of most benchmarks between open-access models (in each respective parameter size category) \cite{zxhang_falcon_2023}.
 It appears to rival some of the most capable closed-access models such as \gls{PaLM} in capability.
 
-Their better performance for most tasks is assumed to mostly be the result of longer training and higher-quality data sets \cite{zxhang_falcon_2023}.
+The better performance of \model{falcon} for most tasks is assumed to mostly be the result of longer training and higher-quality data sets \cite{zxhang_falcon_2023}.
 
 Recently, a new 180 billion parameter \model{falcon} variant was announced \cite{tii_falcon180b_2023}. \model{falcon}-180B is not included in this benchmark.
 

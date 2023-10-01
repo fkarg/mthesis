@@ -1,5 +1,5 @@
 output = {
-    "additive": "neutral",
+    "additive": "acid",
     "solvent": "water",
     "temperature": 80,
     "temperature_unit": "C",

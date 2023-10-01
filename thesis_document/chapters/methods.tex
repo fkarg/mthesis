@@ -12,20 +12,20 @@ First, a bit on how they work in general, second a bit of background on the mode
 % background is more general, methods is specific to the methods we use, in our case LLMs
 
 \section{Language Model Basics}\label{sec:basics}
-This Section aims to provide an overview and fundamental understanding of the underlying concepts and terminology of the language models used in this work.
+This Section aims to provide an overview of the language models used in this work as well as a fundamental understanding of the underlying concepts and terminology.
 First, the fundamentals of the original transformer architecture are being established in \subref{transformer}.
-\subref{modern} re-introduces the transformer architecture from a modern perspective, and highlights changes relative to the original architecture.
+\subref{modern} reintroduces the transformer architecture from a modern perspective, and highlights changes relative to the original architecture.
 Last but not least, \subref{llm} provides information on the scaling up and development of modern \glspl{LLM}.
 
 \input{figures/transformer}
 
 \subsection{The Transformer Architecture}\label{sub:transformer}
-All modern language models are based on what \gls{Google} introduced as the transformer architecture \cite{vaswani_attention_2017}.
-This architecture originally was designed for translation, with an encoder and a decoderpart (See \figref{transformer} for more details).
-Text to translate would be first encoded to the embedding space by the encoder, and the decoder would autoregressively (only one token for each full forward pass, where the most recent one will be appended to the output) generate the output, token by token.
+All modern language models are based on what was introduced as the transformer architecture \cite{vaswani_attention_2017} by \gls{Google} in 2017.
+This architecture was originally designed for translation, with an encoder and a decoder part (See \figref{transformer} for more details).
+The text to translate is first encoded to the embedding space by the encoder, after which the decoder will autoregressively (only one token for each full forward pass, where the most recent one will be appended to the output) generate the output, token by token.
 
-This new transformer architecture quickly established itself by outperforming other architectures available at the time with a fraction of the training cost.
-An Encoder-Only transformer architecture, specifically \gls{BERT}, set a new \gls{SOTA} for all \gls{NLP} benchmarks established at the time.
+This new transformer architecture quickly established itself by outperforming other architectures available at the time with only a fraction of the training cost.
+An encoder-only transformer architecture, specifically \gls{BERT}, set a new \gls{SOTA} for all \gls{NLP} benchmarks established at the time \cite{devlin_bert_2018}.
 % This success was not limited to \gls{NLP} tasks.
 
 % Along with significantly increasing capability in \acrlong{NLP}, these models enabled more sophisticated requests for data extraction.
@@ -34,18 +34,18 @@ An Encoder-Only transformer architecture, specifically \gls{BERT}, set a new \gl
 
 \subsection{A Modern Transformer Architecture}\label{sub:modern}
 
-There have been various attempts at improving the transformer architecture \cite{shazeer_glu_2020, su_roformer_2022, ainslie_gqa_2023, bolya_hydra_2022, sukhbaatar_adaptive_2019, lu_understanding_2019, ye_understanding_2023, wu_memorizing_2022}, some of them more successful than others.
+There have been various attempts at improving the transformer architecture, some of them more successful than others \cite{shazeer_glu_2020, su_roformer_2022, ainslie_gqa_2023, bolya_hydra_2022, sukhbaatar_adaptive_2019, lu_understanding_2019, ye_understanding_2023, wu_memorizing_2022}.
 A number of these variations have been adapted, and are used when setting up a new transformer model with few exceptions.
 Refer to \figref{modern_transformer} for a graphic representation and additional description.
 
 Early transformer architectures used \gls{ReLU} as an activation function. By comparing different activation functions, it was found that \gls{SwiGLU} empirically works best in most situations. % \cite{shazeer_glu_2020}
-Surprisingly, few modern \gls{LLM} architectures use dropout \cite{srivastava_dropout_2014}.
+Surprisingly, even though dropout established itself as extremely robust technique against overfitting and forcing generalization  \cite{srivastava_dropout_2014}, few modern \gls{LLM} architectures make use of it.
 This may be due to a lack of available high-quality training data.
 
-Instead of the originally used sinusoidal encoding for positions, the more sophisticated \gls{RoPE} demonstrated overall better performance.
+An even better overall performance was achieved when using the more sophisticated \gls{RoPE} instead of previous sinusoidal encoding for positions.
 % \cite{su_roformer_2022}
 Normalizing with RMSNorm as LayerNorm \cite{ba_layer_2016}, and using it before instead of after each layer resulted in less erratic training.
-Grouping attention query heads together reduced parameter counts and marginally improved performance, resulting in \gls{GQA}.
+In addition, a further marginally improved performance and parameter count reduction could be achieved by grouping attention query heads together in \gls{GQA}.
 % \cite{ainslie_gqa_2023}
 % work better than no sharing or full individual heads \cite{bolya_hydra_2022}.
 
@@ -97,16 +97,16 @@ Training a \acrlong{LLM} heavily depends on the task the model is supposed to le
 The objective of any \gls{causal} is to predict the next token based on the current token sequence.
 Prediction of the next token only depends on previous tokens in the context.
 For such scenarios, the reward is modeled as the likelihood of predicting the correct token in the sequence.
-Practically, with few exceptions the optimizer is AdamW \cite{loshchilov_decoupled_2017} minimizing the Cross-Entropy loss of the predicted tokens \cite{naveed_comprehensive_2023}.
+In most cases (and with few exceptions), the optimizer of choice is AdamW \cite{loshchilov_decoupled_2017}, tasked to minimize the Cross-Entropy loss of predicted tokens \cite{naveed_comprehensive_2023}.
 
-% \draft{
-For training a \gls{LLM}, a high-quality dataset is also needed, many of which are publicly available \cite{redpajamadata_2023}.
-For more details on pretraining and nuances necessary for large scale distributed training, refer to \cite{tirumala_d4_2023}.
+Fully training a new model for competitive capability is a massive undertaking requiring many thousands of GPU-hours \cite{touvron_llama_2023, scao_what_2022}, with all the associated costs and carbon footprint that entails.
+In order to train a \gls{LLM}, a high-quality dataset is also needed, many of which are publicly available \cite{redpajamadata_2023}.
+More details on pretraining and nuances necessary for large scale distributed training can be found in \cite{tirumala_d4_2023}.
 % }
 
 \subsection{Fine-Tuning}\label{sub:finetune}
-Fine-tuning exploits \textit{transfer learning} by continuing to train (See the previous \subref{pretraining} for details on training in general) a previously \textit{pre-trained} model, usually with a lower training rate and on very specialized data \cite{gaddipati_comparative_2020}.
-This allows \textit{transferring} previously learned features to accomplish a different task by making small adaptations.
+Fine-tuning exploits \textit{transfer learning} by continuing to train a previously \textit{pre-trained} model, usually with a lower training rate and on very specialized data \cite{gaddipati_comparative_2020}.
+This allows \textit{transferring} previously learned features to accomplish a different task by slightly adapting the model but exploiting existing structures for feature detection.
 The main benefits include using substantially less computational resources and training examples \cite{gaddipati_comparative_2020}, both of which tend to be hard to acquire, depending on the task.
 
 As such, fine-tuning and the resulting models are usually highly specialized to their task.
@@ -115,11 +115,11 @@ As such, fine-tuning and the resulting models are usually highly specialized to 
 Pre-trained or task-specific fine-tuned  models have learned context dependent token sequence likelihoods.
 This is useful for predicting the 'next' token on a wikipedia article or novel, but this does not make it easy to utilize the model in other ways.
 
-Essentially, fine-tuning on instructions guides the output by shifting the learned context-dependent token sequence likelihood, providing more control over model outputs.
-This results in users having a preference for the outputs of smaller models, over substantially bigger models, when the smaller model has been instruction fine-tuned \cite{ouyang_training_2022}, as it makes the model more 'useful' in a naive sense.
+This can be solved by instead predicting the most likely token sequence when prompted with instructions instead.
+Fine-tuning on instructions thus guides the output by shifting the learned context-dependent token sequence likelihood, providing more control over model outputs.
+This results in users having a preference for the outputs of smaller models, over substantially bigger models, when the smaller model has been instruction fine-tuned \cite{ouyang_training_2022}, as it makes the model more `useful' in a naive sense.
 A model fine-tuned on  a instruction dataset is commonly referred to as an \textit{instruct}-variant.
-
-More information on instruction-based fine-tuning can be found in \cite{ouyang_training_2022, tirumala_d4_2023}.
+More details on instruction-based fine-tuning can be found in \cite{ouyang_training_2022, tirumala_d4_2023}.
 
 
 % \subsection{RLHF}\label{sub:rlhf}

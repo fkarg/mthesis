@@ -75,14 +75,19 @@
 \newcommand{\tsolv}{\texttt{solvent}\xspace}
 \newcommand{\cid}{\texttt{cid}\xspace}
 
+\newcommand*{\mybox}[2]{\colorbox{#1!10}{\parbox{.98\linewidth}{#2}}}
+
 \newcounter{code}
 \setcounter{code}{0}
 \newenvironment{codeboxed}[2]{
-    \begin{minipage}{\linewidth}\begin{center}\textbf{#1}\\\small #2\\[1ex]\begin{tabular}{|p{\textwidth}|}\hline}{
+\begin{minipage}{\linewidth}\begin{center}\textbf{#1}\\\small \mybox{gray}{#2}\\[1ex]\begin{tabular}{|p{\textwidth}|}\hline}{
     \\\hline\end{tabular}\end{center}\end{minipage}}
 
 \newcommand{\code}[3]{\refstepcounter{code}\label{code:#2}\begin{codeboxed}{Code Example \thecode}{#3}
         \inputminted[linenos,fontsize=\small]{Python}{code/#1}\end{codeboxed}}
+
+\newcommand{\mpy}[1]{\mintinline{python}{#1}}
+
 
 
 \hypersetup

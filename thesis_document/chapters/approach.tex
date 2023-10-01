@@ -13,7 +13,7 @@ All source code for this work can be found at \url{https://github.com/fkarg/mthe
 
 It became appearent during literature research that a comparison between different models would be valuable, and that additional models can be expected to be released in time to be included in this work.
 Thus, almost all code ought to be model-agnostic.
-The \acrlong{transformers} library is the perfect candidate for that: it is a well-established framework providing abstractions to load, manipulate and train any deep learning architecture in a standardized format.
+The \acrlong{transformers} library was chosen due to being a well-established framework providing abstractions to load, manipulate and train any deep learning architecture in a standardized format.
 Additionally, all open-access \glspl{LLM} are available directly through the \gls{hf} portal.
 
 \paragraph{Dependencies}
@@ -28,16 +28,17 @@ Proportionally speaking, the main module (with 36\%), dataloader (with 23\%), an
 
 \section{Prompts}\label{sec:prompts}
 \glspl{LLM} are capable of very generic tasks, based on the input they are asked to respond to.
-The way to get them to solve a task as requested is by \textit{prompting} the model with a certain input.
+\textit{Prompting} a model with a certain input gives more fine-grained control over the output and can provide additional structure, information, and suggestions for solving a specified task.
 This is particularly eminent in models fine-tuned for instruction-based or chat-based interaction.
 
-In this work, not put much effort was put in achieving the best prompts.
+In this work, the main effort was put towards creating a pipeline for fine-tuning all models for the specified \gls{NER} task.
 This was due to the expectation that even small amounts of fine-tuning would be more effective in guiding model outputs than the best prompt could be.
+% Thus, prompting was given only cursory attention.
 More details on fine-tuning attempts in this work can be found in the later \secref{sft}.
 
 \paragraph{Structured Output}
 \texttt{guidance} \cite{guidance_2023}, originally from \gls{microsoft} research, allows more effective control over \glspl{LLM} than traditional prompting or chaining does.
-Effectively, it provides a harness around the \gls{LLM}, providing support for the model in generating structured information, and making use of additional output structures such as CoT \cite{wei_chainofthought_2022} to result in higher-quality outputs.
+In effect, \texttt{guidance} is a harness around a \gls{LLM}, providing support for the model in generating structured information, and making use of additional output structures such as CoT \cite{wei_chainofthought_2022} to result in higher-quality outputs.
 
 For this work, specifically the library \texttt{jsonformer} \cite{1rgs_2023} is used, which does not provide the full feature suite of the \texttt{guidance} library.
 At the time of deciding, \texttt{guidance} did not support models through the \gls{transformers} library yet.
@@ -74,12 +75,19 @@ Additionally, the full prompt used can be seen in \coderef{prompt}, and an examp
 
 
 \section{Data Source}\label{sec:data}
-As data source, 905 synthesis paragraphs to create parts of the publicly accessible labels in the database SynMOF\_A and SynMOF\_M \cite{luo_mof_2022} where used.
+As data source, 778 synthesis paragraphs and their corresponding labels from the publicly accessible database SynMOF\_M \cite{luo_mof_2022} where used.
+Each synthesis paragraph describes the creation procedure of a \gls{MOF}.
+This work focused on the basic parameters \ttemp, \ttime and \tsolv, though additional parameters could be added quickly to the schema discussed in the prior \secref{prompts}.
 
-Labels where taken from SynMOF\_A exclusively. Data from SynMOF\_A was extracted automatically, but confirmed and validated manually for correctness.
+% TODO: maybe describe 'every synthesis has one
+% or multiple temp, duration, solvent,
+% optionally additive, and other parameters???
+
+The labels from the SynMOF\_M database where manually annotated in prior work \cite{luo_mof_2022}.
 % In total, those 905 labels and synthesis paragraphs where fully utilized during evaluation.
-All proportional results in the later \chapref{results} are based on the accuracy of over 905 items.
-A split in test and training dataset was performed for training, but this should not influence the accuracy for evaluation regardless.
+All proportional results in the later \chapref{results} are based on the accuracy of over all 778 items.
+For training purposes, this dataset would have been split in dedicated datasets for test and training.
+% A split in test and training dataset was performed for training, but this should not influence the accuracy for evaluation.
 % Only a fraction of that would have been used for training purposes.
 %, as fine-tuning with a few hundred examples is more than sufficient \cite{dunn_structured_2022}.
 
@@ -97,10 +105,10 @@ Unit conversions for \ttemp and \ttime happen automatically before comparison an
 This ensures that durations of both '24h' and '1 day' are seen as equal, even though the strings are different.
 
 \subsection{Compounds}\label{sub:compsolv}
-Instead of names from chemical compounds, the database (See \secref{data} for more information on the data source) has the \texttt{pubchempy}-\texttt{cid} (compound id) as label for solvents and additives (if applicable).
-Most compounds have multiple different synonyms they are known by, e.g. `water' has one \cid (which is 962) and 319 distinct synonyms it can get resolved from.
-Surprisingly, while the list of synonyms includes both `distilled water' and `H2O', it does not include `distilled H2O', which is mentioned verbatim in eight of the 905 synthesis paragraphs, and suggested as an answer by some models.
-For more details on compound resolution problems, see the paragraph on Solvents in Section~\ref{par:solv}.
+Instead of names of chemical compounds, the database (See \secref{data} for more information on the data source) contains the \texttt{pubchempy}-\texttt{cid} (compound id) as the labels for solvents and additives (if applicable).
+Most compounds have multiple different synonymous names they are known by, e.g. `water' has one \cid (which is 962) and a list of 319 distinct strings it can get resolved from.
+Surprisingly, while the list of synonyms includes both `distilled water' and `H2O', it does not include `distilled H2O', which is mentioned verbatim in eight of the 778 synthesis paragraphs, and suggested as an answer by some models.
+For more details on compound resolution problems, see \subref{solv}.
 
 For each answer provided from the model for \tadd and \tsolv, an attempt at resolving the \cid is made.
 If a \cid is found, it is compared with the label \cid.
