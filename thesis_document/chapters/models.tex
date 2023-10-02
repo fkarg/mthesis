@@ -6,14 +6,14 @@ See \secref{basics} for an overview and broad categorization of the models menti
 
 
 \subsection{Criteria}\label{sub:criteria}
-First, the model weights need to be available. 
+First, the model weights need to be available.
 This is necessary to run the model in a self-hosted manner.
 Practically, this is a constraint towards open-source or at least open-access models (their license needs to allow for academic research).
 % \todo{reason for criteria: people want to fine-tune models on their own potentially sensitive data}
 
 Second, at this point dozens of \glspl{LLM} have been trained, and weights made available.
 One model was trained purely as a marketing pitch to sell computing systems \cite{dey_cerebrasgpt_2023}.
-To vastly condense the number of models to consider, each base model ought to have demonstrated foundational capability in other domains.
+To vastly condense the number of models to consider, each base model ought to have demonstrated fundamental capability in other domains.
 Additionally, due to the nature of the task, it is valuable to include both base models and instruct-based derivatives for comparison.
 
 Third, all else being equal, a smaller model is preferred.
@@ -68,7 +68,7 @@ Thus, before the release of \model{falcon} and \model{llama2}, \model{vicuna} wa
 \gls{meta} released \model{llama2} \cite{touvron_llama2_2023} only a few months after the release of its predecessor.
 They introduced few fundamental changes when compared to \model{llama}.
 The main differences include making use of \gls{GQA} for the first time, and training on more tokens.
-For each size, \model{llama2} was released in four versions: 1) the base model 2) a 'helpful'-variant trained with human-feedback 3) a 'chat' variant optimized for dialogue and 4) a combined 'helpful' and 'chat' variant.
+For each size, \model{llama2} was released in four versions: 1) the base model 2) a `helpful'-variant trained with human-feedback 3) a `chat' variant optimized for dialogue and 4) a combined `helpful' and `chat' variant.
 
 
 \subsection{Falcon (Used)}\label{sub:falcon}
@@ -78,7 +78,7 @@ It appears to rival some of the most capable closed-access models such as \gls{P
 
 The better performance of \model{falcon} for most tasks is assumed to mostly be the result of longer training and higher-quality data sets \cite{zxhang_falcon_2023}.
 
-Recently, a new 180 billion parameter \model{falcon} variant was announced \cite{tii_falcon180b_2023}. \model{falcon}-180B is not included in this benchmark.
+Recently, a new closed-access 180 billion parameter \model{falcon} variant was announced \cite{tii_falcon180b_2023}. \model{falcon}-180B is not included in this benchmark.
 
 
 \subsection{GPT4 (Not Used)}\label{sub:GPT4}

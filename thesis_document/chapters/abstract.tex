@@ -9,7 +9,7 @@ A majority of materials science knowledge is contained in unstructered text scat
 %  Two to three sentences of more detailed
 %  background, comprehensible to scientists
 %  in related disciplines.
-Thus, the extraction of such information from unstructured scientific literature and conversion to machine-readable formats has become a challenge of \acrlong{NLP}.
+Thus, the extraction of such information from unstructured scientific literature and conversion to machine-readable formats has become a grand challenge of \acrlong{NLP}.
 Recently, \acrlongpl{LLM} have gained prominence for their general capabilities across \acrlong{NLP} tasks, including \acrlong{NER}.
 %  One sentence clearly stating the general
 %  problem being addressed by this particular
@@ -24,8 +24,8 @@ This work demonstrates that automated information extraction from materials scie
 %  what was thought to be the case previously,
 %  or how the main result adds to previous
 %  knowledge.
-In fact, 13 billion parameter sized variants from both \model{llama} and \model{llama2} achieved an accuracy of 95 to 98\% for the extraction of temperature and time information from unstructured text.
-Additionally, the 7 billion parameter sized \model{falcon} achieved an accuracy of 79\% on the extraction of solvent information from synthesis paragraphs on the creation of \acrlongpl{MOF}.
+In fact, 13 billion parameter sized variants from both \model{llama} and \model{llama2} achieved an accuracy of 95 to 98\% for the extraction of temperature and time information from synthesis paragraphs on the creation of \acrlongpl{MOF}.
+Additionally, the 7 billion parameter sized \model{falcon} achieved an accuracy of 79\% on the extraction of solvent information on the same unstructured scientific literature.
 %Contrary to expectation, fine-tuning is harder than expected with few resources available.
 %  One or two sentences to put the results
 %  into a more general context.
@@ -37,8 +37,13 @@ The smaller size of these models, their open-access availability, and no necessi
 % This means, that even for more sophisticated information extraction tasks fine-tuning might not be necessary, particularly with more generally capable models in the future.
 
 \addchap{Zusammenfassung}
-Deutsche Zusammenfassung hier. \todo{write zusammenfassung}
-
+Ein Großteil von materialwissenschaftlichem Wissen ist verteilt über unzählige wissen\-schaft\-lichen Arbeiten, wo es unerreichbar für besser werdende, aber datenhungrige \acrlong{ML} Modelle ist, die mehr und mehr in allen Schritten der Herstellung neuer Materialien beteiligt sind.
+Darum ist die Extrahierung solcher Informationen aus unstrukturierten wissenschaftlichen Artikeln und Konvertierung zu maschinenlesbaren Formaten eine große Herausforderung der Verarbeitung natürlicher Sprache geworden.
+Zuletzt haben große Sprachmodelle Bekanntheit für ihre allgemeinen Fähigkeiten in der Verarbeitung natürlicher Sprache erlangt, inklusive der Erkennung benannter Entitäten.
+Diese Arbeit zeigt, dass automatisches Extrahieren aus Arbeiten der Materialwissenschaft mit hoher Genauigkeit möglich ist, sogar von Modellen mit nur 13 Milliarden Parametern und ohne nachzutrainieren.
+Tatsächlich haben die 13 Milliarden Parameter Varianten von \model{llama} und \model{llama2} Genauigkeiten von 95 bis 98\% bei der Extrahierung von Temperatur- und Zeitdauerinformation aus Syntheseabschnitten zur Herstellung von Metall-Organischen-Frameworks erreicht.
+Zusätzlich hat die 7 Milliarden Parameter große Variante von \model{falcon} eine Genauigkeit von 79\% bei der Extrahierung der Lösung in selbigen unstrukturierten wissenschaftlichen Artikeln erreicht.
+Die kleine Größe dieser Modelle, deren freie Verfügbarkeit, und keine Notwendigkeit für zusätzliches Trainieren ermöglicht die Nutzung mit Verbraucherhardware, was diese Fähigkeiten sehr viel zugänglicher macht, als zuvor angenommen.
 
 \cleardoublepage
 % \pagenumbering{arabic}

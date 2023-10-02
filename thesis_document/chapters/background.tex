@@ -62,7 +62,7 @@ In this work, \gls{NER} is not modeled as a sequence-to-sequence labeling proble
 Additionally, a distinction has to be made between a \gls{masked} such as \gls{BERT} and all well-known \glspl{LLM} which are \glspl{causal}.
 A \gls{causal} predicts the likelihood of the next token (piece of text) based on a previous sequence of tokens, often called \textit{input}, \textit{prompt} or \textit{context}.
 In contrast, a \gls{masked} predicts attributes of, or tokens in potentially multiple masked locations as part of a sequence of tokens, taking the full context of all surrounding tokens into account.
-The output of a \gls{masked} are properties or tokens for each masked location, whereas the outupt of a \gls{causal} is a likelihood distribution for the next token in the sequence. 
+The output of a \gls{masked} are properties or tokens for each masked location, whereas the outupt of a \gls{causal} is a likelihood distribution for the next token in the sequence.
 % Additionally, in this work \glspl{causal} are used, whereas \gls{BERT} is a \gls{masked}.
 \secref{masked} outlines how a comparison with modern \gls{masked} architectures might look like. Additionally, \secref{basics} describes \acrlongpl{LM} in more detail.
 

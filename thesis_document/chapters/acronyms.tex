@@ -33,7 +33,7 @@
 
 \newglossaryentry{causal}{
     name=causal language model,
-    description={A causal language model predicts the likelihood of the next token based on a sequence of tokens. By sampling one of the predicted tokens, output can be generated autoregressively. This in contrast to e.g. a \gls{masked}.}
+    description={A causal language model predicts the likelihood of the next token based on a sequence of tokens (input). By sampling one of the predicted tokens and appending it to the input, output can be generated autoregressively. This in contrast to e.g. a \gls{masked}.}
 }
 
 \newglossaryentry{masked}{
@@ -44,7 +44,7 @@
 
 \newglossaryentry{fscore}{
     name=F-Score,
-    description={$ 2\cdot (precision \cdot recall) / (precision + recall)$, where \textit{precsision} is a metric for how many retrieved items are relevant, and \textit{recall} is a metric for how many relevant items where retrieved.}
+    description={$ 2\cdot (precision \cdot recall) / (precision + recall)$, where \textit{precision} is a metric for how many retrieved items are relevant, and \textit{recall} is a metric for how many relevant items where retrieved.}
 }
 
 \newglossaryentry{pp}{
@@ -74,7 +74,7 @@
 
 \newglossaryentry{ChatGPT}{
     name=ChatGPT,
-    description={A chat interface for \gls{GPT3}.5 or \gls{GPT4} from \gls{OpenAI}, which makes it easier to interface with the model. Refer to \subref{instruct} for more information on instruct-based models, chat variants are an extension of.
+    description={A chat interface for \gls{GPT3}.5 or \gls{GPT4} from \gls{OpenAI}, which makes it easier to interface with the model. \subref{instruct} provides more information on instruct-based models, chat-variants like ChatGPT are an extension of.
     }
 }
 
@@ -98,7 +98,7 @@
 
 \newglossaryentry{PaLM}{
     name=PaLM,
-    description={An extremely capable \gls{LLM} from \gls{Google} \cite{chowdhery_palm_2022}.
+    description={An extremely capable closed-access \gls{LLM} from \gls{Google} \cite{chowdhery_palm_2022}.
     }
 }
 
@@ -122,7 +122,7 @@
 
 \newglossaryentry{llama2}{
     name=LLaMa 2,
-    description={One of the \glspl{LLM} used. Created by \gls{meta}, successor of \model{llama}. See \subref{llama2} for details.
+    description={One of the \glspl{LLM} used. It is the successor of \model{llama}, also created by \gls{meta}. See \subref{llama2} for details.
     }
 }
 
@@ -143,23 +143,23 @@
 
 \newglossaryentry{OpenAI}{
     name=OpenAI,
-    description={American AI company, trailbrlazing at the frontier of scaling deep learning architectures and algorithmic breakthroughs for doing so. Their currently most well-known models are the \gls{GPT} family of models, particularly \gls{GPT2}, \gls{GPT3} and \gls{GPT4}.}
+    description={American AI company, trailblazer at the frontier of scaling deep learning architectures and corresponding algorithmic breakthroughs. Their currently most well-known models are the \gls{GPT} family of models, particularly \gls{GPT2}, \gls{GPT3} and \gls{GPT4}.}
 }
 
 \newglossaryentry{Google}{
     name=Google,
-    description={Now called Alphabet, search engine giant turned AI powerhouse, well known for training supersized machine learning models with unrealistic hardware requirements for just about anyone else.}
+    description={Now called Alphabet, search engine giant and AI powerhouse, well known for training supersized machine learning models with unrealistic hardware requirements for just about anyone else.}
 }
 
 \newglossaryentry{microsoft}{
     name=Microsoft,
-    description={Large Tech Giant, recently starting a cooperation with \gls{OpenAI} by investing USD\$10 Billion and integrating \gls{GPT4} and other models in their services}
+    description={Tech Giant, well-known for its operating system. Microsoft recently started intensive cooperation with \gls{OpenAI} through a \$10 Billion USD investment, and started integrating \gls{GPT4} and other models throughout their services.}
 }
 
 
 \newglossaryentry{hf}{
     name=HuggingFace,
-    description={American deep learning ecosystem startup, having a well established framework to interface and abstract between similar models.}
+    description={American deep learning ecosystem startup, having created the well established \texttt{transformers} framework which provides useful abstractions of most existing open-access Machine Learning models.}
 }
 
 \newglossaryentry{tii}{
@@ -173,6 +173,6 @@
     name=Large Model Systems Organization,
     text=LMSYS,
     first={Large Model Systems Organization (LMSYS)},
-    description={The Large Model Systems Organization eponymously develops large models and systems that are open, accessible, and scalable.}
+    description={The Large Model Systems Organization eponymously develops large models and systems that are open, accessible, and scalable, e.g. Vicuna.}
 }
 

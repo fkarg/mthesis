@@ -1,35 +1,52 @@
 \chapter{Outlook}\label{chap:outlook}
-\todo{outlook chapter guideline: what could be done next? Why was this not done?}
-This work aimed to answer numerous questions surrounding the use of \glspl{LLM} for automated data extraction from scientific literature.
-The knowledge gained while doing so, allows us to ask more, and better questions.
-\todo{write outlook}
+% \todo{outlook chapter guideline: what could be done next? Why was this not done?}
+This work aimed to answer a number of questions surrounding the use of \glspl{LLM} for automated information extraction from scientific literature.
+A number of questions have been answered, and insights where gained.
+This newfound knowledge provides the opportunity to ask better questions.
 
-\section{More Prompt Engineering}\label{sec:out:prompt}
-During this work, a lot of effort was put in attempting to fine-tune the models used (See \secref{res:sft} for details on \informal{our} work, and \subref{finetune} for details on training and fine-tuning \glspl{LM} in general).
-Thus, not much effort was put in getting the most of out prompt engineering.
+\section{Further Analysis}\label{sec:out:analysis}
+While a certain amount of analysis on failure modes was done, there remain numerous avenues unexplored.
+One such avenue is the full exploration of \tsolv resolution cases.
+How many of the model-provided answers are actually right, but couldn't be resolved?
+Of those that could be resolved but are wrong, what did the models answer, and why?
+
+A secondary avenue for exploration could be the more accurate querying for \tadd and additional parameters.
+
+Answering these questions could provide substantial insight on the problem of \gls{NER} with \glspl{LLM}.
+
+\section{Prompts}\label{sec:out:prompt}
+For this work, the most effort was put in attempting to fine-tune the models used.
+Consequently, not much effort was put in designing the best prompt for a zero-shot setting.
 Better prompts could potentially be automatically generated to work well across models \cite{zhou_large_2022}.
-Using tools from mechanistic interpretability \cite{conmy_automated_2023} it should be possible to generate highly-specialized prompts \cite{rumbelow_solidgoldmagikarp_2023} for each model.
+Using tools from mechanistic interpretability \cite{conmy_automated_2023} it should be possible to generate highly-specialized prompts \cite{rumbelow_solidgoldmagikarp_2023} for each model as well. They may not generalize, however.
+
+Additionally, the more sophisticated \texttt{guidance} \cite{guidance_2023} library now allows integration of \gls{transformers} models.
+Using it instead of \texttt{jsonformer} should enable more fine-grained control and allow for better outputs overall.
 
 % \todo{try duration_in_h and temperature_in_C as prompts}
-
-
-\informal{We} prompted the model for both
+% \informal{We} prompted the model for both
 
 \section{Fine-Tuning}\label{sec:out:sft}
-While attempted, \informal{we} where not successfull in fine-tuning one of the selected models (See \secref{res:sft} for details on \informal{our} work on fine-tuning, and \subref{finetune} for details on training and fine-tuning \glspl{LM} in general).
-\todo{expand outlook section on fine-tuning}
+While attempted, working fine-tuned models where not achieved during this work.
+As mentioned before, a model fine-tuned for a specific task should have better performance than a generally pretrained model \cite{zhao_finetuning_2021}.
+
+However, as demonstrated in this work, fine-tuning may not be necessary depending on the task.
+A detailed comparison with fine-tuned models would still be able to provide substantial insights in failures of current models.
+Additionally, the question of how much more accurate existing open-access \acrlongpl{LLM} could become on information extraction tasks remains unanswered.
 
 \section{Different Frameworks}\label{sub:frameworks}
-In recent months a new ecosystem of \gls{LLM} orchestration frameworks emerged.
-They are often building on top of the abstraction capabilities of the \acrshort{transformers} library, and bring additional tooling for using \glspl{LLM} for agentic use-cases, but also interfacing, chaining and fine-tuning for various use-cases.
-Most prominent for that are currently LangChain \cite{langchain_2023} and HayStack \cite{haystack_2023}, though with the current pace of new frameworks emerging, this may change over time.
-A comparison was not done due to time constraints.
+In recent months an ecosystem of \gls{LLM} orchestration frameworks emerged.
+Orchestration frameworks often build on top of the abstractions provided by the \acrshort{transformers} library, but bring additional tooling for using \glspl{LLM} particularly in agentic use-cases.
+Additionally, interfacing, chaining and fine-tuning of \glspl{LLM} is supposed to be easier.
+The most prominent orchestration frameworks are currently LangChain \cite{langchain_2023} and HayStack \cite{haystack_2023}, though with the current pace of new frameworks emerging, this may change over time.
 
 
 \section{Next-Gen Models}\label{sec:next-gen}
-Since data extraction for \informal{our} use-case has been established to work with fine-tuning \gls{GPT3} \cite{dunn_structured_2022}, it should in expectation work even better with newer models like \gls{GPT4}.
-A comparison was not done due to time and resource constraints.
+While this work compared a number of open-access \glspl{LLM}, a comparison with closed-access  models such as \model{falcon}-180B or \model{GPT4} with or without fine-tuning would provide additional insights on relative capabilities.
+
 
 \section{Comparison to Masked Language Models}\label{sec:masked}
-The task of knowledge extraction may be well suited to \glspl{masked} modern \gls{BERT}-derived architectures such as T5 \cite{raffel_exploring_2020}.
-A comparison was not done due to time constraints.
+The task of knowledge extraction may be well suited to \glspl{masked} with modern \gls{BERT}-derived architectures such as T5 \cite{raffel_exploring_2020}.
+Thus, such a a comparison would be of particular interest.
+
+

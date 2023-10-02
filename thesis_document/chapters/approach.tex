@@ -9,7 +9,7 @@ The dataset used, and how it was processed is described in \secref{data}, before
 
 \section{Implementation}\label{sec:impl}
 All source code for this work can be found at \url{https://github.com/fkarg/mthesis}, and a tag will mark the state at the time of submission.
-\todo{publish on day of submission}
+% \todo{publish on day of submission}
 
 It became appearent during literature research that a comparison between different models would be valuable, and that additional models can be expected to be released in time to be included in this work.
 Thus, almost all code ought to be model-agnostic.
@@ -106,7 +106,7 @@ This ensures that durations of both '24h' and '1 day' are seen as equal, even th
 
 \subsection{Compounds}\label{sub:compsolv}
 Instead of names of chemical compounds, the database (See \secref{data} for more information on the data source) contains the \texttt{pubchempy}-\texttt{cid} (compound id) as the labels for solvents and additives (if applicable).
-Most compounds have multiple different synonymous names they are known by, e.g. `water' has one \cid (which is 962) and a list of 319 distinct strings it can get resolved from.
+Most compounds have multiple different synonymous names they are known by, e.g. `water' has one \cid (which is 962) and a list of 319 distinct strings it can be resolved from.
 Surprisingly, while the list of synonyms includes both `distilled water' and `H2O', it does not include `distilled H2O', which is mentioned verbatim in eight of the 778 synthesis paragraphs, and suggested as an answer by some models.
 For more details on compound resolution problems, see \subref{solv}.
 

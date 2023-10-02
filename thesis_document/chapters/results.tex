@@ -1,4 +1,6 @@
 \chapter{Results and Discussion}\label{chap:results}
+As mentioned in the previous \chapref{approach}, the approach of this work is to guide a number of open-access \glspl{LLM} through prompts to extract \ttemp, \ttime and \tsolv data from \gls{MOF} synthesis paragraphs.
+% \todo{make quick recap on approach for who starts reading here}
 % Evaluation Criteria:
 % - Quality of explanation (written)
 % - Support with diagrams, tables and figures
@@ -10,26 +12,23 @@
 % - Comparison with related work
 % - Discussion of implications
 % - Discussion of limitations
-\section{Overview}\label{sec:res:overview}
-\subsection{Recap}
-\draft{Before, ....}
-\todo{make quick recap on approach for who starts reading here}
+% \todo{add note on additives, detection if one was there in the first place: alternatively outlook}
 
-\todo{add note on additives, detection if one was there in the first place: alternatively outlook}
-\subsection{What's to come}
-\draft{In this Chapter, ...}
+\secref{result:first} describes and discusses extraction accuracy across the different model sizes, and potential insights gained there.
+Building on that, \secref{mistakes} provides deeper insight in different failure modes, before \secref{res:sft} provides excerpts of why attempts for fine-tuning ultimately failed.
 
-\subsection{Note on differences to impl}
-\todo{redo subsection titles and structure}
-\textbf{Note} that while all code (refer to \secref{impl} for notes on implementation) includes \texttt{additive}, figures in this chapter do not.
-This decision was made due to mistaken modeling of the task, which resulted in horrendous accuracy.
-7B-sized models all had less than 1\% correct (except for Vicuna with 2.5\%), and even large models had either below 1\% or around 15\% correct (\model{llama2} and \model{falcon}, not the instruct-variant).
+\paragraph{Note on Differences to Implementation}
+While all code as explained and partially showcased in \secref{impl} includes the additional category of \texttt{additive}, figures in this chapter do not.
+This decision was made due to mistaken modeling of the task, which resulted in accuracy substantially worse than it probably is when modelled properly.
+It was modeled as extraction task, similar to \tsolv. However, it ought to have been a classification task, with the options \mpy{[None, "base", "acid"]}.
+Thus, all 7B-sized models had an accuracy of less than 1\% (except for \model{vicuna}-7B with 2.5\%), and even large models had either below 1\% or only around 15\% correct (both \model{llama2} and \model{falcon}, not the instruct-variant).
+Additionally, a lot of answers would have been \mpy{None}, but all models always answered \textit{something}, because it did not seem apparent that \mpy{None} is a possible answer and only very large models have the capability of Reflexion \cite{shinn_reflexion_2023}.
 
-Instead of literal extraction, the task should have been modeled as classification task.
-This was not redone due to time constraints.
+% Instead of literal extraction, the task should have been modeled as classification task.
+This was only noticed after all models had been run, and was not redone due to time constraints.
 
 
-\todo{build graphs for each model family -- if I have enough time for that}
+% \todo{build graphs for each model family -- if I have enough time for that}
 
 \input{figures/results_7b_accuracy}
 \input{figures/results_13b_accuracy}
@@ -39,7 +38,7 @@ This was not redone due to time constraints.
 \section{Accuracy Overview}\label{sec:result:first}
 
 \subsection{7B Parameter Models}\label{sub:result:7b}
-As can be seen in \figref{7b_acc}, accuracy in extracting \ttemp and \ttime data varies wildlyacross models, and good performance in one does not always correlate with good performance in the other.
+As can be seen in \figref{7b_acc}, accuracy in extracting \ttemp and \ttime data varies wildly across models, and good performance in one does not always correlate with good performance in the other.
 
 \model{llama2} has the highest accuracy for both \ttemp and \ttime, but \model{falcon} is more accurate in \tsolv prediction on our dataset.
 Based on this, it seems that \model{llama2}-7B already achieves close to the highest accuracy for extraction of \ttemp, and is close behind on \ttime.
@@ -58,9 +57,14 @@ From what was seen from \model{falcon}-instruct-7B in \subref{result:7b}, \model
 
 \subsection{Large Models}\label{sub:result:large}
 As can be seen in \figref{large_acc}, scores between large models differ marginally at best.
+All models have an accuracy of 98\% or above on \ttemp extraction, and an average accuracy of 97\% on \ttime.
+
 Surprisingly, the accuracy on \tsolv extraction improved by less than maybe expected.
-In fact, as can be seen in the previous \figref{7b_acc}, smaller models were in average similarly capable, though the higher variance of smaller models included those both more and less capable than its larger siblings.
-This may be due to accidential success, and would warrant further analysis.
+In fact, as can be seen in the previous \figref{7b_acc} comparing the accuracy of 7B sized models, smaller models were on average similarly capable.
+Although, variance of accuracy between smaller models included those both more and less capable than its larger siblings.
+This may be due to accidential success, particularly in the case of \model{falcon}-7B having the highest accuracy on \tsolv extraction across all models and sizes.
+However, \model{llama}-7B similarly having a higher accuracy than any of its bigger siblings indicates something structural that would warrant further analysis.
+% and would warrant further analysis.
 
 
 
@@ -70,11 +74,11 @@ Analysis of cases where the extracted data was incorrect can provide valuable in
 Insight on unit confusion, particularly of smaller models, is provided in \subref{unitconfusion}.
 Resolution of solvents and problems with it are looked into in \subref{solv}, before \subref{oom} gives a short account of a more complex failure mode.
 
-\subsection{Unit Confusion}\label{sub:unitconfusion}
 \input{figures/results_7b_temp}
 \input{figures/results_7b_time}
-\input{figures/results_7b_solv}
-\input{figures/results_large_solv}
+
+
+\subsection{Unit Confusion}\label{sub:unitconfusion}
 One interesting observation is that smaller models appear to make a lot of `easy' mistakes.
 Not all such simple mistakes can be easily classified, but mistakenly outputting the wrong unit can.
 For \textit{unit confusion}, the following instances where counted: the answer (on \ttemp or \ttime) provided from a model is wrong, but interpreting the same answer with a different unit could get the correct answer.
@@ -94,9 +98,11 @@ This also explains how \model{llama} could quickly gain 33 \glspl{pp} in accurac
 \paragraph{Bigger-sized Models}
 Unit confusion on models sized 13B parameters or more is happening in less than 0.5\% of cases (in 0-4 answers of 778 data points), and is thus of no further interest.
 
+\input{figures/results_7b_solv}
+\input{figures/results_large_solv}
 
 \subsection{Solvent Resolution}\label{sub:solv}
-As mentioned previously in \subref{compsolv}, compounds may have multiple names that are used in different synthesis paragraphs, but not all of them may get resolved from \texttt{pubchempy}.
+As mentioned previously in \subref{compsolv}, compounds may have multiple names that are used in different synthesis paragraphs, but not all of them may be resolved from \texttt{pubchempy}.
 Thus, taking a closer look at how often answers for \tsolv from 7B-sized models could not be resolved in \figref{7b_solv} reveals an interesting picture.
 
 First, all models seem to be affected by not being able to resolve \tsolv to some degree.
@@ -114,23 +120,23 @@ answers of \ttime where clearly supposed to be in seconds (e.g. 864000 seconds a
 A similar mistake happened sometimes with \ttemp units in Kelvin.
 This did not preclude the unit from being wrong.
 In fact, it sometimes appears that (since the unit information is generated later) the model attempted to increase or decrease its previous answer with a different unit than would be expected, making it closer to correct than simply having the wrong number of zeros -- but still wrong.
-% As if trying to make up for that, the provided unit (probably because it was generated later) was sometimes \textit{inbetween} of what it 
-Smaller models seem to have a higher tendency of making these mistakes, but no further analysis was done due to time constraints.
+% As if trying to make up for that, the provided unit (probably because it was generated later) was sometimes \textit{inbetween} of what it
+Smaller models seem to have a higher tendency of making these mistakes, but no further analysis was done due to the more complex nature of the error.
 
 
 
 % \section{Additional Observations}\label{sec:discussion}
 % There are two interesting trends that can be observed across models:
-% 
+%
 % \begin{enumerate}
 %     \item Larger models are more accurate in the extraction of \ttemp and \ttime.
 %     \item Accuracy in the extraction of \tsolv appears to be largely independent of model size.
 % \end{enumerate}
-% 
+%
 % The first observation confirms general expectations.
 % However, even 13B-sized \model{llama} and \model{llama2} are only marginally worse than any of their bigger siblings, which indicates that even mid-sized models might already be fully capable of the extraction of parameters such as \ttemp and \ttime.
-% 
-% The second observation, that models mostly achieve the same accuracy on \tsolv extraction regardless of size, is indicative of 
+%
+% The second observation, that models mostly achieve the same accuracy on \tsolv extraction regardless of size, is indicative of
 % the models getting \textit{confused} rather than fundamentally being incapable of doing it.
 % The accuracy of just shy of 60\% also indicates that \textit{for the most part} it is clear what the task is.
 % This suggests that this task could benefit substantially from additional prompt engineering, and maybe even more from fine-tuning. See \secref{out:prompt} and \secref{out:sft} for the outlook on each respectively.
@@ -143,9 +149,9 @@ Smaller models seem to have a higher tendency of making these mistakes, but no f
 
 \section{Supervised Fine Tuning}\label{sec:res:sft}
 Pretrained \glspl{LLM} are trained on so much data that they become generally capable of most tasks even with no additional fine-tuning \cite{brown_language_2020}, but this usually takes many thousands of GPU-hours \cite{touvron_llama_2023, scao_what_2022}.
-Instead, fine-tuning a pretrained model has substantial benefits: it requires many orders of magnitude fewer GPU-hours, and sometimes more importantly, a lot fewer examples for training to achieve similar results to a specifically trained model for most tasks \cite{gaddipati_comparative_2020}.
+Instead, fine-tuning a pretrained model has substantial benefits: it requires only a fraction of the GPU-hours, and sometimes more importantly, a lot fewer examples for training to achieve similar results to a specifically trained model for most tasks \cite{gaddipati_comparative_2020}.
 
-More information on pre-training a \gls{LLM} can be found in \secref{training}, and \subref{finetune} has additional details on fine-tunig.
+More information on pre-training a \gls{LLM} can be found in \secref{training}, and \subref{finetune} has additional details on fine-tuning.
 
 In the end, fine-tuning was abandoned for this work due to lack of success and time constraints. See \chapref{conclusion} for conclusions and \secref{out:sft} for an outlook on comparisons with fine-tuned models.
 
@@ -155,7 +161,7 @@ Further hours, while sometimes yielding different errors, yielded no additional 
 Neither did interacting with the community, where a number of people had slightly different but very similar problems, almost always with no answer in any official or unofficial forum.
 
 % Other failed attempts tended to follow similar patterns of:
-% 
+%
 % \begin{itemize}
 %     \item Example demonstrated in official documentation, but individual parts have no documentation available.
 %     \item Straightforward attempts to slightly adjust official examples fails due to hidden complexity the short and elegant example abstracted away.
@@ -166,7 +172,7 @@ Neither did interacting with the community, where a number of people had slightl
 
 \subsection{Excerpt 1: Broken Models}\label{sub:brokenft}
 Since for this work a custom dataset is used, it also requires a custom dataloader.
-Traditionally, specifically for training, a dataloader contains one field for the 'input' of the model, and one for the label, or 'output' of the model, the optimizer should optimize for as a result of the input.
+Traditionally, specifically for training, a dataloader contains one field for the `input' of the model, and one for the label, or `output' of the model, the optimizer should optimize for as a result of the input.
 Each item of the dataloader is a dictionary of keys, with specific keys for input and output.
 There is however, only partial and very conflicting documentation on the existance and usage of these keys.
 
@@ -188,12 +194,12 @@ The common usage of the keys \mpy{"input_ids"} and \mpy{"attention_mask"} is rat
 Despite that, \mpy{"label"} is not so clear.
 
 Since neither of the three is documented, what remains is looking at use from others, or digging into the code.
-Multiple tutorials and even official sources (e.g. microsoft \cite{deepspeedexamples_2023}), use it in the following way: \mpy{"label": text_encodings["input_ids"]}.
+Multiple tutorials and even official sources (e.g. \gls{microsoft} \cite{deepspeedexamples_2023}), use it in the following way: \mpy{"label": text_encodings["input_ids"]}.
 
 This, in fact, can train a model and result in model weights differing from the original ones.
 However, all such trained models for this work were broken, as they did not generate anything that was not an \mpy{"<EOS>"}-token.
-These tokens are usually used as a stopping criterion during generation -- meaning that the model predicts that a natural seperation happens between the previous and the next tokens. 
-This is true in cases where \mpy{"<EOS>"} denotes a switch from user-generated to assistent-generated text, a paragraph or answer ended or similar (as it will be used in training data).
+These tokens are usually used as a stopping criterion during generation -- meaning that the model predicts that a natural separation happens between the previous and the next tokens.
+This is true in cases where \mpy{"<EOS>"} denotes a switch from user-generated to assisstent-generated text, a paragraph or answer ended or similar breaks in continuity (as it will be used for in training data).
 Nonetheless, this is not the case here. Even when ignoring the \textit{first} such token, no further \mpy{"<EOS>"}-tokens should follow immediately after.
 
 At this point, it is unclear what exactly happened.
@@ -220,8 +226,8 @@ This abstraction would generally reduce redundant boilerplate code.
 \code{error.py}{error}{Counterintuitively, this is not a \mpy{KeyError}.}
 
 \begin{sloppypar}
-After inspecting some of the working examples to learn that the dataloaders provided a \mpy{"text"}-key, and adapting other code accordingly to \textit{not} tokenize it beforehand, this resultet in a \mpy{ValueError} missing \mpy{"input_ids"}, as can be seen in the full message in \coderef{error}.
-When instead tokenizing before the \texttt{DataCollatorForCompletionOnlyLM}, it would fail, complaining that it will do tokenization itself.
+After inspecting some of the working examples to learn that the dataloaders provided a \mpy{"text"}-key, and adapting other code accordingly to \textit{not} tokenize it beforehand, this resulted in a \mpy{ValueError} missing \mpy{"input_ids"}, as can be seen in the full message in \coderef{error}.
+When instead tokenizing before the \texttt{DataCollatorForCompletionOnlyLM} (providing tokenized \mpy{"input_ids"} as key), it would fail, complaining that it will do tokenization itself.
 \end{sloppypar}
 
 % \subsection{Community Support}

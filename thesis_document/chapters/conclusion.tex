@@ -5,26 +5,23 @@
 
 Coming back to the initially posed goals of this work from \secref{question}:
 
-\begin{enumerate}
-    \item Demonstrate zero-shot automated information extraction from scientific literature using open-access \glspl{LLM}.
-    \item Benchmark and compare the accuracy of currently available open-access \glspl{LLM} for automated information extraction from scientific literature.
-    \item Attempt fine-tuning of open-access \glspl{LLM} in order to increase accuracy.
-\end{enumerate}
-
 First, zero-shot automated information extraction from scientific literature was successfully demonstrated with high accuracy achieved by most models of all sizes, as detailed in \secref{result:first}.
 
 Second, the capabilities of some of the most capable open-access \glspl{LLM} was measured and compared specifically for the information extraction task on scientific data, detailed also in \secref{result:first}.
 Furthermore, analyzing frequent mistakes in \secref{mistakes} gave additional insight in failure modes and further venues for inquiry and improvement.
 
-Generally speaking, this work demonstrated and measured the fundamental capability of various models for information extraction tasks for scientific literature in a zero-shot setting with a easily configurable pipeline.
-This pipeline can easily be configured to extract additional parameters, and even hybrid systems (automatic extraction with manual oversight) for more complex parameters could substantially increase data quality for various domains of research.
-This means that \glspl{LLM} can be powerful tools for information extraction, even in setups where the model is self-hosted.
-
 Third, a lot of time and effort was put in attempting to fine-tune models for the information extraction task, which was substantially harder than initially assumed, and eventually abandoned.
 \secref{res:sft} has excerpts of the difficulties encountered, which gives some insight to the task of fine-tuning in practice.
 
 
+This work demonstrates and measures the fundamental capability of various models for information extraction tasks for scientific literature in a zero-shot setting with an easily configurable pipeline.
+This pipeline can easily be configured to extract additional parameters.
+Hybrid systems (automatic extraction with manual oversight) could substantially increase data quality for various domains of research even for very complex parameters.
+This indicates that \glspl{LLM} can be powerful tools for information extraction, even in setups where the model is self-hosted with no fine-tuning.
 
+Most surprising is the comparatively high accuracy that 13B-sized models are able to achieve, particularly \model{llama} and \model{llama2}.
+Many consumer graphics cards have VRAM of more than 10GB available, which is sufficient to load 13B-sized models with 4-bit quantization and achieve a throughput of 30 to 40 tokens per second, depending on the specific GPU used \cite{hardwarerequirements_2023}.
+Thus, high-accuracy information extraction capabilities are much more accessible than previously expected, which could have far-reaching implications for the future of \gls{NLP}.
 
 
 

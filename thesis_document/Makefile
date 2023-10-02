@@ -42,10 +42,10 @@ dist-clean: clean
 	# nix-shell -p git-latexdiff
 	git latexdiff --latexmk --main main.tex --output main-diff.pdf HEAD --
 
-%.pdf: %.tex *.tex */*.tex references.bib code/* img/*
+%.pdf: %.tex *.tex */*.tex references.bib
 	mkdir -p $(OUT_DIR)/chapters
 	mkdir -p $(OUT_DIR)/include
 	mkdir -p $(OUT_DIR)/figures
 	# -interaction=nonstopmode
-	latexmk -outdir=$(OUT_DIR) -pdf -use-make -file-line-error -shell-escape -g $<
+	latexmk -outdir=$(OUT_DIR) -pdf -use-make -file-line-error -shell-escape $<
 	cp -v $(foreach PDF, $(PDFNAMES),$(OUT_DIR)/$(PDF)) . || :
