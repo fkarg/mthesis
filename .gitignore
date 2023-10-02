@@ -135,3 +135,5 @@ out
 # model checkpoints (don't commit)
 checkpoints
 extension
+
+references.bib
