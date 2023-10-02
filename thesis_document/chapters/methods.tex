@@ -3,30 +3,39 @@
 % - Explanation
 % - Reproducibility
 % - Visualization
-\todo{write methods introduction}
-\draft{
-Chapter on tools (language models) used. What exactly do I want to explain?
-First, a bit on how they work in general, second a bit of background on the models, a bit of a comparison (architecture and benchmarks?)
-}
+This chapter gives an overview of how \acrlongpl{LM} work in general.
+For that, basic and modern terminology and concepts on \gls{LM} are explained in \secref{basics}, before \secref{training} explains further how training and fine-tuning of these models broadly works.
 
 % background is more general, methods is specific to the methods we use, in our case LLMs
 
 \section{Language Model Basics}\label{sec:basics}
 This Section aims to provide an overview of the language models used in this work as well as a fundamental understanding of the underlying concepts and terminology.
-First, the fundamentals of the original transformer architecture are being established in \subref{transformer}.
+First, some basic terminology on \glspl{LM} is explained in \subref{terminology} before fundamentals of the original transformer architecture are being established in \subref{transformer}.
 \subref{modern} reintroduces the transformer architecture from a modern perspective, and highlights changes relative to the original architecture.
 Last but not least, \subref{llm} provides information on the scaling up and development of modern \glspl{LLM}.
 
-\input{figures/transformer}
+
+
+\subsection{Basic Terminology}\label{sub:terminology}
+% All modern \gls{LM} operate on \textit{tokens} instead of text directly, usually tokenized (split apart) by \texttt{sentencepiece} \cite{kudo_sentencepiece_2018}
+
+\begin{itemize}
+\item A \textit{token} is a short piece text, and can be anything from an individual character up to entire words. On average, a token is 3-4 letters.
+\item The \textit{context length} of a model is the amount of tokens it can process as input concurrently to provide an output.
+\item A \textit{single-shot} or \textit{multi-shot} setting describes an evaluation setting in which a \gls{LLM} is being provided with one or multiple examples of the task to fulfill as part of the input. In early \glspl{LLM}, this increased task accuracy considerably \cite{brown_language_2020}.
+\item \textit{Zero-shot} is, in contrast to single-shot or multi-shot approaches, not providing any previous examples or demonstrations of the task. This approach fully relies on the transfer learning capabilities of the model, which was only subjected to non-task-specific training beforehand. This work tests models in such a setting.
+\end{itemize}
 
 \subsection{The Transformer Architecture}\label{sub:transformer}
-All modern language models are based on what was introduced as the transformer architecture \cite{vaswani_attention_2017} by \gls{Google} in 2017.
+All modern \acrlong{LM} are based on what was introduced as the transformer architecture \cite{vaswani_attention_2017} by \gls{Google} in 2017.
 This architecture was originally designed for translation, with an encoder and a decoder part (See \figref{transformer} for more details).
 The text to translate is first encoded to the embedding space by the encoder, after which the decoder will autoregressively (only one token for each full forward pass, where the most recent one will be appended to the output) generate the output, token by token.
 
 This new transformer architecture quickly established itself by outperforming other architectures available at the time with only a fraction of the training cost.
 An encoder-only transformer architecture, specifically \gls{BERT}, set a new \gls{SOTA} for all \gls{NLP} benchmarks established at the time \cite{devlin_bert_2018}.
 % This success was not limited to \gls{NLP} tasks.
+
+
 
 % Along with significantly increasing capability in \acrlong{NLP}, these models enabled more sophisticated requests for data extraction.
 
@@ -54,7 +63,7 @@ Noteworthy and practically used are in particular sparse attention \cite{child_g
 FlashAttention reintroduced quadratic complexity, but resolved bottlenecks in memory layout and IO throughput, achieving substantial speedups for practical sizes of context length.
 Attention with linear context-length complexity has been demonstrated \cite{wu_fastformer_2021, hua_transformer_2022}, but is not without drawbacks and thus not widely used.
 
-
+\input{figures/transformer}
 \input{figures/modern_transformer}
 
 This modern architecture as roughly described here and visualized in \figref{modern_transformer}, is used with small variations by every recent \glspl{LLM} \cite{naveed_comprehensive_2023}, and in particular those used for this work, introduced later in \secref{models}.
@@ -91,7 +100,13 @@ For more information on most of the aforementioned models, see the later \secref
 
 
 \section{Training Large Language Models}\label{sec:training}
-Training a \acrlong{LLM} heavily depends on the task the model is supposed to learn. For information on very general pretraining, see \subref{pretraining}. In \subref{finetune} additional information on fine-tuning a pretrained model is discussed. A specialized version of that, instruction-based fine-tuning is then discussed in \subref{instruct}.
+Most datasets for training \gls{ML} models consist of two parts: \textit{input} data and \textit{target} or \textit{label} data.
+In these cases, the model ought to learn the generalizing nonlinear function of providing the labels based on the input.
+This terminology continues to be used for training \glspl{LLM}, even though there may be no input, or the label is just additional appended text.
+
+Training a \acrlong{LLM} heavily depends on the task the model is supposed to learn.
+First general pretraining is discussed in \subref{pretraining}, before additional information on on fine-tuning a pretrained model is discussed in \subref{finetune}.
+A specialized version of that, fine-tuning on instructions, is then discussed in \subref{instruct}.
 
 
 \subsection{Pretraining}\label{sub:pretraining}

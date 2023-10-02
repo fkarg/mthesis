@@ -13,7 +13,7 @@ All source code for this work can be found at \url{https://github.com/fkarg/mthe
 
 It became appearent during literature research that a comparison between different models would be valuable, and that additional models can be expected to be released in time to be included in this work.
 Thus, almost all code ought to be model-agnostic.
-The \acrlong{transformers} library was chosen due to being a well-established framework providing abstractions to load, manipulate and train any deep learning architecture in a standardized format.
+The \acrlong{transformers} library was chosen as a well-established framework providing abstractions to load, manipulate and train any deep learning architecture in a standardized format.
 Additionally, all open-access \glspl{LLM} are available directly through the \gls{hf} portal.
 
 \paragraph{Dependencies}
@@ -34,20 +34,20 @@ This is particularly eminent in models fine-tuned for instruction-based or chat-
 In this work, the main effort was put towards creating a pipeline for fine-tuning all models for the specified \gls{NER} task.
 This was due to the expectation that even small amounts of fine-tuning would be more effective in guiding model outputs than the best prompt could be.
 % Thus, prompting was given only cursory attention.
-Results of fine-tuning attempts from this work can be found in the later \secref{res:sft}.
+Results of fine-tuning attempts from this work can be found below in \secref{res:sft}.
 
 \paragraph{Structured Output}
-\texttt{guidance} \cite{guidance_2023}, originally from \gls{microsoft} research, allows more effective control over \glspl{LLM} than traditional prompting or chaining does.
+\texttt{guidance} \cite{guidance_2023}, an approach and library originally developed by \gls{microsoft} research, allows more effective control over \glspl{LLM} than traditional prompting or chaining does.
 In effect, \texttt{guidance} is a harness around a \gls{LLM}, providing support for the model in generating structured information, and making use of additional output structures such as CoT \cite{wei_chainofthought_2022} to result in higher-quality outputs.
 
 For this work, specifically the library \texttt{jsonformer} \cite{1rgs_2023} is used, which does not provide the full feature suite of the \texttt{guidance} library.
 At the time of deciding, \texttt{guidance} did not support models through the \gls{transformers} library yet.
 
-The schema used for guidance can be seen in \coderef{schema}.
-Additionally, the full prompt used can be seen in \coderef{prompt}, and an example output in \coderef{output}.
+The schema used for guidance through \texttt{jsonformer} is illustrated in the following code examples, which show (1) a schema for guidance, (2) a full prompt as wells as (3) an example output, in \coderef{schema}, \coderef{prompt} and \coderef{output} respectively.
+% Additionally, the full prompt used can be seen in \coderef{prompt}, and an example output in \coderef{output}.
 
 
-\code{schema.py}{schema}{The schema provided for the model to follow. Model output termination would happen after generation of a token for `\mintinline{python}{"}' for strings or `\texttt{,}' for numbers, or a number of other dedicated 'end of generation' tokens, e.g. \texttt{<EOS>}. See \coderef{output} for what an output for this schema might look like.}
+\code{schema.py}{schema}{The schema provided for the model to follow. Model output termination would happen after generation of a token for `\mintinline{python}{"}' for strings or `\texttt{,}' for numbers, or a number of other dedicated 'end of generation' tokens, e.g. \texttt{<EOS>}. See \coderef{output} for what a possible output of this schema might look like.}
 
 \code{prompt.py}{prompt}{Prompt used to generate output. \mintinline{python}{"{output}"} delineates where the model provides an answer. See \coderef{output} for what may be filled in.}
 

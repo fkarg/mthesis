@@ -39,7 +39,7 @@ This was not redone due to time constraints.
 \section{Accuracy Overview}\label{sec:result:first}
 
 \subsection{7B Parameter Models}\label{sub:result:7b}
-As can be seen in \figref{7b_acc}, accuracy in extracting \ttemp and \ttime data varies wildly, both within and across models.
+As can be seen in \figref{7b_acc}, accuracy in extracting \ttemp and \ttime data varies wildlyacross models, and good performance in one does not always correlate with good performance in the other.
 
 \model{llama2} has the highest accuracy for both \ttemp and \ttime, but \model{falcon} is more accurate in \tsolv prediction on our dataset.
 Based on this, it seems that \model{llama2}-7B already achieves close to the highest accuracy for extraction of \ttemp, and is close behind on \ttime.
@@ -60,7 +60,7 @@ From what was seen from \model{falcon}-instruct-7B in \subref{result:7b}, \model
 As can be seen in \figref{large_acc}, scores between large models differ marginally at best.
 Surprisingly, the accuracy on \tsolv extraction improved by less than maybe expected.
 In fact, as can be seen in the previous \figref{7b_acc}, smaller models were in average similarly capable, though the higher variance of smaller models included those both more and less capable than its larger siblings.
-This may be due to accidential sucess, and would warrant further analysis.
+This may be due to accidential success, and would warrant further analysis.
 
 
 
@@ -80,7 +80,7 @@ Not all such simple mistakes can be easily classified, but mistakenly outputting
 For \textit{unit confusion}, the following instances where counted: the answer (on \ttemp or \ttime) provided from a model is wrong, but interpreting the same answer with a different unit could get the correct answer.
 More details on model output structure can be found in \secref{prompts}.
 
-For example, in one instances \model{falcon} confidently answered 20 °K, when the correct answer would have been 20 °C.
+For example, in one instance \model{falcon} confidently answered 20 °K, when the correct answer would have been 20 °C.
 
 \paragraph{Temperature Units}
 As can be seen in \figref{7b_temp}, only \model{falcon} experiences unit confusion for temperature -- and in particular the instruct-variant.
@@ -106,7 +106,7 @@ This also indicates that the approach taken for compound resolution in this work
 
 Second, larger models seem to be affected even more, as can be seen in \figref{large_solv}.
 One hypothesis for this observation is that the models are more accurate, and quote the correct \tsolv verbatim, but the answer cannot be resolved.
-This may be true in particular for the \tsolv \texttt{N,N-DIMETHYLACETAMIDE}, where the synthesis paragraphs contain none of its 125 synonyms in 34 cases (or about 3.76\% of the dataset).
+This may be true in particular for the \tsolv \texttt{N,N-DIMETHYLACETAMIDE} (\texttt{cid} 31374), where the synthesis paragraphs contain none of its 125 synonyms in 34 cases (or about 4.37\% of the dataset).
 
 \subsection{Orders of Magnitude}\label{sub:oom}
 In some cases, the following mistake was observed:
@@ -147,7 +147,7 @@ Instead, fine-tuning a pretrained model has substantial benefits: it requires ma
 
 More information on pre-training a \gls{LLM} can be found in \secref{training}, and \subref{finetune} has additional details on fine-tunig.
 
-In the end, fine-tuning was abandoned for this work due to lack of success and time constraints. See \secref{con:sft} for conclusions and \secref{out:sft} for an outlook on comparisons with fine-tuned models.
+In the end, fine-tuning was abandoned for this work due to lack of success and time constraints. See \chapref{conclusion} for conclusions and \secref{out:sft} for an outlook on comparisons with fine-tuned models.
 
 What follows are two excerpts of what was encountered when attempting to fine-tune \glspl{LLM} using th \gls{transformers} library.
 These excerpts are by no means exhaustive, as many hours of bugfixing where necessary to even get to these points.
@@ -191,7 +191,7 @@ Since neither of the three is documented, what remains is looking at use from ot
 Multiple tutorials and even official sources (e.g. microsoft \cite{deepspeedexamples_2023}), use it in the following way: \mpy{"label": text_encodings["input_ids"]}.
 
 This, in fact, can train a model and result in model weights differing from the original ones.
-However, this now trained model was broken, as it did not generate anything that was not an \mpy{"<EOS>"}-token.
+However, all such trained models for this work were broken, as they did not generate anything that was not an \mpy{"<EOS>"}-token.
 These tokens are usually used as a stopping criterion during generation -- meaning that the model predicts that a natural seperation happens between the previous and the next tokens. 
 This is true in cases where \mpy{"<EOS>"} denotes a switch from user-generated to assistent-generated text, a paragraph or answer ended or similar (as it will be used in training data).
 Nonetheless, this is not the case here. Even when ignoring the \textit{first} such token, no further \mpy{"<EOS>"}-tokens should follow immediately after.

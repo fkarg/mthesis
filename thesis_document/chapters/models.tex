@@ -6,25 +6,27 @@ See \secref{basics} for an overview and broad categorization of the models menti
 
 
 \subsection{Criteria}\label{sub:criteria}
-For this work, the following criteria where chosen:
+First, the model weights need to be available. 
+This is necessary to run the model in a self-hosted manner.
+Practically, this is a constraint towards open-source or at least open-access models (their license needs to allow for academic research).
+% \todo{reason for criteria: people want to fine-tune models on their own potentially sensitive data}
+
+Second, at this point dozens of \glspl{LLM} have been trained, and weights made available.
+One model was trained purely as a marketing pitch to sell computing systems \cite{dey_cerebrasgpt_2023}.
+To vastly condense the number of models to consider, each base model ought to have demonstrated foundational capability in other domains.
+Additionally, due to the nature of the task, it is valuable to include both base models and instruct-based derivatives for comparison.
+
+Third, all else being equal, a smaller model is preferred.
+This is due to smaller models being less resource intensive to evaluate and fine-tune.
+Smaller variants of larger models additionally enable faster and less resource intensive iteration during development.
+
+In summary, the following criteria where chosen for model selection in this work:
 \begin{enumerate}
     \item It is possible to get the full model weights.
     \item The selected models ought to be decently capable \glspl{causal}.
     \item Ceteris paribus, a smaller model is better.
 \end{enumerate}
 
-First, the model weights need to be available. This is necessary to run the model in a self-hosted manner.
-Practically, this is a constraint towards open-source or at least open-access models (their license needs to allow for academic research).
-\todo{reason for criteria: people want to fine-tune models on their own potentially sensitive data}
-
-Second, at this point dozens of \glspl{LLM} have been trained, and weights made available.
-One model was trained purely as a marketing pitch to sell computing systems \cite{dey_cerebrasgpt_2023}.
-To vastly condense the number of models to consider, each base model ought to have demonstrated foundational capability in other domains.
-Additionally, due to the nature of the task, it would be valuable to include both base models and instruct-based derivatives.
-
-Third, all else being equal, a smaller model is preferred.
-This is due to smaller models being less resource intensive to evaluate and fine-tune.
-Smaller variants of larger models additionally enable faster and less resource intensive iteration during development.
 
 
 \subsection{OPT, BLOOM (Not Used)}
