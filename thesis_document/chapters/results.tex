@@ -10,7 +10,7 @@
 % - Comparison with related work
 % - Discussion of implications
 % - Discussion of limitations
-\section{Overview}
+\section{Overview}\label{sec:res:overview}
 \subsection{Recap}
 \draft{Before, ....}
 \todo{make quick recap on approach for who starts reading here}
@@ -141,7 +141,7 @@ Smaller models seem to have a higher tendency of making these mistakes, but no f
 % \verb!2023-09-09 16:05:36 ERROR    pcp: Could not find `cid` for [distilled H2O]!
 
 
-\section{Supervised Fine Tuning}\label{sec:sft}
+\section{Supervised Fine Tuning}\label{sec:res:sft}
 Pretrained \glspl{LLM} are trained on so much data that they become generally capable of most tasks even with no additional fine-tuning \cite{brown_language_2020}, but this usually takes many thousands of GPU-hours \cite{touvron_llama_2023, scao_what_2022}.
 Instead, fine-tuning a pretrained model has substantial benefits: it requires many orders of magnitude fewer GPU-hours, and sometimes more importantly, a lot fewer examples for training to achieve similar results to a specifically trained model for most tasks \cite{gaddipati_comparative_2020}.
 

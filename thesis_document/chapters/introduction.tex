@@ -2,66 +2,64 @@
 
 % clear and concise:
 %  Presentation of the topic and the background
-Unstructured scientific literature contains a vast amount of materials science knowledge, and is the only place to get it.
-However, this places it squarely out of reach for further processing, which makes it difficult or impossible to build on a large part of prior work.
+Unstructured scientific literature contains a vast amount of materials science knowledge, which is not provided in a more structured manner elsewhere.
+This places it squarely out of reach for further processing, which makes it difficult or impossible to build on a large part of prior work.
 %  Motivation of importance
-\gls{ML} models are increasingly used in screening steps for materials discovery and property prediction \cite{saal_machine_2020, luo_mof_2022, choudhary_recent_2022}, among other steps.
+\gls{ML} models are increasingly used in screening steps for materials discovery and property prediction \cite{saal_machine_2020, luo_mof_2022, choudhary_recent_2022}.
 % These models continue to get better, but often the biggest bottleneck is a lack of data.
 In general, more high-quality data improves the output quality of \gls{ML} models considerably \cite{hoffmann_empirical_2022}.
 %  Research gap, research question
-Currently, the amount of data accessible to train such models is limited, \todo{@Tobias check} in particular from older or less known work.
+Currently, the amount of data accessible to train such models is limited. This is both from older or less known work, but also from recent work that does not publish or contribute to a database.
 
 Over the last year, \glspl{LLM} rose to public prominence since the launch of \gls{ChatGPT}.
 Regardless of public perception, recent improvements across \gls{NLP} benchmarks are undeniable \cite{devlin_bert_2018, openai_gpt4_2023}.
 In this work, \glspl{LLM} are used for information extraction of scientific text on synthesisizing \glspl{MOF}.
-
-% Structure of the thesis
-\draft{
-Structure.
-}
-% Short summary of main results
-\draft{
-Results summary.
-}
-
-% \section{Motivation}
-% Take for example the field of synthesizing Metal-Organic Frameworks (MOFs)
-% \cite{zhou_introduction_2012}. While numerous detailed descriptions of
-% synthesis procedures exist, they are not available in machine-readable formats,
-% which prevents effective application of state-of-the-art techniques such as
-% automated experimentation \cite{shi_automated_2021} or synthesis parameter prediction
-% \cite{luo_mof_2022}. Thus, we intend to create a pipeline for deriving
-% machine-readable information on MOF synthesis parameters from given questions
-% on provided scientific articles.
-
-% Motivation
-% \begin{itemize}
-%     \item vast amount of material science knowledge scattered across papers
-%     \item often non-machine readable formats
-%     \item makes it difficult or impossible to build on (all) prior work
-%     \item results in tremendous duplicates and other unnecessary work
-%     \item a lot of insights to be gained from such a database, as well as automated experimental design (and possibly execution)
-% \end{itemize}
+This work demonstrates that smaller open-access models can achieve high accuracy on information extraction tasks without fine-tuning.
+% Research on \glspl{MOF} continues to be one of the fastest growing fields, due to their effective usage for both battery and catalysation \cite{zhou_metal_2014}, but only a limited amount of the information is available to process in an automated fashion.
 
 
 \section{Scientific Question}\label{sec:question}
 
-The goals of this work are threefold:
+% The goals of this work are threefold:
+There are three main questions this work aims to answer:
 \begin{enumerate}
-    \item Demonstrate zero-shot automated information extraction from scientific literature using open-access \glspl{LLM}.
-    \item Benchmark and compare the accuracy of currently available open-access \glspl{LLM} for the automated information extraction from scientific literature.
-    \item Attempt fine-tuning of open-access \glspl{LLM} in order to increase accuracy.
+    % \item Demonstrate zero-shot automated information extraction from scientific literature using open-access \glspl{LLM}.
+    \item Can we demonstrate high accuracy in zero-shot automated information extraction from scientific literature using open-access \glspl{LLM}?
+    % \item Benchmark and compare the accuracy of currently available open-access \glspl{LLM} for automated information extraction from scientific literature.
+    \item How do currently available open-access \glspl{LLM} compare for this task?
+    % \item Attempt fine-tuning of open-access \glspl{LLM} in order to increase accuracy.
+    \item How easy is it to fine-tune open-access \glspl{LLM} for this task, and how much does fine-tuning increase the accuracy?
 \end{enumerate}
 
-As part of this work, a highly flexible automated pipeline for the extraction of non-machine readable information in \gls{MOF} synthesis will be created.
-The approach chosen in this work will be discussed in more detail \chapref{approach}, where the implementation is described in \secref{impl}, the models used in \secref{models}, and \secref{data} describes the source of data.
+As part of this work, a highly flexible automated pipeline for the extraction of information from unstructured \gls{MOF} synthesis paragraphs was created.
+
+
+\section{Structure of this Work}\label{sec:structure}
+
+This work is built up in the following way:
+First, \chapref{background} provides background knowledge on \gls{NLP} and its tasks, primarily in \secref{NLP}. \secref{related} goes on to explain how \glspl{LM} have become a powerful tool in this discipline.
+
+\chapref{methods} then provides a basic understanding of the \glspl{LLM} used, by first defining basic and modern terminology in \secref{basics} before explaining training and fine-tuning in \secref{training}.
+
+The approach chosen in this work will be discussed in more detail \chapref{approach}, where the implementation is described in \secref{impl}, and the models used in this work are described in \secref{models}. Additionally, \secref{data} describes the origin of the data used for this work.
+
+\chapref{results} is fully dedicated to exploring the results of this work.
+A high accuracy on the extraction of temperature, duration, and solvent information from unstructured scientific text was achieved, in a zero-shot setting without fine-tuning.
+This is explained in more detail in \secref{result:first}, before \secref{mistakes} analyses some of the most frequent failure modes.
+Moreover, \secref{res:sft} provides excerpts of errors encountered during fine-tuning.
+
+The conclusions from this work are drawn in \chapref{conclusion}, before \chapref{outlook} provides an outlook of possible further veins of inquiry to explore.
 
 
 \newpage
-collection of todos
-\todo{find a first section for introduction chapter}
 
 explain stuff somewhere
 \todo{explain context length somewhere}
 \todo{explain zero-shot somewhere}
-\todo{explain causal and masked language models somewhere}
+\todo{maybe put a short explanation of 'label' here somewhere}
+\todo{quickly explain precision and recall somewhere}
+
+
+collection of todos
+\todo{find a first section for introduction chapter}
+\todo{move image descriptions away from description in referencing text}

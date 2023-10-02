@@ -1,12 +1,13 @@
 \chapter{Conclusion}\label{chap:conclusion}
 % \todo{conclusion chapter guideline: what was learned from results based on initial question from the experiments and from other sources?}
-
+% it turned out that the models where good in extracting existing information
+% but they could not detect if information was present at all (though maybe due to prompting), or it was simply not mapped as classification.
 
 Coming back to the initially posed goals of this work from \secref{question}:
 
 \begin{enumerate}
     \item Demonstrate zero-shot automated information extraction from scientific literature using open-access \glspl{LLM}.
-    \item Benchmark and compare the accuracy of currently available open-access \glspl{LLM} for the automated information extraction from scientific literature.
+    \item Benchmark and compare the accuracy of currently available open-access \glspl{LLM} for automated information extraction from scientific literature.
     \item Attempt fine-tuning of open-access \glspl{LLM} in order to increase accuracy.
 \end{enumerate}
 
@@ -20,7 +21,7 @@ This pipeline can easily be configured to extract additional parameters, and eve
 This means that \glspl{LLM} can be powerful tools for information extraction, even in setups where the model is self-hosted.
 
 Third, a lot of time and effort was put in attempting to fine-tune models for the information extraction task, which was substantially harder than initially assumed, and eventually abandoned.
-\secref{sft} has excerpts of the difficulties encountered, which gives some insight to the task of fine-tuning in practice.
+\secref{res:sft} has excerpts of the difficulties encountered, which gives some insight to the task of fine-tuning in practice.
 
 
 
