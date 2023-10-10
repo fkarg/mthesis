@@ -20,7 +20,7 @@ Last but not least, \subref{llm} provides information on the scaling up and deve
 % All modern \gls{LM} operate on \textit{tokens} instead of text directly, usually tokenized (split apart) by \texttt{sentencepiece} \cite{kudo_sentencepiece_2018}
 
 \begin{itemize}
-\item A \textit{token} is a short piece text, and can be anything from an individual character up to entire words. On average, a token is 3-4 letters.
+\item A \textit{token} is a short piece of text, and can be anything from an individual character up to entire words. On average, a token is 3-4 letters.
 \item The \textit{context length} of a model is the amount of tokens it can process as input concurrently to provide an output.
 \item A \textit{single-shot} or \textit{multi-shot} setting describes an evaluation setting in which a \gls{LLM} is being provided with one or multiple examples of the task to fulfill as part of the input. In early \glspl{LLM}, this increased task accuracy considerably \cite{brown_language_2020}.
 \item \textit{Zero-shot} is, in contrast to single-shot or multi-shot approaches, not providing any previous examples or demonstrations of the task. This approach fully relies on the transfer learning capabilities of the model, which was only subjected to non-task-specific training beforehand. This work tests models in such a setting.
