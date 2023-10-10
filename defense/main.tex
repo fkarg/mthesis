@@ -1,0 +1,35 @@
+% moved in main_(handout/present).tex:
+% % \documentclass[en,hyperref=colorlinks]{sdqbeamer}
+% % \documentclass[en]{sdqbeamer}
+% \mode<presentation> % ??? what is this for?
+\graphicspath{ {./img/} {./logos/} } % add further graphics paths here
+
+
+\include{setup.tex}
+
+
+\include{chapters/motivation.tex}
+% \include{chapters/background.tex}
+% \include{chapters/methods.tex}
+\include{chapters/approach.tex}
+\include{chapters/results.tex}
+\include{chapters/conclusion.tex}
+\include{chapters/outlook.tex}
+\include{chapters/end.tex}
+
+% \include{chapters/example.tex}
+
+% \maketitle
+
+% TODO
+% - [ ] change logo
+% - [ ] change banner
+
+\appendix
+\beginbackup
+\input{chapters/sources.tex}
+% \include{chapters/backup.tex}
+% \include{chapters/example.tex}
+\backupend
+
+\end{document}
