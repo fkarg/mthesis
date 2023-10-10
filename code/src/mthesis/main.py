@@ -404,7 +404,7 @@ def analyse(
         typer.Option(
             help="Path to `mof_dataset_labeled.csv` file, used to cache dataset intermediaries.",
         ),
-    ] = "mof_dataset_labeled.csv",
+    ] = "mof_dataset_labeled_M.csv",
     reload_dataset: Annotated[
         bool,
         typer.Option(
@@ -472,7 +472,10 @@ def analyse(
     for evaluation in stats:
         pid = evaluation["paragraph_id"]
         model_name = evaluation["model_name"]
-        item = ds[pid]
+        try:
+            item = ds[pid]
+        except KeyError:
+            continue
         text, label = item["text"], item["label"]
         answer = evaluation["answer"]
 

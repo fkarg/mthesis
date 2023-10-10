@@ -132,8 +132,10 @@ dmypy.json
 # TeX
 out
 
-# model checkpoints (don't commit)
+# model checkpoints and other artifacts
 checkpoints
 extension
-
 references.bib
+backup
+old
+results

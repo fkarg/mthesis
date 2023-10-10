@@ -157,17 +157,21 @@ class LabeledMOFDataset(MOFDataset):
 
                 if answer_a and answer_m and answer_a != answer_m:
                     log.warning(
-                        f"Dataset: answer cids differ. a: {answer_a} m: {answer_m}. Continuing with answer [a]."
+                        f"Dataset: answer cids differ. a: {answer_a} m: {answer_m}. Continuing with answer [m]."
                     )
-                if answer_a is None:
+                # if answer_a is None:
+                #     self.labels[paragraph_id][parameter] = None
+                #     continue
+
+                if answer_m is None:
                     self.labels[paragraph_id][parameter] = None
                     continue
 
                 if parameter in ["additive", "solvent"]:
-                    synonyms = cid2syns(answer_a)
+                    synonyms = cid2syns(answer_m)
                     found = False
 
-                    self.labels[paragraph_id][parameter + "_cid"] = answer_a
+                    self.labels[paragraph_id][parameter + "_cid"] = answer_m
 
                     for syn in synonyms:
                         if syn.lower() in self.paragraphs[paragraph_id].lower():
@@ -175,10 +179,10 @@ class LabeledMOFDataset(MOFDataset):
                             found = True
                             break
                     if not found:
-                        log.warning(f"Didn't find synonym for {synonyms[0]} in text. Selecting it as default. Available: {len(synonyms)}")
+                        log.error(f"Didn't find {parameter} synonym for {synonyms[0]} in text. Selecting it as default. Available: {len(synonyms)}")
                         self.labels[paragraph_id][parameter] = synonyms[0]
                 elif parameter in ["time", "temperature"]:
-                    self.labels[paragraph_id][parameter] = answer_a
+                    self.labels[paragraph_id][parameter] = answer_m
             self.labels[paragraph_id]["temperature_unit"] = "C"
             self.labels[paragraph_id]["time_unit"] = "h"
 
@@ -191,7 +195,7 @@ class LabeledMOFDataset(MOFDataset):
         paragraph_id, <parameters>, context
         idx, <labels>, <context>
         """
-        keys = ["paragraph_id"] + list(self.label_cols.keys()) + ["context", "temperature_unit", "time_unit"]
+        keys = ["paragraph_id"] + list(self.label_cols.keys()) + ["context", "temperature_unit", "time_unit", "additive_cid", "solvent_cid"]
         with open(filename, "w", newline="") as f:
             writer = csv.DictWriter(f, fieldnames=keys, delimiter=";")
 
@@ -231,7 +235,10 @@ class LabeledMOFDataset(MOFDataset):
         try:
             paragraph = self.paragraphs[idx]
         except KeyError:
-            idx, paragraph = self.paragraph_list[idx]
+            try:
+                idx, paragraph = self.paragraph_list[idx]
+            except TypeError:
+                raise KeyError
 
         label = self.labels[idx]
         # {'additive': 'H2O', 'solvent': 'H2O', 'temperature': 150.0, 'temperature_unit': 'C', 'time': 96.0, 'time_unit': 'h'}
