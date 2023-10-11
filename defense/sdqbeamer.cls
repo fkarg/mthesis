@@ -587,7 +587,8 @@
 \setbeamercolor*{palette sidebar tertiary}{fg=black!75}
 \setbeamercolor*{palette sidebar quaternary}{fg=black!75}
 
-\setbeamercolor*{item projected}{fg=white,bg=kit-green100}
+% \setbeamercolor*{item projected}{fg=white,bg=kit-green100}
+\setbeamercolor*{item projected}{fg=kit-gray100,bg=kit-green50}
 
 \setbeamercolor*{block title}{fg=white,bg=kit-green100}
 \setbeamercolor*{block title alerted}{use=alerted text,fg=white,bg=alerted text.fg!75!black}
@@ -627,6 +628,7 @@
 }
 
 \setbeamertemplate{itemize items}{\raisebox{.2ex}{\KITmark}}
+% \setbeamertemplate{enumerate items}{\raisebox{.2ex}{\KITmark}}
 
 %% ----------------------
 %% | Inhaltsverzeichnis |

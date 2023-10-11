@@ -1,27 +1,80 @@
 \section{Approach}
 
-\begin{frame}[c]{Implementation}
-    \todo{this}
+\begin{frame}[c]{Criteria for Models}
+    \todo{fix color scheme}
+    \Large
+    \begin{enumerate}[<+(1)->]
+    \item It is possible to get the full model weights.
+    \item The selected models ought to be decently capable \glspl{causal}.
+    \item Ceteris paribus, a smaller model is better.
+    \end{enumerate}
 \end{frame}
 
 
 \begin{frame}[c]{Language Models}
-    \todo{this}
+    \large
+
+    \begin{itemize}[<+(1)->]
+        \item \gls{llama} 7B, 13B, 30B, 65B
+        \item \gls{vicuna} 7B, 13B, 33B
+        \item \gls{llama2} 7B, 13B, 70B
+        \item \gls{falcon} 7B, 40B
+        \item \gls{falcon}-instruct 7B, 40B
+    \end{itemize}
 \end{frame}
 
 
-\begin{frame}[c]{Prompts}
-    \todo{this}
+\begin{frame}[c]{Schema}
+    \large
+\code{schema.py}{schema}{The schema provided for the model to follow. Model output termination would happen after generation of a token for `\mintinline{python}{"}' for strings or `\texttt{,}' for numbers, or a number of other dedicated `end of generation' tokens, e.g. \texttt{<EOS>}.}
+\end{frame}
+
+\begin{frame}[c]{Prompt}
+    \large
+    \code{prompt.py}{prompt}{Prompt used to generate output. \mintinline{python}{"{output}"} delineates where the model provides an answer.}
+\end{frame}
+
+\begin{frame}[c]{Output}
+    \large
+    \code{example_output.py}{output}{Exemplary output based on the prompt and schema shown before.}
 \end{frame}
 
 
 \begin{frame}[c]{Data Source}
+    \Large
+    \begin{itemize}[<+(1)->]
+        \item SynMOF\_M \cite{luo_mof_2022}
+            \begin{itemize}[<+(1)->]
+                \large
+                \item Publicly Accessible
+                \item Manually Extracted
+                \item 778 Labels
+                \item Temperature Information is in \texttt{°C}
+                \item Timeframe (Durations) in \texttt{h}.
+                \item Chemical Compounds via \texttt{cid}
+            \end{itemize}
+        \item Corresponding Synthesis Paragraphs 
+    \end{itemize}
+    % and their corresponding labels from the publicly accessible database
+\end{frame}
+
+
+\begin{frame}[c]{Unit Equality}
+    Time and Temperature \\
+    Compounds
     \todo{this}
 \end{frame}
 
 
-\begin{frame}[c]{Criteria for Equality}
-    Time and Temperature \\
-    Compounds
-    \todo{this}
+\begin{frame}[c]{Compound Equality: \texttt{cid}}
+    \large
+    Foreshadowing:
+    \begin{itemize}[<+(1)->]
+        \item `water'
+        \item \texttt{cid} 962
+        \item `Synonyms': 319
+        \item Includes `distilled water' and `H2O'
+        \item But not `distilled H2O' 
+            \only<handout>{\item Even though this occurs verbatim in eight synthesis paragraphs}
+    \end{itemize}
 \end{frame}

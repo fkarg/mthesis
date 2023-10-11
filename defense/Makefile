@@ -24,7 +24,7 @@ compress: $(COMPRESSED)
 # '||' is similar to a pipe, but only run if an error happened
 # ':' is a posix-'true', preventing it from failing if a file was missing (allowing 'make fast')
 # %.pdf: %.tex *.tex */*.tex references.bib img/*
-%.pdf: %.tex *.tex */*.tex references.bib img/*
+%.pdf: %.tex *.tex */*.tex references.bib img/* sdqbeamer.cls
 	mkdir -p $(OUT_DIR)/$*/chapters/
 	latexmk -outdir=$(OUT_DIR)/$* -pdf -use-make -file-line-error -shell-escape -g $< || :
 	# lualatex --file-line-error --output-directory=$(OUT_DIR)/$* --interaction=nonstopmode $< -g || :

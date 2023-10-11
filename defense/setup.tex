@@ -42,17 +42,29 @@
 \DeclareCaptionFont{black}{\color{black}}
 % \DeclareUnicodeCharacter{0301}{ì}
 
-\usepackage[outputdir={\detokenize{out/main_handout}}]{minted}
+% \usepackage[cache=false,outputdir={\detokenize{out}}]{minted}
+% \usepackage[outputdir={\detokenize{out/main_handout}}]{minted}
+% \usepackage[cache=false]{minted}
+% -> moved to main_*.tex
 \usemintedstyle{pastie}
 
 \newcommand{\gray}[1]{
     \textcolor[gray]{0.65}{#1}
 }
 
+\usepackage{xspace}
+\newcommand{\ttime}{\texttt{time}\xspace}
+\newcommand{\ttemp}{\texttt{temperature}\xspace}
+\newcommand{\tadd}{\texttt{additive}\xspace}
+\newcommand{\tsolv}{\texttt{solvent}\xspace}
+\newcommand{\cid}{\texttt{cid}\xspace}
+
+\newcommand{\mpy}[1]{\mintinline{python}{#1}}
+
 
 %% Titelbild
-% \titleimage{banner_defense}
-\titleimage{banner_2020_kit}
+\titleimage{banner_defense}
+% \titleimage{banner_2020_kit}
 
 %% Gruppenlogo
 \grouplogo{AiMat_logo_purple}
@@ -102,13 +114,21 @@ urldate=iso
 
 \newcommand\todo[1]{{\color{red}\textbf{TODO: #1}}}
 
+\newcommand*{\myboxx}[2]{\colorbox{#1!10}{\parbox{.98\linewidth}{#2}}}
+
+\newcounter{code}
+\setcounter{code}{0}
+\newenvironment{codeboxed}[1]{
+\begin{minipage}{\linewidth}\begin{center}\small \myboxx{gray}{#1}\\[1ex]\begin{tabular}{|p{\textwidth}|}\hline}{
+    \\\hline\end{tabular}\end{center}\end{minipage}}
+
+\newcommand{\code}[3]{\refstepcounter{code}\label{code:#2}\begin{codeboxed}{#3}
+        \inputminted[linenos,fontsize=\small]{Python}{code/#1}\end{codeboxed}}
 
 \begin{document}
 
 % re-enable for more final versions
 % Titelseite
-% \KITtitleframe
-% \addtocounter{framenumber}{1}
 
 %Inhaltsverzeichnis
 % \begin{frame}{Inhaltsverzeichnis}
