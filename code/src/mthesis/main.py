@@ -514,7 +514,7 @@ def analyse(
         elif txt2cid(answer["additive"]) == []:
             confusion.resolve_answer(model_name, "additive")
             confusion.wrong(model_name, "additive")
-        elif set(txt2cid(answer["additive"])).isdisjoint(label["additive_cid"]):
+        elif set(txt2cid(answer["additive"])).isdisjoint(set(label["additive_cid"])):
             log.debug(f"adddiff [{pid}] {answer['additive']} != {label['additive']}")
             confusion.wrong(model_name, "additive")
         else:
@@ -524,7 +524,7 @@ def analyse(
         if txt2cid(answer["solvent"]) == []:
             confusion.resolve_answer(model_name, "solvent")
             confusion.wrong(model_name, "solvent")
-        elif set(txt2cid(answer["solvent"])).isdisjoint(label["solvent_cid"]):
+        elif set(txt2cid(answer["solvent"])).isdisjoint(set(label["solvent_cid"])):
             log.debug(f"soldiff [{pid}] {answer['solvent']} != {label['solvent']}")
             confusion.wrong(model_name, "solvent")
         else:

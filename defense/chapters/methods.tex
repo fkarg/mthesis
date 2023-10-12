@@ -7,7 +7,7 @@
             \begin{itemize}
                 \item Refer to my previous talk about the transformer architecture for more details on internals
             \end{itemize}
-        \item   \textbf{Context Length:} Amount of tokens a model can process concurrently as input
+        % \item   \textbf{Context Length:} Amount of tokens a model can process concurrently as input
         \item   \textbf{Single-shot / Multi-shot:} Evaluation setting in which a \gls{LLM} is being provided with one or multiple examples of the task to fulfill
         \item   \textbf{Zero-shot:} Evaluation setting in which no task examples are provided, or the model has been fine-tuned for
     \end{itemize}
@@ -29,7 +29,7 @@
             Most Prominent Changes:
             \begin{itemize}[<+(1)->]
                 \item Activation Function: \gls{SwiGLU} \cite{shazeer_glu_2020} instead of \gls{ReLU}
-                \item Positional Encoding: \gls{RoPE} \cite{su_roformer_2022}, and \textit{on each layer}
+                \item Positional Encoding: \acrfull{RoPE} \cite{su_roformer_2022}, and \textit{on each layer}
                 \item Normalization with RMSNorm \cite{ba_layer_2016} \textit{before} instead of after each layer
                 \item Attention: Often a variant of Sparse Attention \cite{child_generating_2019} or FlashAttention \cite{dao_flashattention_2022}
                 \item Most Recently: The usage of \acrfull{GQA} \cite{ainslie_gqa_2023}
